@@ -13,16 +13,16 @@
       --gelap: #102c1c;
       --gelap2: #181818;
       --putih: #fff;
-      --border-emas: 1.5px solid var(--emas);
+      --border-emas: 2px solid var(--emas);
       --blur: 14px;
-      --card-gap: 1.5rem;
+      --transisi: cubic-bezier(.77,0,.18,1);
     }
-    body {
+    html, body {
+      height: 100%;
       margin: 0;
       padding: 0;
       font-family: 'Orbitron', Arial, sans-serif;
       background: linear-gradient(135deg, var(--gelap) 0%, var(--gelap2) 100%);
-      min-height: 100vh;
       color: var(--putih);
       position: relative;
       overflow-x: hidden;
@@ -38,42 +38,133 @@
         repeating-linear-gradient(90deg, rgba(255,255,255,0.09) 0px, rgba(255,255,255,0.09) 1.5px, transparent 2px, transparent 80px);
       opacity: 0.22;
     }
-    .header {
-      text-align: center;
-      font-size: 3rem;
+    .center-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 80vh;
+      background: rgba(17,34,17,0.7);
+      border-radius: 24px;
+      box-shadow: 0 0 32px var(--emas), 0 0 16px var(--hijau);
+      padding: 2.5rem 1.5rem 2rem 1.5rem;
+      max-width: 400px;
+      margin: 6vh auto 0 auto;
+      position: relative;
+      z-index: 2;
+      backdrop-filter: blur(var(--blur));
+      -webkit-backdrop-filter: blur(var(--blur));
+      transition: box-shadow 0.5s var(--transisi);
+    }
+    .main-title {
+      font-size: 2.3rem;
       font-family: 'Orbitron', Arial, sans-serif;
       font-weight: 900;
       letter-spacing: 2px;
-      margin: 2.5rem 0 2rem 0;
+      margin-bottom: 2.2rem;
       background: linear-gradient(90deg, var(--hijau), var(--emas) 80%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
       color: transparent;
-      filter: drop-shadow(0 8px 24px var(--hijau)) drop-shadow(0 2px 32px var(--emas));
-      text-shadow: 0 2px 0 #222, 0 6px 16px var(--emas);
+      filter: drop-shadow(0 0 16px var(--hijau)) drop-shadow(0 0 32px var(--emas));
+      text-shadow: 0 2px 0 #222;
       border-radius: 0 0 80px 80px/0 0 60px 60px;
       position: relative;
       z-index: 2;
-      transform: translateY(8px);
-      transition: filter 0.5s cubic-bezier(.77,0,.18,1);
+      text-align: center;
+      transition: filter 0.5s var(--transisi);
     }
-    .container {
-      max-width: 700px;
-      margin: auto;
-      padding: 1rem;
-      position: relative;
-      z-index: 2;
-    }
-    .sport-tabs {
+    .sport-btns {
       display: flex;
-      justify-content: center;
-      gap: 1rem;
-      margin-bottom: 2rem;
-      flex-wrap: wrap;
+      flex-direction: column;
+      gap: 1.2rem;
+      width: 100%;
+      align-items: center;
+      margin-top: 1rem;
     }
-    .sport-tab {
+    .sport-btn {
+      width: 100%;
+      max-width: 320px;
+      font-size: 1.2rem;
+      font-family: 'Orbitron', Arial, sans-serif;
+      font-weight: 900;
       background: linear-gradient(90deg, var(--hijau) 0%, var(--emas) 100%);
+      color: #222;
+      border: none;
+      border-radius: 40px;
+      padding: 1rem 0;
+      cursor: pointer;
+      box-shadow: 0 0 16px var(--hijau), 0 0 24px var(--emas);
+      margin-bottom: 0.2rem;
+      transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s var(--transisi);
+      outline: none;
+      letter-spacing: 1px;
+      position: relative;
+      text-shadow: 0 0 8px var(--emas);
+    }
+    .sport-btn:hover, .sport-btn:focus {
+      background: linear-gradient(90deg, var(--emas) 0%, var(--hijau) 100%);
+      color: var(--putih);
+      box-shadow: 0 0 32px var(--emas), 0 0 32px var(--hijau);
+      transform: scale(1.05);
+    }
+    .jadwal-screen {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: transparent;
+      z-index: 10;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      pointer-events: none;
+      opacity: 0;
+      transform: translateX(100vw);
+      transition: opacity 0.5s var(--transisi), transform 0.7s var(--transisi);
+    }
+    .jadwal-screen.active {
+      pointer-events: auto;
+      opacity: 1;
+      transform: translateX(0);
+    }
+    .jadwal-content {
+      width: 100%;
+      max-width: 700px;
+      margin: 5vh auto 0 auto;
+      background: rgba(17,34,17,0.7);
+      border-radius: 24px;
+      box-shadow: 0 0 32px var(--emas), 0 0 16px var(--hijau);
+      padding: 2rem 1rem 2rem 1rem;
+      position: relative;
+      z-index: 11;
+      min-height: 60vh;
+      backdrop-filter: blur(var(--blur));
+      -webkit-backdrop-filter: blur(var(--blur));
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      animation: slideIn 0.7s var(--transisi);
+    }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(80vw);}
+      to { opacity: 1; transform: translateX(0);}
+    }
+    .jadwal-header {
+      font-size: 2rem;
+      font-family: 'Orbitron', Arial, sans-serif;
+      font-weight: 900;
+      letter-spacing: 2px;
+      background: linear-gradient(90deg, var(--hijau), var(--emas) 80%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      color: transparent;
+      filter: drop-shadow(0 0 12px var(--hijau)) drop-shadow(0 0 24px var(--emas));
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+    .back-btn {
+      background: linear-gradient(90deg, var(--emas) 0%, var(--hijau) 100%);
       color: #222;
       font-family: 'Orbitron', Arial, sans-serif;
       font-weight: 900;
@@ -83,29 +174,30 @@
       padding: 0.7rem 2rem;
       cursor: pointer;
       box-shadow: 0 0 10px var(--hijau), 0 0 14px var(--emas);
-      margin-bottom: 0.5rem;
-      transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s;
+      margin-bottom: 1.2rem;
+      transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s var(--transisi);
       outline: none;
       letter-spacing: 1px;
       position: relative;
+      align-self: flex-start;
     }
-    .sport-tab.active, .sport-tab:hover {
-      background: linear-gradient(90deg, var(--emas) 0%, var(--hijau) 100%);
+    .back-btn:hover, .back-btn:focus {
+      background: linear-gradient(90deg, var(--hijau) 0%, var(--emas) 100%);
       color: var(--putih);
       box-shadow: 0 0 18px var(--emas), 0 0 18px var(--hijau);
-      transform: scale(1.06);
+      transform: scale(1.05);
     }
     .liga-card {
       background: linear-gradient(135deg, rgba(17,34,17,0.85) 60%, rgba(255,215,0,0.13) 100%);
-      border-radius: 22px;
+      border-radius: 18px;
       box-shadow: 0 8px 32px 2px var(--emas), 0 0 16px 2px var(--hijau);
       border: var(--border-emas);
-      margin-bottom: var(--card-gap);
+      margin-bottom: 1.2rem;
       min-width: 260px;
       max-width: 100%;
       display: flex;
       flex-direction: column;
-      transition: box-shadow 0.5s cubic-bezier(.77,0,.18,1), transform 0.5s cubic-bezier(.77,0,.18,1);
+      transition: box-shadow 0.5s var(--transisi), transform 0.5s var(--transisi);
       overflow: hidden;
       backdrop-filter: blur(var(--blur));
       -webkit-backdrop-filter: blur(var(--blur));
@@ -116,8 +208,8 @@
       transform: translateY(-4px) scale(1.025);
     }
     .liga-header {
-      padding: 1.2rem 1rem;
-      font-size: 1.25rem;
+      padding: 1.1rem 1rem;
+      font-size: 1.15rem;
       font-weight: 900;
       cursor: pointer;
       background: linear-gradient(90deg, var(--hijau) 0%, var(--emas) 100%);
@@ -134,7 +226,7 @@
     .liga-header .arrow {
       font-size: 1.2em;
       margin-left: 0.5em;
-      transition: transform 0.5s cubic-bezier(.77,0,.18,1);
+      transition: transform 0.5s var(--transisi);
     }
     .liga-card.expanded .liga-header .arrow {
       transform: rotate(90deg);
@@ -142,7 +234,7 @@
     .liga-content {
       max-height: 0;
       overflow: hidden;
-      transition: max-height 0.7s cubic-bezier(.77,0,.18,1), padding 0.5s cubic-bezier(.77,0,.18,1);
+      transition: max-height 0.7s var(--transisi), padding 0.5s var(--transisi);
       background: rgba(17, 34, 17, 0.85);
       padding: 0 1rem;
     }
@@ -205,7 +297,7 @@
       font-weight: 900;
       cursor: pointer;
       box-shadow: 0 0 10px var(--hijau), 0 0 14px var(--emas);
-      transition: transform 0.18s cubic-bezier(.77,0,.18,1), box-shadow 0.18s cubic-bezier(.77,0,.18,1), background 0.2s cubic-bezier(.77,0,.18,1);
+      transition: transform 0.18s var(--transisi), box-shadow 0.18s var(--transisi), background 0.2s var(--transisi);
       outline: none;
       letter-spacing: 1px;
       display: inline-block;
@@ -217,7 +309,6 @@
       box-shadow: 0 0 18px var(--emas), 0 0 18px var(--hijau);
       color: var(--putih);
     }
-    /* Loader Spinner */
     .loader {
       display: flex;
       justify-content: center;
@@ -247,29 +338,44 @@
       letter-spacing: 1px;
     }
     @media (max-width: 900px) {
-      .container { max-width: 98vw; }
-      .liga-header { font-size: 1.1rem; }
-      .sport-tab { font-size: 1rem; padding: 0.6rem 1.2rem; }
+      .center-box, .jadwal-content { max-width: 98vw; }
+      .main-title, .jadwal-header { font-size: 1.5rem; }
+      .sport-btn { font-size: 1rem; padding: 0.8rem 0; }
+      .back-btn { font-size: 1rem; padding: 0.6rem 1.2rem; }
     }
     @media (max-width: 600px) {
-      .header { font-size: 1.5rem; }
-      .container { padding: 0.3rem; }
+      .center-box, .jadwal-content { padding: 1rem 0.3rem; border-radius: 14px; }
+      .main-title, .jadwal-header { font-size: 1.1rem; }
+      .sport-btn { font-size: 0.95rem; padding: 0.7rem 0; }
+      .back-btn { font-size: 0.95rem; padding: 0.5rem 1rem; }
       .liga-header { font-size: 1rem; padding: 0.8rem 0.5rem; }
       th, td { font-size: 0.85rem; padding: 0.5rem 0.2rem; }
       .bet-btn { padding: 0.5rem 1rem; font-size: 0.9rem; }
       .jadwal-table { min-width: 260px; }
       .liga-card { border-radius: 14px; }
-      .sport-tabs { gap: 0.5rem; }
     }
   </style>
 </head>
 <body>
-  <div class="header">JADWAL SPORT SLOTGOKIL</div>
-  <div class="container">
-    <div class="sport-tabs" id="sport-tabs"></div>
-    <div id="jadwal-container">
-      <div class="loader" id="loader">
-        <div class="spinner"></div>
+  <div id="main-menu" class="center-box">
+    <div class="main-title">JADWAL SPORT SLOTGOKIL</div>
+    <div class="sport-btns">
+      <button class="sport-btn" data-sport="bola">Bola</button>
+      <button class="sport-btn" data-sport="basket">Basket</button>
+      <button class="sport-btn" data-sport="tennis">Tennis</button>
+      <button class="sport-btn" data-sport="voli">Voli</button>
+      <button class="sport-btn" data-sport="badminton">Badminton</button>
+      <button class="sport-btn" data-sport="baseball">Baseball</button>
+    </div>
+  </div>
+  <div id="jadwal-screen" class="jadwal-screen">
+    <div class="jadwal-content">
+      <button class="back-btn" id="back-btn">&#8592; Kembali</button>
+      <div class="jadwal-header" id="jadwal-header"></div>
+      <div id="jadwal-container">
+        <div class="loader" id="loader">
+          <div class="spinner"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -277,50 +383,59 @@
     // Ganti URL_API dengan URL Google Apps Script Web App Anda
     const URL_API = 'https://script.google.com/macros/s/AKfycbxDDkfozREVjv6EahkZTI0sN-VG1QkOeEot3d36k7wDzBn4in5qV31iG61ykrpFdkhZeQ/exec';
 
-    const SPORTS = [
-      { key: 'bola', label: 'Bola' },
-      { key: 'basket', label: 'Basket' },
-      { key: 'tennis', label: 'Tennis' },
-      { key: 'voli', label: 'Voli' },
-      { key: 'badminton', label: 'Badminton' },
-      { key: 'baseball', label: 'Baseball' }
-    ];
-
-    let currentSport = SPORTS[0].key;
-
     function escapeHTML(str) {
       return String(str).replace(/[&<>"']/g, function(m) {
         return ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'})[m];
       });
     }
 
-    function renderTabs() {
-      const tabs = document.getElementById('sport-tabs');
-      tabs.innerHTML = '';
-      SPORTS.forEach(sport => {
-        const btn = document.createElement('button');
-        btn.className = 'sport-tab' + (sport.key === currentSport ? ' active' : '');
-        btn.textContent = sport.label;
-        btn.onclick = () => {
-          if (currentSport !== sport.key) {
-            currentSport = sport.key;
-            renderTabs();
-            fetchJadwal();
-          }
-        };
-        tabs.appendChild(btn);
-      });
-    }
+    const mainMenu = document.getElementById('main-menu');
+    const jadwalScreen = document.getElementById('jadwal-screen');
+    const jadwalHeader = document.getElementById('jadwal-header');
+    const jadwalContainer = document.getElementById('jadwal-container');
+    const loader = document.getElementById('loader');
+    const backBtn = document.getElementById('back-btn');
 
-    async function fetchJadwal() {
-      const loader = document.getElementById('loader');
-      const jadwalContainer = document.getElementById('jadwal-container');
+    let currentSport = null;
+
+    document.querySelectorAll('.sport-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        currentSport = btn.getAttribute('data-sport');
+        showJadwalScreen();
+        fetchJadwal();
+      });
+    });
+
+    backBtn.addEventListener('click', () => {
+      jadwalScreen.classList.remove('active');
+      mainMenu.style.display = 'flex';
+      setTimeout(() => {
+        jadwalScreen.style.opacity = 0;
+        jadwalScreen.style.transform = 'translateX(100vw)';
+      }, 400);
+    });
+
+    function showJadwalScreen() {
+      mainMenu.style.display = 'none';
+      jadwalScreen.classList.add('active');
+      jadwalScreen.style.opacity = 1;
+      jadwalScreen.style.transform = 'translateX(0)';
+      jadwalHeader.textContent = 'Jadwal ' + capitalize(currentSport);
       jadwalContainer.innerHTML = '';
       jadwalContainer.appendChild(loader);
       loader.style.display = 'flex';
+    }
+
+    function capitalize(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    async function fetchJadwal() {
+      loader.style.display = 'flex';
+      jadwalContainer.innerHTML = '';
+      jadwalContainer.appendChild(loader);
       try {
-        // Kirim parameter olahraga ke API
-        const res = await fetch(URL_API + '?olahraga=' + encodeURIComponent(currentSport));
+        const res = await fetch(URL_API + '?sport=' + encodeURIComponent(currentSport));
         if (!res.ok) throw new Error('Gagal fetch');
         const jadwal = await res.json();
 
@@ -340,9 +455,7 @@
     }
 
     function renderJadwal(ligaMap) {
-      const jadwalContainer = document.getElementById('jadwal-container');
       jadwalContainer.innerHTML = '';
-
       Object.entries(ligaMap).forEach(([liga, matches], idx) => {
         const card = document.createElement('div');
         card.className = 'liga-card';
@@ -399,9 +512,6 @@
         if (idx === 0) card.classList.add('expanded');
       });
     }
-
-    renderTabs();
-    fetchJadwal();
   </script>
 </body>
 </html>

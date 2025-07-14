@@ -38,12 +38,12 @@
         repeating-linear-gradient(90deg, rgba(255,255,255,0.09) 0px, rgba(255,255,255,0.09) 1.5px, transparent 2px, transparent 80px);
       opacity: 0.22;
     }
-    .center-box {
+    .main-menu {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      min-height: 80vh;
+      min-height: 90vh;
       background: rgba(17,34,17,0.7);
       border-radius: 24px;
       box-shadow: 0 0 32px var(--emas), 0 0 16px var(--hijau);
@@ -144,6 +144,8 @@
       flex-direction: column;
       gap: 1.5rem;
       animation: slideIn 0.7s var(--transisi);
+      overflow-y: auto;
+      max-height: 90vh;
     }
     @keyframes slideIn {
       from { opacity: 0; transform: translateX(80vw);}
@@ -178,8 +180,10 @@
       transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s var(--transisi);
       outline: none;
       letter-spacing: 1px;
-      position: relative;
-      align-self: flex-start;
+      position: absolute;
+      left: 1rem;
+      top: 1rem;
+      z-index: 12;
     }
     .back-btn:hover, .back-btn:focus {
       background: linear-gradient(90deg, var(--hijau) 0%, var(--emas) 100%);
@@ -338,13 +342,13 @@
       letter-spacing: 1px;
     }
     @media (max-width: 900px) {
-      .center-box, .jadwal-content { max-width: 98vw; }
+      .main-menu, .jadwal-content { max-width: 98vw; }
       .main-title, .jadwal-header { font-size: 1.5rem; }
       .sport-btn { font-size: 1rem; padding: 0.8rem 0; }
       .back-btn { font-size: 1rem; padding: 0.6rem 1.2rem; }
     }
     @media (max-width: 600px) {
-      .center-box, .jadwal-content { padding: 1rem 0.3rem; border-radius: 14px; }
+      .main-menu, .jadwal-content { padding: 1rem 0.3rem; border-radius: 14px; }
       .main-title, .jadwal-header { font-size: 1.1rem; }
       .sport-btn { font-size: 0.95rem; padding: 0.7rem 0; }
       .back-btn { font-size: 0.95rem; padding: 0.5rem 1rem; }
@@ -357,7 +361,7 @@
   </style>
 </head>
 <body>
-  <div id="main-menu" class="center-box">
+  <div id="main-menu" class="main-menu">
     <div class="main-title">JADWAL SPORT SLOTGOKIL</div>
     <div class="sport-btns">
       <button class="sport-btn" data-sport="bola">Bola</button>
@@ -381,7 +385,7 @@
   </div>
   <script>
     // Ganti URL_API dengan URL Google Apps Script Web App Anda
-    const URL_API = 'https://script.google.com/macros/s/AKfycbxDDkfozREVjv6EahkZTI0sN-VG1QkOeEot3d36k7wDzBn4in5qV31iG61ykrpFdkhZeQ/exec';
+    const URL_API = 'https://script.google.com/macros/s/AKfycbwudNyzoXPmcUooDjzlNwe0a6aKbwebpEPwaY2Wt_jd3RJDPPSXztuqstA3gXKqhGVogg/exec';
 
     function escapeHTML(str) {
       return String(str).replace(/[&<>"']/g, function(m) {
@@ -408,8 +412,8 @@
 
     backBtn.addEventListener('click', () => {
       jadwalScreen.classList.remove('active');
-      mainMenu.style.display = 'flex';
       setTimeout(() => {
+        mainMenu.style.display = 'flex';
         jadwalScreen.style.opacity = 0;
         jadwalScreen.style.transform = 'translateX(100vw)';
       }, 400);

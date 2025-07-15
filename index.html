@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Jadwal Olahraga - Flashscore Emoji Style</title>
+  <title>Jadwal Olahraga - Flashscore Emoji Flag Style</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     :root {
@@ -301,33 +301,25 @@
       { key: 'baseball', label: 'Baseball', emoji: '⚾' }
     ];
 
-    // Mapping emoji icon liga
+    // Mapping emoji bendera negara/turnamen
     function getLigaIcon(liga) {
-      // Turnamen global & UEFA
-      if (liga.includes("Champions League")) return "🏆";
-      if (liga.includes("Europa League")) return "🏆";
-      if (liga.includes("Conference League")) return "🏆";
-      if (liga.includes("Australian Open")) return "🎾";
-      if (liga.includes("French Open")) return "🎾";
-      if (liga.includes("US Open")) return "🎾";
-      if (liga.includes("Wimbledon")) return "🎾";
-      if (liga.includes("Indonesia Open")) return "🏸";
-
-      // Sepak bola
-      if (liga.includes("Premier League") || liga.includes("LaLiga") || liga.includes("Serie A") || liga.includes("Bundesliga") || liga.includes("Ligue 1") || liga.includes("Brasileiro") || liga.includes("Copa") || liga.includes("League") || liga.includes("Liga") || liga.includes("Football")) return "⚽";
-
-      // Basket
-      if (liga.includes("NBA") || liga.includes("Basket")) return "🏀";
-
-      // Voli
-      if (liga.includes("Voli")) return "🏐";
-
-      // Badminton
-      if (liga.includes("Badminton") || liga.includes("All England")) return "🏸";
-
-      // Baseball
-      if (liga.includes("Baseball")) return "⚾";
-
+      if (liga.includes("Japan") || liga.includes("J-League")) return "🇯🇵";
+      if (liga.includes("South Korea") || liga.includes("K League") || liga.includes("KBO")) return "🇰🇷";
+      if (liga.includes("Italy") || liga.includes("Serie A") || liga.includes("Serie A1")) return "🇮🇹";
+      if (liga.includes("Spain") || liga.includes("LaLiga")) return "🇪🇸";
+      if (liga.includes("France") || liga.includes("Ligue 1") || liga.includes("French Open")) return "🇫🇷";
+      if (liga.includes("Germany") || liga.includes("Bundesliga")) return "🇩🇪";
+      if (liga.includes("Brazil") || liga.includes("Brasileiro")) return "🇧🇷";
+      if (liga.includes("Argentina")) return "🇦🇷";
+      if (liga.includes("Mexico") || liga.includes("LMB")) return "🇲🇽";
+      if (liga.includes("Taiwan") || liga.includes("CPBL")) return "🇹🇼";
+      if (liga.includes("USA") || liga.includes("US Open") || liga.includes("MLB") || liga.includes("NBA")) return "🇺🇸";
+      if (liga.includes("England") || liga.includes("Premier League") || liga.includes("Wimbledon")) return "🏴";
+      if (liga.includes("ASEAN") || liga.includes("Indonesia") || liga.includes("Thailand") || liga.includes("Malaysia") || liga.includes("Vietnam")) return "🇮🇩";
+      if (liga.includes("Australia") || liga.includes("A-League") || liga.includes("Australian Open")) return "🇦🇺";
+      if (liga.includes("China")) return "🇨🇳";
+      // Fallback (turnamen global, UEFA, Club Friendly, dst)
+      if (liga.includes("Champions League") || liga.includes("Europa League") || liga.includes("Conference League") || liga.includes("World") || liga.includes("Club Friendly")) return "🌍";
       // Default
       return "🏆";
     }

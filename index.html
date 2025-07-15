@@ -1,502 +1,422 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>JADWAL SPORT SLOTGOKIL</title>
+  <title>Jadwal Olahraga - Flashscore Emoji Style</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Orbitron Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --hijau: #00ff88;
-      --emas: #ffd700;
-      --gelap: #102c1c;
-      --gelap2: #181818;
-      --putih: #fff;
-      --border-emas: 2px solid var(--emas);
-      --blur: 14px;
-      --transisi: cubic-bezier(.77,0,.18,1);
+      --bg-main: #f7f7f7;
+      --bg-card: #fff;
+      --bg-accent: #f1f3f6;
+      --bg-hover: #e3eaf3;
+      --border: #d1d5db;
+      --text-main: #222;
+      --text-muted: #666;
+      --accent: #1976d2;
+      --bet-bg: #e3f0ff;
+      --bet-hover: #bbdefb;
+      --tab-bg: #f1f3f6;
+      --tab-active: #fff;
+      --tab-border: #d1d5db;
     }
-    html, body {
-      height: 100%;
+    body {
+      background: var(--bg-main);
+      color: var(--text-main);
+      font-family: 'Segoe UI', Arial, Roboto, sans-serif;
       margin: 0;
       padding: 0;
-      font-family: 'Orbitron', Arial, sans-serif;
-      background: linear-gradient(135deg, var(--gelap) 0%, var(--gelap2) 100%);
-      color: var(--putih);
-      position: relative;
-      overflow-x: hidden;
-    }
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-      background:
-        repeating-linear-gradient(0deg, rgba(255,255,255,0.09) 0px, rgba(255,255,255,0.09) 1.5px, transparent 2px, transparent 80px),
-        repeating-linear-gradient(90deg, rgba(255,255,255,0.09) 0px, rgba(255,255,255,0.09) 1.5px, transparent 2px, transparent 80px);
-      opacity: 0.22;
-    }
-    .main-menu {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 90vh;
-      background: rgba(17,34,17,0.7);
-      border-radius: 24px;
-      box-shadow: 0 0 32px var(--emas), 0 0 16px var(--hijau);
-      padding: 2.5rem 1.5rem 2rem 1.5rem;
-      max-width: 400px;
-      margin: 6vh auto 0 auto;
-      position: relative;
-      z-index: 2;
-      backdrop-filter: blur(var(--blur));
-      -webkit-backdrop-filter: blur(var(--blur));
-      transition: box-shadow 0.5s var(--transisi);
-    }
-    .main-title {
-      font-size: 2.3rem;
-      font-family: 'Orbitron', Arial, sans-serif;
-      font-weight: 900;
-      letter-spacing: 2px;
-      margin-bottom: 2.2rem;
-      background: linear-gradient(90deg, var(--hijau), var(--emas) 80%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      color: transparent;
-      filter: drop-shadow(0 0 16px var(--hijau)) drop-shadow(0 0 32px var(--emas));
-      text-shadow: 0 2px 0 #222;
-      border-radius: 0 0 80px 80px/0 0 60px 60px;
-      position: relative;
-      z-index: 2;
-      text-align: center;
-      transition: filter 0.5s var(--transisi);
-    }
-    .sport-btns {
-      display: flex;
-      flex-direction: column;
-      gap: 1.2rem;
-      width: 100%;
-      align-items: center;
-      margin-top: 1rem;
-    }
-    .sport-btn {
-      width: 100%;
-      max-width: 320px;
-      font-size: 1.2rem;
-      font-family: 'Orbitron', Arial, sans-serif;
-      font-weight: 900;
-      background: linear-gradient(90deg, var(--hijau) 0%, var(--emas) 100%);
-      color: #222;
-      border: none;
-      border-radius: 40px;
-      padding: 1rem 0;
-      cursor: pointer;
-      box-shadow: 0 0 16px var(--hijau), 0 0 24px var(--emas);
-      margin-bottom: 0.2rem;
-      transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s var(--transisi);
-      outline: none;
-      letter-spacing: 1px;
-      position: relative;
-      text-shadow: 0 0 8px var(--emas);
-    }
-    .sport-btn:hover, .sport-btn:focus {
-      background: linear-gradient(90deg, var(--emas) 0%, var(--hijau) 100%);
-      color: var(--putih);
-      box-shadow: 0 0 32px var(--emas), 0 0 32px var(--hijau);
-      transform: scale(1.05);
-    }
-    .jadwal-screen {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: transparent;
-      z-index: 10;
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
-      pointer-events: none;
-      opacity: 0;
-      transform: translateX(100vw);
-      transition: opacity 0.5s var(--transisi), transform 0.7s var(--transisi);
-    }
-    .jadwal-screen.active {
-      pointer-events: auto;
-      opacity: 1;
-      transform: translateX(0);
-    }
-    .jadwal-content {
-      width: 100%;
-      max-width: 700px;
-      margin: 5vh auto 0 auto;
-      background: rgba(17,34,17,0.7);
-      border-radius: 24px;
-      box-shadow: 0 0 32px var(--emas), 0 0 16px var(--hijau);
-      padding: 2rem 1rem 2rem 1rem;
-      position: relative;
-      z-index: 11;
-      min-height: 60vh;
-      backdrop-filter: blur(var(--blur));
-      -webkit-backdrop-filter: blur(var(--blur));
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-      animation: slideIn 0.7s var(--transisi);
-      overflow-y: auto;
-      max-height: 90vh;
-    }
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateX(80vw);}
-      to { opacity: 1; transform: translateX(0);}
-    }
-    .jadwal-header {
-      font-size: 2rem;
-      font-family: 'Orbitron', Arial, sans-serif;
-      font-weight: 900;
-      letter-spacing: 2px;
-      background: linear-gradient(90deg, var(--hijau), var(--emas) 80%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      color: transparent;
-      filter: drop-shadow(0 0 12px var(--hijau)) drop-shadow(0 0 24px var(--emas));
-      text-align: center;
-      margin-bottom: 0.5rem;
-    }
-    .back-btn {
-      background: linear-gradient(90deg, var(--emas) 0%, var(--hijau) 100%);
-      color: #222;
-      font-family: 'Orbitron', Arial, sans-serif;
-      font-weight: 900;
-      font-size: 1.1rem;
-      border: none;
-      border-radius: 30px;
-      padding: 0.7rem 2rem;
-      cursor: pointer;
-      box-shadow: 0 0 10px var(--hijau), 0 0 14px var(--emas);
-      margin-bottom: 1.2rem;
-      transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s var(--transisi);
-      outline: none;
-      letter-spacing: 1px;
-      position: absolute;
-      left: 1rem;
-      top: 1rem;
-      z-index: 12;
-    }
-    .back-btn:hover, .back-btn:focus {
-      background: linear-gradient(90deg, var(--hijau) 0%, var(--emas) 100%);
-      color: var(--putih);
-      box-shadow: 0 0 18px var(--emas), 0 0 18px var(--hijau);
-      transform: scale(1.05);
-    }
-    .liga-card {
-      background: linear-gradient(135deg, rgba(17,34,17,0.85) 60%, rgba(255,215,0,0.13) 100%);
-      border-radius: 18px;
-      box-shadow: 0 8px 32px 2px var(--emas), 0 0 16px 2px var(--hijau);
-      border: var(--border-emas);
-      margin-bottom: 1.2rem;
-      min-width: 260px;
-      max-width: 100%;
-      display: flex;
-      flex-direction: column;
-      transition: box-shadow 0.5s var(--transisi), transform 0.5s var(--transisi);
-      overflow: hidden;
-      backdrop-filter: blur(var(--blur));
-      -webkit-backdrop-filter: blur(var(--blur));
-      position: relative;
-    }
-    .liga-card:hover {
-      box-shadow: 0 16px 48px 4px var(--emas), 0 0 32px 4px var(--hijau);
-      transform: translateY(-4px) scale(1.025);
-    }
-    .liga-header {
-      padding: 1.1rem 1rem;
-      font-size: 1.15rem;
-      font-weight: 900;
-      cursor: pointer;
-      background: linear-gradient(90deg, var(--hijau) 0%, var(--emas) 100%);
-      color: #222;
-      border-bottom: var(--border-emas);
-      user-select: none;
+      min-height: 100vh;
       transition: background 0.3s, color 0.3s;
-      letter-spacing: 1px;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 8px 32px 8px;
+    }
+    .header-bar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      box-shadow: 0 2px 12px var(--hijau), 0 2px 16px var(--emas);
+      margin: 0;
+      padding: 18px 0 0 0;
     }
-    .liga-header .arrow {
+    .sports-tabs {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+      margin: 0;
+      flex: 1;
+    }
+    .sport-btn {
+      background: var(--tab-bg);
+      border: 1px solid var(--tab-border);
+      border-bottom: none;
+      border-radius: 7px 7px 0 0;
+      color: var(--text-main);
+      font-size: 1rem;
+      font-weight: 500;
+      padding: 8px 18px;
+      cursor: pointer;
+      outline: none;
+      transition: background 0.2s, color 0.2s;
+      min-width: 80px;
+      white-space: nowrap;
+    }
+    .sport-btn.active {
+      background: var(--tab-active);
+      color: var(--accent);
+      font-weight: 600;
+      border-bottom: 2px solid var(--accent);
+    }
+    .dark-toggle-btn {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      margin-left: 12px;
+      color: var(--text-muted);
+      transition: color 0.2s;
+    }
+    .dark-toggle-btn:hover {
+      color: var(--accent);
+    }
+    .accordion {
+      margin-bottom: 18px;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      background: var(--bg-card);
+      overflow: hidden;
+      transition: background 0.3s;
+    }
+    .accordion-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      padding: 14px 18px;
+      background: var(--bg-accent);
+      font-size: 1.08rem;
+      font-weight: 600;
+      border-bottom: 1px solid var(--border);
+      user-select: none;
+      transition: background 0.2s;
+    }
+    .accordion-header:hover, .accordion-header:active {
+      background: var(--bg-hover);
+    }
+    .league-icon {
+      font-size: 1.5rem;
+      margin-right: 10px;
+      flex-shrink: 0;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .accordion-title {
+      font-weight: bold;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .accordion-arrow {
       font-size: 1.2em;
-      margin-left: 0.5em;
-      transition: transform 0.5s var(--transisi);
+      transition: transform 0.3s;
+      margin-left: 10px;
+      color: var(--text-muted);
     }
-    .liga-card.expanded .liga-header .arrow {
+    .accordion.expanded .accordion-arrow {
       transform: rotate(90deg);
     }
-    .liga-content {
+    .accordion-content {
       max-height: 0;
       overflow: hidden;
-      transition: max-height 0.7s var(--transisi), padding 0.5s var(--transisi);
-      background: rgba(17, 34, 17, 0.85);
-      padding: 0 1rem;
+      transition: max-height 0.4s cubic-bezier(.4,0,.2,1), padding 0.3s;
+      background: var(--bg-card);
+      padding: 0 18px;
     }
-    .liga-card.expanded .liga-content {
-      max-height: 800px;
-      padding: 1.2rem 1rem 1.5rem 1rem;
+    .accordion.expanded .accordion-content {
+      padding: 14px 18px 18px 18px;
+      max-height: 1200px;
     }
-    .jadwal-table-wrap {
+    .league-table-wrap {
       width: 100%;
       overflow-x: auto;
-      margin: 0 auto;
-      border-radius: 12px;
-      background: rgba(0,0,0,0.03);
-      box-shadow: 0 0 8px var(--hijau), 0 0 16px var(--emas);
     }
-    .jadwal-table {
+    table.league-table {
       width: 100%;
       border-collapse: collapse;
-      background: rgba(17,34,17,0.7);
-      border-radius: 12px;
-      margin: 0 auto;
-      min-width: 320px;
+      background: var(--bg-card);
+      font-size: 0.98rem;
+      min-width: 420px;
     }
-    th, td {
-      padding: 0.8rem 0.5rem;
+    table.league-table th, table.league-table td {
+      padding: 8px 6px;
       text-align: center;
-      font-size: 1rem;
-      border-bottom: var(--border-emas);
-      transition: background 0.3s, color 0.3s;
+      border-bottom: 1px solid var(--border);
+      font-weight: 400;
+      color: var(--text-main);
     }
-    th {
-      background: linear-gradient(90deg, rgba(0,255,136,0.18), rgba(255,215,0,0.18));
-      color: var(--emas);
-      font-weight: 900;
-      border-top: var(--border-emas);
-      letter-spacing: 1px;
+    table.league-table th {
+      background: var(--bg-accent);
+      font-weight: 600;
+      color: var(--text-muted);
+      font-size: 0.97rem;
+      letter-spacing: 0.5px;
     }
-    tr {
-      background: rgba(17,34,17,0.6);
-      transition: background 0.3s, box-shadow 0.3s;
+    table.league-table tr {
+      background: var(--bg-card);
+      transition: background 0.2s;
     }
-    tr:hover {
-      background: linear-gradient(90deg, rgba(0,255,136,0.22), rgba(255,215,0,0.18));
-      color: var(--emas);
-      box-shadow: 0 0 8px var(--hijau), 0 0 8px var(--emas);
-    }
-    .vs {
-      color: var(--emas);
-      font-weight: 900;
-      font-size: 1.08em;
-      margin: 0 0.4em;
+    table.league-table tr:hover {
+      background: var(--bg-hover);
     }
     .bet-btn {
-      background: linear-gradient(90deg, var(--hijau) 0%, var(--emas) 100%);
-      color: #222;
-      padding: 0.6rem 1.5rem;
+      background: var(--bet-bg);
+      color: var(--accent);
       border: none;
-      border-radius: 40px;
-      font-size: 1rem;
-      font-weight: 900;
+      border-radius: 4px;
+      padding: 6px 16px;
+      font-size: 0.97rem;
+      font-weight: 700;
       cursor: pointer;
-      box-shadow: 0 0 10px var(--hijau), 0 0 14px var(--emas);
-      transition: transform 0.18s var(--transisi), box-shadow 0.18s var(--transisi), background 0.2s var(--transisi);
-      outline: none;
-      letter-spacing: 1px;
-      display: inline-block;
       text-decoration: none;
+      transition: background 0.2s, color 0.2s;
+      display: inline-block;
     }
-    .bet-btn:hover {
-      transform: scale(1.07);
-      background: linear-gradient(90deg, var(--emas) 0%, var(--hijau) 100%);
-      box-shadow: 0 0 18px var(--emas), 0 0 18px var(--hijau);
-      color: var(--putih);
-    }
-    .loader {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin: 4rem 0;
-    }
-    .spinner {
-      width: 60px;
-      height: 60px;
-      border: 7px solid #222;
-      border-top: 7px solid var(--hijau);
-      border-right: 7px solid var(--emas);
-      border-radius: 50%;
-      animation: spin 1.1s linear infinite;
-      box-shadow: 0 0 24px var(--hijau), 0 0 24px var(--emas);
-    }
-    @keyframes spin {
-      0% { transform: rotate(0deg);}
-      100% { transform: rotate(360deg);}
+    .bet-btn:hover, .bet-btn:focus {
+      background: var(--bet-hover);
+      color: var(--accent);
     }
     .error-msg {
-      color: var(--emas);
-      font-size: 1.2rem;
-      font-weight: 900;
+      color: #d32f2f;
+      background: #fff0f0;
+      border: 1px solid #f5c2c7;
+      border-radius: 6px;
+      padding: 18px;
       text-align: center;
-      margin: 3rem 0;
-      letter-spacing: 1px;
+      margin: 32px 0;
+      font-weight: 500;
     }
-    @media (max-width: 900px) {
-      .main-menu, .jadwal-content { max-width: 98vw; }
-      .main-title, .jadwal-header { font-size: 1.5rem; }
-      .sport-btn { font-size: 1rem; padding: 0.8rem 0; }
-      .back-btn { font-size: 1rem; padding: 0.6rem 1.2rem; }
+    .loader {
+      text-align: center;
+      color: var(--text-muted);
+      padding: 32px 0;
+      font-size: 1.1rem;
     }
-    @media (max-width: 600px) {
-      .main-menu, .jadwal-content { padding: 1rem 0.3rem; border-radius: 14px; }
-      .main-title, .jadwal-header { font-size: 1.1rem; }
-      .sport-btn { font-size: 0.95rem; padding: 0.7rem 0; }
-      .back-btn { font-size: 0.95rem; padding: 0.5rem 1rem; }
-      .liga-header { font-size: 1rem; padding: 0.8rem 0.5rem; }
-      th, td { font-size: 0.85rem; padding: 0.5rem 0.2rem; }
-      .bet-btn { padding: 0.5rem 1rem; font-size: 0.9rem; }
-      .jadwal-table { min-width: 260px; }
-      .liga-card { border-radius: 14px; }
+    /* Dark mode */
+    .dark-mode {
+      --bg-main: #181a20;
+      --bg-card: #23252b;
+      --bg-accent: #23252b;
+      --bg-hover: #222c36;
+      --border: #333a45;
+      --text-main: #fff;
+      --text-muted: #b0b0b0;
+      --accent: #90caf9;
+      --bet-bg: #263859;
+      --bet-hover: #1976d2;
+      --tab-bg: #23252b;
+      --tab-active: #181a20;
+      --tab-border: #333a45;
+    }
+    .dark-mode .error-msg {
+      background: #2d1a1a;
+      color: #ffb4b4;
+      border-color: #a33;
+    }
+    .dark-mode .bet-btn {
+      color: #90caf9;
+      background: #263859;
+    }
+    .dark-mode .bet-btn:hover, .dark-mode .bet-btn:focus {
+      background: #1976d2;
+      color: #fff;
+    }
+    @media (max-width: 700px) {
+      .container {
+        max-width: 100vw;
+        padding: 0 2px 24px 2px;
+      }
+      .sports-tabs {
+        font-size: 0.97rem;
+        gap: 4px;
+      }
+      .sport-btn {
+        padding: 7px 10px;
+        font-size: 0.97rem;
+        min-width: 60px;
+      }
+      .accordion-header {
+        font-size: 1rem;
+        padding: 11px 10px;
+      }
+      .accordion-content {
+        padding: 0 10px;
+      }
+      .accordion.expanded .accordion-content {
+        padding: 10px 10px 14px 10px;
+      }
+      table.league-table th, table.league-table td {
+        padding: 6px 2px;
+        font-size: 0.95rem;
+      }
+      .bet-btn {
+        padding: 5px 10px;
+        font-size: 0.95rem;
+      }
+    }
+    @media (max-width: 480px) {
+      table.league-table {
+        min-width: 320px;
+        font-size: 0.93rem;
+      }
+      .league-table-wrap {
+        padding: 0;
+      }
     }
   </style>
 </head>
 <body>
-  <div id="main-menu" class="main-menu">
-    <div class="main-title">JADWAL SPORT SLOTGOKIL</div>
-    <div class="sport-btns">
-      <button class="sport-btn" data-sport="bola">Bola</button>
-      <button class="sport-btn" data-sport="basket">Basket</button>
-      <button class="sport-btn" data-sport="tennis">Tennis</button>
-      <button class="sport-btn" data-sport="voli">Voli</button>
-      <button class="sport-btn" data-sport="badminton">Badminton</button>
-      <button class="sport-btn" data-sport="baseball">Baseball</button>
+  <div class="container">
+    <div class="header-bar">
+      <div class="sports-tabs" id="sports-tabs"></div>
+      <button class="dark-toggle-btn" id="dark-toggle" title="Toggle dark mode">🌙</button>
     </div>
-  </div>
-  <div id="jadwal-screen" class="jadwal-screen">
-    <div class="jadwal-content">
-      <button class="back-btn" id="back-btn">&#8592; Kembali</button>
-      <div class="jadwal-header" id="jadwal-header"></div>
-      <div id="jadwal-container">
-        <div class="loader" id="loader">
-          <div class="spinner"></div>
-        </div>
-      </div>
-    </div>
+    <div id="main-content"></div>
   </div>
   <script>
-    // Ganti URL_API dengan URL Google Apps Script Web App Anda
+    // Ganti URL_API sesuai endpoint Anda
     const URL_API = 'https://script.google.com/macros/s/AKfycbzoIifvsbqAcfiVvBhNdYsUqSGpu2AwpD2CntfeTseVk8rKatfOJ9pXCH0e4Ox1U1hU-A/exec';
 
-    function escapeHTML(str) {
-      return String(str).replace(/[&<>"']/g, function(m) {
-        return ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'})[m];
+    // Kategori olahraga + emoji
+    const SPORTS = [
+      { key: 'bola', label: 'Bola', emoji: '⚽' },
+      { key: 'basket', label: 'Basket', emoji: '🏀' },
+      { key: 'tennis', label: 'Tennis', emoji: '🎾' },
+      { key: 'voli', label: 'Voli', emoji: '🏐' },
+      { key: 'badminton', label: 'Badminton', emoji: '🏸' },
+      { key: 'baseball', label: 'Baseball', emoji: '⚾' }
+    ];
+
+    // Mapping emoji icon liga
+    function getLigaIcon(liga) {
+      // Turnamen global & UEFA
+      if (liga.includes("Champions League")) return "🏆";
+      if (liga.includes("Europa League")) return "🏆";
+      if (liga.includes("Conference League")) return "🏆";
+      if (liga.includes("Australian Open")) return "🎾";
+      if (liga.includes("French Open")) return "🎾";
+      if (liga.includes("US Open")) return "🎾";
+      if (liga.includes("Wimbledon")) return "🎾";
+      if (liga.includes("Indonesia Open")) return "🏸";
+
+      // Sepak bola
+      if (liga.includes("Premier League") || liga.includes("LaLiga") || liga.includes("Serie A") || liga.includes("Bundesliga") || liga.includes("Ligue 1") || liga.includes("Brasileiro") || liga.includes("Copa") || liga.includes("League") || liga.includes("Liga") || liga.includes("Football")) return "⚽";
+
+      // Basket
+      if (liga.includes("NBA") || liga.includes("Basket")) return "🏀";
+
+      // Voli
+      if (liga.includes("Voli")) return "🏐";
+
+      // Badminton
+      if (liga.includes("Badminton") || liga.includes("All England")) return "🏸";
+
+      // Baseball
+      if (liga.includes("Baseball")) return "⚾";
+
+      // Default
+      return "🏆";
+    }
+
+    // Render tabs kategori olahraga
+    function renderSportsTabs(activeSport) {
+      const tabs = document.getElementById('sports-tabs');
+      tabs.innerHTML = '';
+      SPORTS.forEach(sport => {
+        const btn = document.createElement('button');
+        btn.className = 'sport-btn' + (sport.key === activeSport ? ' active' : '');
+        btn.textContent = sport.emoji + ' ' + sport.label;
+        btn.onclick = () => {
+          if (window.currentSport !== sport.key) {
+            window.currentSport = sport.key;
+            renderSportsTabs(sport.key);
+            fetchAndRenderLeagues(sport.key);
+          }
+        };
+        tabs.appendChild(btn);
       });
     }
 
-    const mainMenu = document.getElementById('main-menu');
-    const jadwalScreen = document.getElementById('jadwal-screen');
-    const jadwalHeader = document.getElementById('jadwal-header');
-    const jadwalContainer = document.getElementById('jadwal-container');
-    const loader = document.getElementById('loader');
-    const backBtn = document.getElementById('back-btn');
-
-    let currentSport = null;
-
-    document.querySelectorAll('.sport-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        currentSport = btn.getAttribute('data-sport');
-        showJadwalScreen();
-        fetchJadwal();
-      });
-    });
-
-    backBtn.addEventListener('click', () => {
-      jadwalScreen.classList.remove('active');
-      setTimeout(() => {
-        mainMenu.style.display = 'flex';
-        jadwalScreen.style.opacity = 0;
-        jadwalScreen.style.transform = 'translateX(100vw)';
-      }, 400);
-    });
-
-    function showJadwalScreen() {
-      mainMenu.style.display = 'none';
-      jadwalScreen.classList.add('active');
-      jadwalScreen.style.opacity = 1;
-      jadwalScreen.style.transform = 'translateX(0)';
-      jadwalHeader.textContent = 'Jadwal ' + capitalize(currentSport);
-      jadwalContainer.innerHTML = '';
-      jadwalContainer.appendChild(loader);
-      loader.style.display = 'flex';
+    // Loader
+    function showLoader() {
+      document.getElementById('main-content').innerHTML =
+        '<div class="loader">Memuat jadwal...</div>';
     }
 
-    function capitalize(str) {
-      return str.charAt(0).toUpperCase() + str.slice(1);
+    // Error
+    function showError(msg) {
+      document.getElementById('main-content').innerHTML =
+        `<div class="error-msg">${msg}</div>`;
     }
 
-    async function fetchJadwal() {
-      loader.style.display = 'flex';
-      jadwalContainer.innerHTML = '';
-      jadwalContainer.appendChild(loader);
-      try {
-        const res = await fetch(URL_API + '?sport=' + encodeURIComponent(currentSport));
-        if (!res.ok) throw new Error('Gagal fetch');
-        const jadwal = await res.json();
-
-        // Group by liga
-        const ligaMap = {};
-        jadwal.forEach(j => {
-          if (!j.liga || !j.tanggal || !j.jam || !j.tima || !j.timb || !j.linkbet) return;
-          if (!ligaMap[j.liga]) ligaMap[j.liga] = [];
-          ligaMap[j.liga].push(j);
-        });
-
-        renderJadwal(ligaMap);
-      } catch (e) {
-        loader.style.display = 'none';
-        jadwalContainer.innerHTML = '<div class="error-msg">Gagal mengambil data jadwal.<br>Silakan refresh.</div>';
+    // Render liga dan pertandingan
+    function renderLeagues(leagues) {
+      const main = document.getElementById('main-content');
+      main.innerHTML = '';
+      if (!leagues || Object.keys(leagues).length === 0) {
+        main.innerHTML = '<div class="error-msg">Tidak ada jadwal tersedia.</div>';
+        return;
       }
-    }
+      Object.entries(leagues).forEach(([league, matches], idx) => {
+        // Accordion
+        const accordion = document.createElement('div');
+        accordion.className = 'accordion' + (idx === 0 ? ' expanded' : '');
 
-    function renderJadwal(ligaMap) {
-      jadwalContainer.innerHTML = '';
-      Object.entries(ligaMap).forEach(([liga, matches], idx) => {
-        const card = document.createElement('div');
-        card.className = 'liga-card';
-
+        // Header
         const header = document.createElement('div');
-        header.className = 'liga-header';
-        header.innerHTML = `<span>${escapeHTML(liga)}</span><span class="arrow">&#9654;</span>`;
+        header.className = 'accordion-header';
+        header.innerHTML = `
+          <span class="accordion-title">
+            <span class="league-icon">${getLigaIcon(league)}</span>
+            ${escapeHTML(league)}
+          </span>
+          <span class="accordion-arrow">&#9654;</span>`;
+        header.onclick = () => {
+          accordion.classList.toggle('expanded');
+        };
 
+        // Content
         const content = document.createElement('div');
-        content.className = 'liga-content';
+        content.className = 'accordion-content';
 
+        // Table
         const tableWrap = document.createElement('div');
-        tableWrap.className = 'jadwal-table-wrap';
-
+        tableWrap.className = 'league-table-wrap';
         const table = document.createElement('table');
-        table.className = 'jadwal-table';
+        table.className = 'league-table';
         table.innerHTML = `
           <thead>
             <tr>
               <th>Tanggal</th>
               <th>Jam</th>
-              <th>Pertandingan</th>
+              <th>Home</th>
+              <th>Away</th>
               <th>BET</th>
             </tr>
           </thead>
           <tbody>
             ${matches.map(m => `
               <tr>
-                <td>${escapeHTML(m.tanggal)}</td>
-                <td>${escapeHTML(m.jam)}</td>
+                <td>${escapeHTML(m.tanggal || '')}</td>
+                <td>${escapeHTML(m.jam || '')}</td>
+                <td>${escapeHTML(m.home || m.tima || '')}</td>
+                <td>${escapeHTML(m.away || m.timb || '')}</td>
                 <td>
-                  ${escapeHTML(m.tima)}
-                  <span class="vs">vs</span>
-                  ${escapeHTML(m.timb)}
-                </td>
-                <td>
-                  <a class="bet-btn" href="${m.linkbet}" target="_blank" rel="noopener">BET</a>
+                  <a class="bet-btn" href="${m.linkbet || '#'}" target="_blank" rel="noopener">BET</a>
                 </td>
               </tr>
             `).join('')}
@@ -505,17 +425,67 @@
         tableWrap.appendChild(table);
         content.appendChild(tableWrap);
 
-        header.addEventListener('click', () => {
-          card.classList.toggle('expanded');
-        });
-
-        card.appendChild(header);
-        card.appendChild(content);
-        jadwalContainer.appendChild(card);
-
-        if (idx === 0) card.classList.add('expanded');
+        accordion.appendChild(header);
+        accordion.appendChild(content);
+        main.appendChild(accordion);
       });
     }
+
+    // Escape HTML for safety
+    function escapeHTML(str) {
+      return String(str).replace(/[&<>"']/g, function(m) {
+        return ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'})[m];
+      });
+    }
+
+    // Fetch data dari API dan group by liga
+    async function fetchAndRenderLeagues(sport) {
+      showLoader();
+      try {
+        const res = await fetch(URL_API + '?sport=' + encodeURIComponent(sport));
+        if (!res.ok) throw new Error('Gagal fetch');
+        const jadwal = await res.json();
+
+        // Group by liga
+        const ligaMap = {};
+        jadwal.forEach(j => {
+          if (!j.liga || !j.tanggal || !j.jam || !(j.home || j.tima) || !(j.away || j.timb) || !j.linkbet) return;
+          if (!ligaMap[j.liga]) ligaMap[j.liga] = [];
+          ligaMap[j.liga].push(j);
+        });
+
+        // Sort jadwal per liga by tanggal & jam
+        Object.values(ligaMap).forEach(arr => {
+          arr.sort((a, b) => {
+            // Format: YYYY-MM-DD or DD/MM/YYYY or "16 Juli 2025"
+            let tglA = a.tanggal.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1');
+            let tglB = b.tanggal.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1');
+            let dateA = new Date(tglA + ' ' + a.jam);
+            let dateB = new Date(tglB + ' ' + b.jam);
+            return dateA - dateB;
+          });
+        });
+
+        renderLeagues(ligaMap);
+      } catch (e) {
+        showError('Gagal mengambil data, silakan refresh.');
+      }
+    }
+
+    // Dark mode toggle
+    const darkToggleBtn = document.getElementById('dark-toggle');
+    darkToggleBtn.onclick = function() {
+      document.body.classList.toggle('dark-mode');
+      darkToggleBtn.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+    };
+
+    // Inisialisasi
+    window.currentSport = SPORTS[0].key;
+    renderSportsTabs(window.currentSport);
+    fetchAndRenderLeagues(window.currentSport);
+
+    // Touch support for accordion (optional, for mobile)
+    document.addEventListener('touchstart', function(){}, {passive:true});
   </script>
 </body>
 </html>

@@ -6,19 +6,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     :root {
-      --accent: #1976d2;
-      --accent-dark: #135ba1;
-      --bg-main: #f7f7f7;
+      --bg-main: #fff;
       --bg-card: #fff;
       --bg-accent: #f1f3f6;
       --bg-hover: #e3eaf3;
       --border: #d1d5db;
       --text-main: #222;
       --text-muted: #666;
+      --accent: #1976d2;
+      --accent-dark: #135ba1;
+      --bet-bg: #e3f0ff;
+      --bet-hover: #bbdefb;
       --tab-bg: #f1f3f6;
       --tab-active: #fff;
       --tab-border: #d1d5db;
       --radius: 14px;
+      --shadow: 0 2px 16px rgba(25, 118, 210, 0.07);
+      --transition: cubic-bezier(.77,0,.18,1);
     }
     body {
       background: var(--bg-main);
@@ -34,15 +38,15 @@
       position: fixed;
       z-index: 9999;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: var(--bg-main);
+      background: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
       min-height: 100vh;
-      transition: opacity 0.5s;
+      transition: opacity 0.5s var(--transition);
     }
     .welcome-card {
-      background: var(--bg-card);
+      background: #fff;
       border-radius: 22px;
       box-shadow: 0 6px 32px rgba(25, 118, 210, 0.10), 0 1.5px 8px rgba(0,0,0,0.08);
       padding: 38px 32px 32px 32px;
@@ -51,7 +55,7 @@
       align-items: center;
       min-width: 320px;
       max-width: 94vw;
-      animation: fadeIn 0.7s cubic-bezier(.77,0,.18,1);
+      animation: fadeIn 0.7s var(--transition);
     }
     .welcome-logo {
       width: 180px;
@@ -92,7 +96,7 @@
       from { opacity: 0;}
       to { opacity: 1;}
     }
-    /* Jadwal Sport Layout */
+    /* Jadwal Container */
     .container {
       max-width: 900px;
       margin: 0 auto;
@@ -154,7 +158,8 @@
       border-radius: var(--radius);
       background: var(--bg-card);
       overflow: hidden;
-      transition: background 0.3s;
+      transition: background 0.3s, box-shadow 0.3s var(--transition);
+      box-shadow: var(--shadow);
     }
     .accordion-header {
       display: flex;
@@ -239,8 +244,8 @@
       background: var(--bg-hover);
     }
     .bet-btn {
-      background: var(--tab-bg);
-      color: var(--accent);
+      background: var(--accent);
+      color: #fff;
       border: none;
       border-radius: 4px;
       padding: 6px 16px;
@@ -252,7 +257,7 @@
       display: inline-block;
     }
     .bet-btn:hover, .bet-btn:focus {
-      background: var(--accent);
+      background: var(--accent-dark);
       color: #fff;
     }
     .error-msg {
@@ -282,27 +287,6 @@
       --text-muted: #b0b0b0;
       --accent: #90caf9;
       --accent-dark: #1976d2;
-      --tab-bg: #23252b;
-      --tab-active: #181a20;
-      --tab-border: #333a45;
-    }
-    .dark-mode #welcome-screen {
-      background: var(--bg-main);
-    }
-    .dark-mode .welcome-card {
-      background: var(--bg-card);
-      box-shadow: 0 6px 32px rgba(144,202,249,0.10), 0 1.5px 8px rgba(0,0,0,0.08);
-    }
-    .dark-mode .welcome-title {
-      color: var(--accent);
-    }
-    .dark-mode .welcome-btn {
-      background: var(--accent);
-      color: #fff;
-    }
-    .dark-mode .welcome-btn:hover, .dark-mode .welcome-btn:focus {
-      background: var(--accent-dark);
-      color: #fff;
     }
     .dark-mode .error-msg {
       background: #2d1a1a;
@@ -310,11 +294,11 @@
       border-color: #a33;
     }
     .dark-mode .bet-btn {
-      color: #90caf9;
-      background: #263859;
+      color: #fff;
+      background: #1976d2;
     }
     .dark-mode .bet-btn:hover, .dark-mode .bet-btn:focus {
-      background: #1976d2;
+      background: #135ba1;
       color: #fff;
     }
     @media (max-width: 700px) {
@@ -338,7 +322,6 @@
   </style>
 </head>
 <body>
-  <!-- Welcome Screen -->
   <div id="welcome-screen">
     <div class="welcome-card">
       <img class="welcome-logo" src="https://i.ibb.co/ksD92H7L/sg-logo-200x90-20211713191713-2.png" alt="Logo Slotgokil">
@@ -346,7 +329,6 @@
       <button class="welcome-btn" id="welcome-btn">LIHAT JADWAL SPORT</button>
     </div>
   </div>
-  <!-- Jadwal Sport Container -->
   <div class="container">
     <div class="header-bar">
       <div class="sports-tabs" id="sports-tabs"></div>
@@ -369,79 +351,264 @@
       { key: 'esport', label: 'Esports', emoji: '🎮' }
     ];
 
-    // Mapping emoji bendera negara super lengkap
+    // Mapping emoji bendera negara/turnamen (super lengkap)
     function getLigaIcon(liga) {
       if (!liga) return "🌍";
-      if (liga.includes("Argentina")) return "🇦🇷";
-      if (liga.includes("Brazil")) return "🇧🇷";
-      if (liga.includes("Spain")) return "🇪🇸";
-      if (liga.includes("Italy")) return "🇮🇹";
-      if (liga.includes("France")) return "🇫🇷";
-      if (liga.includes("Germany")) return "🇩🇪";
-      if (liga.includes("England") || liga.includes("Premier League")) return "🏴";
-      if (liga.includes("USA") || liga.includes("NBA") || liga.includes("MLS")) return "🇺🇸";
-      if (liga.includes("Japan")) return "🇯🇵";
-      if (liga.includes("South Korea") || liga.includes("K League")) return "🇰🇷";
-      if (liga.includes("Mexico")) return "🇲🇽";
-      if (liga.includes("Netherlands")) return "🇳🇱";
-      if (liga.includes("Belgium")) return "🇧🇪";
-      if (liga.includes("Sweden")) return "🇸🇪";
-      if (liga.includes("Norway")) return "🇳🇴";
-      if (liga.includes("Portugal")) return "🇵🇹";
-      if (liga.includes("Turkey")) return "🇹🇷";
-      if (liga.includes("Russia")) return "🇷🇺";
-      if (liga.includes("Greece")) return "🇬🇷";
-      if (liga.includes("Ukraine")) return "🇺🇦";
-      if (liga.includes("Denmark")) return "🇩🇰";
-      if (liga.includes("Poland")) return "🇵🇱";
-      if (liga.includes("Czech")) return "🇨🇿";
-      if (liga.includes("Croatia")) return "🇭🇷";
-      if (liga.includes("Serbia")) return "🇷🇸";
-      if (liga.includes("Switzerland")) return "🇨🇭";
-      if (liga.includes("Austria")) return "🇦🇹";
-      if (liga.includes("Scotland")) return "🏴";
-      if (liga.includes("Ireland")) return "🇮🇪";
-      if (liga.includes("Australia")) return "🇦🇺";
-      if (liga.includes("New Zealand")) return "🇳🇿";
-      if (liga.includes("China")) return "🇨🇳";
-      if (liga.includes("Vietnam")) return "🇻🇳";
-      if (liga.includes("Thailand")) return "🇹🇭";
-      if (liga.includes("Malaysia")) return "🇲🇾";
-      if (liga.includes("Indonesia")) return "🇮🇩";
-      if (liga.includes("Philippines")) return "🇵🇭";
-      if (liga.includes("India")) return "🇮🇳";
-      if (liga.includes("Singapore")) return "🇸🇬";
-      if (liga.includes("Saudi Arabia")) return "🇸🇦";
-      if (liga.includes("UAE") || liga.includes("Emirates")) return "🇦🇪";
-      if (liga.includes("Qatar")) return "🇶🇦";
-      if (liga.includes("Kuwait")) return "🇰🇼";
-      if (liga.includes("Iran")) return "🇮🇷";
-      if (liga.includes("Iraq")) return "🇮🇶";
-      if (liga.includes("Israel")) return "🇮🇱";
-      if (liga.includes("Chile")) return "🇨🇱";
-      if (liga.includes("Colombia")) return "🇨🇴";
-      if (liga.includes("Peru")) return "🇵🇪";
-      if (liga.includes("Uruguay")) return "🇺🇾";
-      if (liga.includes("Paraguay")) return "🇵🇾";
-      if (liga.includes("Venezuela")) return "🇻🇪";
-      if (liga.includes("Ecuador")) return "🇪🇨";
-      if (liga.includes("Bolivia")) return "🇧🇴";
-      if (liga.includes("Morocco")) return "🇲🇦";
-      if (liga.includes("Egypt")) return "🇪🇬";
-      if (liga.includes("Algeria")) return "🇩🇿";
-      if (liga.includes("Nigeria")) return "🇳🇬";
-      if (liga.includes("Ghana")) return "🇬🇭";
-      if (liga.includes("Cameroon")) return "🇨🇲";
-      if (liga.includes("South Africa")) return "🇿🇦";
-      // fallback
+      const l = liga.toLowerCase();
+      if (l.includes("afghanistan")) return "🇦🇫";
+      if (l.includes("aland")) return "🇦🇽";
+      if (l.includes("albania")) return "🇦🇱";
+      if (l.includes("algeria")) return "🇩🇿";
+      if (l.includes("american samoa")) return "🇦🇸";
+      if (l.includes("andorra")) return "🇦🇩";
+      if (l.includes("angola")) return "🇦🇴";
+      if (l.includes("anguilla")) return "🇦🇮";
+      if (l.includes("antarctica")) return "🇦🇶";
+      if (l.includes("antigua") || l.includes("barbuda")) return "🇦🇬";
+      if (l.includes("argentina")) return "🇦🇷";
+      if (l.includes("armenia")) return "🇦🇲";
+      if (l.includes("aruba")) return "🇦🇼";
+      if (l.includes("australia")) return "🇦🇺";
+      if (l.includes("austria")) return "🇦🇹";
+      if (l.includes("azerbaijan")) return "🇦🇿";
+      if (l.includes("bahamas")) return "🇧🇸";
+      if (l.includes("bahrain")) return "🇧🇭";
+      if (l.includes("bangladesh")) return "🇧🇩";
+      if (l.includes("barbados")) return "🇧🇧";
+      if (l.includes("belarus")) return "🇧🇾";
+      if (l.includes("belgium")) return "🇧🇪";
+      if (l.includes("belize")) return "🇧🇿";
+      if (l.includes("benin")) return "🇧🇯";
+      if (l.includes("bermuda")) return "🇧🇲";
+      if (l.includes("bhutan")) return "🇧🇹";
+      if (l.includes("bolivia")) return "🇧🇴";
+      if (l.includes("bonaire")) return "🇧🇶";
+      if (l.includes("bosnia")) return "🇧🇦";
+      if (l.includes("botswana")) return "🇧🇼";
+      if (l.includes("bouvet")) return "🇧🇻";
+      if (l.includes("brazil")) return "🇧🇷";
+      if (l.includes("british indian ocean territory")) return "🇮🇴";
+      if (l.includes("brunei")) return "🇧🇳";
+      if (l.includes("bulgaria")) return "🇧🇬";
+      if (l.includes("burkina faso")) return "🇧🇫";
+      if (l.includes("burundi")) return "🇧🇮";
+      if (l.includes("cabo verde") || l.includes("cape verde")) return "🇨🇻";
+      if (l.includes("cambodia")) return "🇰🇭";
+      if (l.includes("cameroon")) return "🇨🇲";
+      if (l.includes("canada")) return "🇨🇦";
+      if (l.includes("cayman islands")) return "🇰🇾";
+      if (l.includes("central african republic")) return "🇨🇫";
+      if (l.includes("chad")) return "🇹🇩";
+      if (l.includes("chile")) return "🇨🇱";
+      if (l.includes("china")) return "🇨🇳";
+      if (l.includes("christmas island")) return "🇨🇽";
+      if (l.includes("cocos") || l.includes("keeling")) return "🇨🇨";
+      if (l.includes("colombia")) return "🇨🇴";
+      if (l.includes("comoros")) return "🇰🇲";
+      if (l.includes("congo")) return "🇨🇬";
+      if (l.includes("democratic republic of the congo") || l.includes("drc")) return "🇨🇩";
+      if (l.includes("cook islands")) return "🇨🇰";
+      if (l.includes("costa rica")) return "🇨🇷";
+      if (l.includes("cote d'ivoire") || l.includes("ivory coast")) return "🇨🇮";
+      if (l.includes("croatia")) return "🇭🇷";
+      if (l.includes("cuba")) return "🇨🇺";
+      if (l.includes("curaçao")) return "🇨🇼";
+      if (l.includes("cyprus")) return "🇨🇾";
+      if (l.includes("czech")) return "🇨🇿";
+      if (l.includes("denmark")) return "🇩🇰";
+      if (l.includes("djibouti")) return "🇩🇯";
+      if (l.includes("dominica")) return "🇩🇲";
+      if (l.includes("dominican republic")) return "🇩🇴";
+      if (l.includes("ecuador")) return "🇪🇨";
+      if (l.includes("egypt")) return "🇪🇬";
+      if (l.includes("el salvador")) return "🇸🇻";
+      if (l.includes("england")) return "🏴";
+      if (l.includes("scotland")) return "🏴";
+      if (l.includes("wales")) return "🏴";
+      if (l.includes("northern ireland")) return "🇬🇧";
+      if (l.includes("uk") || l.includes("united kingdom")) return "🇬🇧";
+      if (l.includes("equatorial guinea")) return "🇬🇶";
+      if (l.includes("eritrea")) return "🇪🇷";
+      if (l.includes("estonia")) return "🇪🇪";
+      if (l.includes("eswatini") || l.includes("swaziland")) return "🇸🇿";
+      if (l.includes("ethiopia")) return "🇪🇹";
+      if (l.includes("falkland islands")) return "🇫🇰";
+      if (l.includes("faroe islands")) return "🇫🇴";
+      if (l.includes("fiji")) return "🇫🇯";
+      if (l.includes("finland")) return "🇫🇮";
+      if (l.includes("france")) return "🇫🇷";
+      if (l.includes("french guiana")) return "🇬🇫";
+      if (l.includes("french polynesia")) return "🇵🇫";
+      if (l.includes("french southern territories")) return "🇹🇫";
+      if (l.includes("gabon")) return "🇬🇦";
+      if (l.includes("gambia")) return "🇬🇲";
+      if (l.includes("georgia")) return "🇬🇪";
+      if (l.includes("germany")) return "🇩🇪";
+      if (l.includes("ghana")) return "🇬🇭";
+      if (l.includes("gibraltar")) return "🇬🇮";
+      if (l.includes("greece")) return "🇬🇷";
+      if (l.includes("greenland")) return "🇬🇱";
+      if (l.includes("grenada")) return "🇬🇩";
+      if (l.includes("guadeloupe")) return "🇬🇵";
+      if (l.includes("guam")) return "🇬🇺";
+      if (l.includes("guatemala")) return "🇬🇹";
+      if (l.includes("guernsey")) return "🇬🇬";
+      if (l.includes("guinea-bissau")) return "🇬🇼";
+      if (l.includes("guinea")) return "🇬🇳";
+      if (l.includes("guyana")) return "🇬🇾";
+      if (l.includes("haiti")) return "🇭🇹";
+      if (l.includes("heard island") || l.includes("mcdonald islands")) return "🇭🇲";
+      if (l.includes("honduras")) return "🇭🇳";
+      if (l.includes("hong kong")) return "🇭🇰";
+      if (l.includes("hungary")) return "🇭🇺";
+      if (l.includes("iceland")) return "🇮🇸";
+      if (l.includes("india")) return "🇮🇳";
+      if (l.includes("indonesia")) return "🇮🇩";
+      if (l.includes("iran")) return "🇮🇷";
+      if (l.includes("iraq")) return "🇮🇶";
+      if (l.includes("ireland")) return "🇮🇪";
+      if (l.includes("isle of man")) return "🇮🇲";
+      if (l.includes("israel")) return "🇮🇱";
+      if (l.includes("italy")) return "🇮🇹";
+      if (l.includes("jamaica")) return "🇯🇲";
+      if (l.includes("japan")) return "🇯🇵";
+      if (l.includes("jersey")) return "🇯🇪";
+      if (l.includes("jordan")) return "🇯🇴";
+      if (l.includes("kazakhstan")) return "🇰🇿";
+      if (l.includes("kenya")) return "🇰🇪";
+      if (l.includes("kiribati")) return "🇰🇮";
+      if (l.includes("north korea")) return "🇰🇵";
+      if (l.includes("south korea") || l.includes("korea")) return "🇰🇷";
+      if (l.includes("kuwait")) return "🇰🇼";
+      if (l.includes("kyrgyzstan")) return "🇰🇬";
+      if (l.includes("laos")) return "🇱🇦";
+      if (l.includes("latvia")) return "🇱🇻";
+      if (l.includes("lebanon")) return "🇱🇧";
+      if (l.includes("lesotho")) return "🇱🇸";
+      if (l.includes("liberia")) return "🇱🇷";
+      if (l.includes("libya")) return "🇱🇾";
+      if (l.includes("liechtenstein")) return "🇱🇮";
+      if (l.includes("lithuania")) return "🇱🇹";
+      if (l.includes("luxembourg")) return "🇱🇺";
+      if (l.includes("macau")) return "🇲🇴";
+      if (l.includes("madagascar")) return "🇲🇬";
+      if (l.includes("malawi")) return "🇲🇼";
+      if (l.includes("malaysia")) return "🇲🇾";
+      if (l.includes("maldives")) return "🇲🇻";
+      if (l.includes("mali")) return "🇲🇱";
+      if (l.includes("malta")) return "🇲🇹";
+      if (l.includes("marshall islands")) return "🇲🇭";
+      if (l.includes("martinique")) return "🇲🇶";
+      if (l.includes("mauritania")) return "🇲🇷";
+      if (l.includes("mauritius")) return "🇲🇺";
+      if (l.includes("mayotte")) return "🇾🇹";
+      if (l.includes("mexico")) return "🇲🇽";
+      if (l.includes("micronesia")) return "🇫🇲";
+      if (l.includes("moldova")) return "🇲🇩";
+      if (l.includes("monaco")) return "🇲🇨";
+      if (l.includes("mongolia")) return "🇲🇳";
+      if (l.includes("montenegro")) return "🇲🇪";
+      if (l.includes("montserrat")) return "🇲🇸";
+      if (l.includes("morocco")) return "🇲🇦";
+      if (l.includes("mozambique")) return "🇲🇿";
+      if (l.includes("myanmar") || l.includes("burma")) return "🇲🇲";
+      if (l.includes("namibia")) return "🇳🇦";
+      if (l.includes("nauru")) return "🇳🇷";
+      if (l.includes("nepal")) return "🇳🇵";
+      if (l.includes("netherlands")) return "🇳🇱";
+      if (l.includes("new caledonia")) return "🇳🇨";
+      if (l.includes("new zealand")) return "🇳🇿";
+      if (l.includes("nicaragua")) return "🇳🇮";
+      if (l.includes("niger")) return "🇳🇪";
+      if (l.includes("nigeria")) return "🇳🇬";
+      if (l.includes("niue")) return "🇳🇺";
+      if (l.includes("norfolk island")) return "🇳🇫";
+      if (l.includes("north macedonia")) return "🇲🇰";
+      if (l.includes("northern mariana islands")) return "🇲🇵";
+      if (l.includes("norway")) return "🇳🇴";
+      if (l.includes("oman")) return "🇴🇲";
+      if (l.includes("pakistan")) return "🇵🇰";
+      if (l.includes("palau")) return "🇵🇼";
+      if (l.includes("palestine")) return "🇵🇸";
+      if (l.includes("panama")) return "🇵🇦";
+      if (l.includes("papua new guinea")) return "🇵🇬";
+      if (l.includes("paraguay")) return "🇵🇾";
+      if (l.includes("peru")) return "🇵🇪";
+      if (l.includes("philippines")) return "🇵🇭";
+      if (l.includes("pitcairn")) return "🇵🇳";
+      if (l.includes("poland")) return "🇵🇱";
+      if (l.includes("portugal")) return "🇵🇹";
+      if (l.includes("puerto rico")) return "🇵🇷";
+      if (l.includes("qatar")) return "🇶🇦";
+      if (l.includes("reunion")) return "🇷🇪";
+      if (l.includes("romania")) return "🇷🇴";
+      if (l.includes("russia")) return "🇷🇺";
+      if (l.includes("rwanda")) return "🇷🇼";
+      if (l.includes("saint barthelemy")) return "🇧🇱";
+      if (l.includes("saint helena")) return "🇸🇭";
+      if (l.includes("saint kitts") || l.includes("nevis")) return "🇰🇳";
+      if (l.includes("saint lucia")) return "🇱🇨";
+      if (l.includes("saint martin")) return "🇲🇫";
+      if (l.includes("saint pierre") || l.includes("miquelon")) return "🇵🇲";
+      if (l.includes("saint vincent") || l.includes("grenadines")) return "🇻🇨";
+      if (l.includes("samoa")) return "🇼🇸";
+      if (l.includes("san marino")) return "🇸🇲";
+      if (l.includes("sao tome") || l.includes("principe")) return "🇸🇹";
+      if (l.includes("saudi arabia")) return "🇸🇦";
+      if (l.includes("senegal")) return "🇸🇳";
+      if (l.includes("serbia")) return "🇷🇸";
+      if (l.includes("seychelles")) return "🇸🇨";
+      if (l.includes("sierra leone")) return "🇸🇱";
+      if (l.includes("singapore")) return "🇸🇬";
+      if (l.includes("sint maarten")) return "🇸🇽";
+      if (l.includes("slovakia")) return "🇸🇰";
+      if (l.includes("slovenia")) return "🇸🇮";
+      if (l.includes("solomon islands")) return "🇸🇧";
+      if (l.includes("somalia")) return "🇸🇴";
+      if (l.includes("south africa")) return "🇿🇦";
+      if (l.includes("south georgia") || l.includes("south sandwich")) return "🇬🇸";
+      if (l.includes("south sudan")) return "🇸🇸";
+      if (l.includes("spain")) return "🇪🇸";
+      if (l.includes("sri lanka")) return "🇱🇰";
+      if (l.includes("sudan")) return "🇸🇩";
+      if (l.includes("suriname")) return "🇸🇷";
+      if (l.includes("svalbard") || l.includes("jan mayen")) return "🇸🇯";
+      if (l.includes("sweden")) return "🇸🇪";
+      if (l.includes("switzerland")) return "🇨🇭";
+      if (l.includes("syria")) return "🇸🇾";
+      if (l.includes("taiwan")) return "🇹🇼";
+      if (l.includes("tajikistan")) return "🇹🇯";
+      if (l.includes("tanzania")) return "🇹🇿";
+      if (l.includes("thailand")) return "🇹🇭";
+      if (l.includes("timor-leste") || l.includes("east timor")) return "🇹🇱";
+      if (l.includes("togo")) return "🇹🇬";
+      if (l.includes("tokelau")) return "🇹🇰";
+      if (l.includes("tonga")) return "🇹🇴";
+      if (l.includes("trinidad") || l.includes("tobago")) return "🇹🇹";
+      if (l.includes("tunisia")) return "🇹🇳";
+      if (l.includes("turkey")) return "🇹🇷";
+      if (l.includes("turkmenistan")) return "🇹🇲";
+      if (l.includes("turks") || l.includes("caicos")) return "🇹🇨";
+      if (l.includes("tuvalu")) return "🇹🇻";
+      if (l.includes("uganda")) return "🇺🇬";
+      if (l.includes("ukraine")) return "🇺🇦";
+      if (l.includes("united arab emirates") || l.includes("uae")) return "🇦🇪";
+      if (l.includes("united states") || l.includes("usa") || l.includes("mls")) return "🇺🇸";
+      if (l.includes("uruguay")) return "🇺🇾";
+      if (l.includes("uzbekistan")) return "🇺🇿";
+      if (l.includes("vanuatu")) return "🇻🇺";
+      if (l.includes("vatican")) return "🇻🇦";
+      if (l.includes("venezuela")) return "🇻🇪";
+      if (l.includes("vietnam")) return "🇻🇳";
+      if (l.includes("virgin islands")) return "🇻🇮";
+      if (l.includes("wallis") || l.includes("futuna")) return "🇼🇫";
+      if (l.includes("western sahara")) return "🇪🇭";
+      if (l.includes("yemen")) return "🇾🇪";
+      if (l.includes("zambia")) return "🇿🇲";
+      if (l.includes("zimbabwe")) return "🇿🇼";
+      // ASEAN, AFF, CAF, UEFA, CONMEBOL, CONCACAF, OFC, CAF, dst
+      if (l.includes("asean") || l.includes("aff") || l.includes("caf") || l.includes("uefa") || l.includes("conmebol") || l.includes("concacaf") || l.includes("ofc")) return "🌍";
       return "🌍";
-    }
-
-    // Escape HTML for safety
-    function escapeHTML(str) {
-      return String(str || '').replace(/[&<>"']/g, function(m) {
-        return ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'})[m];
-      });
     }
 
     // Render tabs kategori olahraga
@@ -476,14 +643,14 @@
     }
 
     // Render liga dan pertandingan
-    function renderLeagues(ligaMap, sportKey) {
+    function renderLeagues(leagues, sportKey) {
       const main = document.getElementById('main-content');
       main.innerHTML = '';
-      if (!ligaMap || Object.keys(ligaMap).length === 0) {
+      if (!leagues || Object.keys(leagues).length === 0) {
         main.innerHTML = '<div class="error-msg">Tidak ada jadwal tersedia.</div>';
         return;
       }
-      Object.entries(ligaMap).forEach(([liga, matches], idx) => {
+      Object.entries(leagues).forEach(([league, matches], idx) => {
         // Accordion
         const accordion = document.createElement('div');
         accordion.className = 'accordion' + (idx === 0 ? ' expanded' : '');
@@ -493,8 +660,8 @@
         header.className = 'accordion-header';
         header.innerHTML = `
           <span class="accordion-title">
-            <span class="league-icon">${getLigaIcon(liga)}</span>
-            <b>${escapeHTML(liga)}</b>
+            <span class="league-icon">${getLigaIcon(league)}</span>
+            ${escapeHTML(league)}
           </span>
           <span class="accordion-arrow">&#9654;</span>`;
         header.onclick = () => {
@@ -510,11 +677,6 @@
         tableWrap.className = 'league-table-wrap';
         const table = document.createElement('table');
         table.className = 'league-table';
-
-        // Esport: cek jika sportKey === 'esport'
-        let isEsport = sportKey === 'esport';
-
-        // Table header
         table.innerHTML = `
           <thead>
             <tr>
@@ -522,18 +684,16 @@
               <th>Jam</th>
               <th>Home</th>
               <th>Away</th>
-              ${isEsport ? '<th>Skor</th>' : ''}
               <th>BET</th>
             </tr>
           </thead>
           <tbody>
             ${matches.map(m => `
               <tr>
-                <td>${escapeHTML(m.tanggal)}</td>
-                <td>${escapeHTML(m.jam)}</td>
-                <td>${escapeHTML(isEsport ? m.tima : m.home)}</td>
-                <td>${escapeHTML(isEsport ? m.timb : m.away)}</td>
-                ${isEsport ? `<td>${escapeHTML(m.skor || '-')}</td>` : ''}
+                <td>${escapeHTML(m.tanggal || '')}</td>
+                <td>${escapeHTML(m.jam || '')}</td>
+                <td>${escapeHTML(m.home || m.tima || '')}</td>
+                <td>${escapeHTML(m.away || m.timb || '')}</td>
                 <td>
                   <a class="bet-btn" href="${m.linkbet || '#'}" target="_blank" rel="noopener">BET</a>
                 </td>
@@ -550,18 +710,24 @@
       });
     }
 
+    // Escape HTML for safety
+    function escapeHTML(str) {
+      return String(str || '').replace(/[&<>"']/g, function(m) {
+        return ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'})[m];
+      });
+    }
+
     // Fetch data dari API dan group by liga
-    async function fetchAndRenderLeagues(sportKey) {
+    async function fetchAndRenderLeagues(sport) {
       showLoader();
       try {
-        const res = await fetch(URL_API + '?sport=' + encodeURIComponent(sportKey));
+        const res = await fetch(URL_API + '?sport=' + encodeURIComponent(sport));
         if (!res.ok) throw new Error('Gagal fetch');
         const jadwal = await res.json();
 
         // Group by liga
         const ligaMap = {};
-        if (sportKey === 'esport') {
-          // Gabung game + turnamen jadi nama liga
+        if (sport === 'esport') {
           jadwal.forEach(j => {
             if (!j.game || !j.turnamen || !j.tanggal || !j.jam || !j.tima || !j.timb || !j.linkbet) return;
             const ligaName = j.game + ' - ' + j.turnamen;
@@ -570,7 +736,7 @@
           });
         } else {
           jadwal.forEach(j => {
-            if (!j.liga || !j.tanggal || !j.jam || !j.home || !j.away || !j.linkbet) return;
+            if (!j.liga || !j.tanggal || !j.jam || !(j.home || j.tima) || !(j.away || j.timb) || !j.linkbet) return;
             if (!ligaMap[j.liga]) ligaMap[j.liga] = [];
             ligaMap[j.liga].push(j);
           });
@@ -587,7 +753,7 @@
           });
         });
 
-        renderLeagues(ligaMap, sportKey);
+        renderLeagues(ligaMap, sport);
       } catch (e) {
         showError('Gagal mengambil data, silakan refresh.');
       }
@@ -610,18 +776,10 @@
         welcomeScreen.style.display = 'none';
         container.style.display = 'block';
       }, 400);
-    };
-
-    // Inisialisasi jadwal sport (jadwal container tetap di-hide sampai welcome ditekan)
-    window.currentSport = SPORTS[0].key;
-    renderSportsTabs(window.currentSport);
-    // Jadwal hanya tampil setelah welcome ditekan
-    // fetchAndRenderLeagues(window.currentSport);
-
-    // Setelah welcome, baru load jadwal
-    welcomeBtn.addEventListener('click', function() {
+      window.currentSport = SPORTS[0].key;
+      renderSportsTabs(window.currentSport);
       fetchAndRenderLeagues(window.currentSport);
-    });
+    };
 
     // Touch support for accordion (optional, for mobile)
     document.addEventListener('touchstart', function(){}, {passive:true});

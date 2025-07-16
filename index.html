@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>JADWAL SPORT SLOTGOKIL Style</title>
+  <title>Jadwal Sport Flashscore Style</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     :root {
@@ -14,11 +14,10 @@
       --text-main: #222;
       --text-muted: #666;
       --accent: #1976d2;
-      --bet-bg: #e3f0ff;
-      --bet-hover: #bbdefb;
       --tab-bg: #f1f3f6;
       --tab-active: #fff;
       --tab-border: #d1d5db;
+      --radius: 12px;
     }
     body {
       background: var(--bg-main);
@@ -86,7 +85,7 @@
     .accordion {
       margin-bottom: 18px;
       border: 1px solid var(--border);
-      border-radius: 7px;
+      border-radius: var(--radius);
       background: var(--bg-card);
       overflow: hidden;
       transition: background 0.3s;
@@ -174,7 +173,7 @@
       background: var(--bg-hover);
     }
     .bet-btn {
-      background: var(--bet-bg);
+      background: var(--tab-bg);
       color: var(--accent);
       border: none;
       border-radius: 4px;
@@ -187,8 +186,8 @@
       display: inline-block;
     }
     .bet-btn:hover, .bet-btn:focus {
-      background: var(--bet-hover);
-      color: var(--accent);
+      background: var(--accent);
+      color: #fff;
     }
     .error-msg {
       color: #d32f2f;
@@ -216,8 +215,6 @@
       --text-main: #fff;
       --text-muted: #b0b0b0;
       --accent: #90caf9;
-      --bet-bg: #263859;
-      --bet-hover: #1976d2;
       --tab-bg: #23252b;
       --tab-active: #181a20;
       --tab-border: #333a45;
@@ -298,30 +295,40 @@
       { key: 'tennis', label: 'Tennis', emoji: '🎾' },
       { key: 'voli', label: 'Voli', emoji: '🏐' },
       { key: 'badminton', label: 'Badminton', emoji: '🏸' },
-      { key: 'baseball', label: 'Baseball', emoji: '⚾' }
+      { key: 'baseball', label: 'Baseball', emoji: '⚾' },
+      { key: 'esport', label: 'Esports', emoji: '🎮' }
     ];
 
-    // Mapping emoji bendera negara/turnamen
+    // Mapping emoji kategori liga (100% emoji, aman offline/online)
     function getLigaIcon(liga) {
-      if (liga.includes("Japan") || liga.includes("J-League")) return "🇯🇵";
-      if (liga.includes("South Korea") || liga.includes("K League") || liga.includes("KBO")) return "🇰🇷";
-      if (liga.includes("Italy") || liga.includes("Serie A") || liga.includes("Serie A1")) return "🇮🇹";
-      if (liga.includes("Spain") || liga.includes("LaLiga")) return "🇪🇸";
-      if (liga.includes("France") || liga.includes("Ligue 1") || liga.includes("French Open")) return "🇫🇷";
-      if (liga.includes("Germany") || liga.includes("Bundesliga")) return "🇩🇪";
-      if (liga.includes("Brazil") || liga.includes("Brasileiro")) return "🇧🇷";
-      if (liga.includes("Argentina")) return "🇦🇷";
-      if (liga.includes("Mexico") || liga.includes("LMB")) return "🇲🇽";
-      if (liga.includes("Taiwan") || liga.includes("CPBL")) return "🇹🇼";
-      if (liga.includes("USA") || liga.includes("US Open") || liga.includes("MLB") || liga.includes("NBA")) return "🇺🇸";
-      if (liga.includes("England") || liga.includes("Premier League") || liga.includes("Wimbledon")) return "🏴";
-      if (liga.includes("ASEAN") || liga.includes("Indonesia") || liga.includes("Thailand") || liga.includes("Malaysia") || liga.includes("Vietnam")) return "🇮🇩";
-      if (liga.includes("Australia") || liga.includes("A-League") || liga.includes("Australian Open")) return "🇦🇺";
-      if (liga.includes("China")) return "🇨🇳";
-      // Fallback (turnamen global, UEFA, Club Friendly, dst)
-      if (liga.includes("Champions League") || liga.includes("Europa League") || liga.includes("Conference League") || liga.includes("World") || liga.includes("Club Friendly")) return "🌍";
-      // Default
-      return "🏆";
+      if (liga.includes("Premier League") || liga.includes("LaLiga") || liga.includes("Serie A") || liga.includes("Bundesliga") || liga.includes("Ligue 1") || liga.includes("Copa") || liga.includes("Liga") || liga.includes("League") || liga.includes("Football"))
+        return "⚽";
+      if (liga.includes("NBA") || liga.includes("Basket") || liga.includes("EuroLeague") || liga.includes("ACB") || liga.includes("VBA"))
+        return "🏀";
+      if (liga.includes("Baseball") || liga.includes("KBO") || liga.includes("NPB") || liga.includes("CPBL") || liga.includes("MLB") || liga.includes("Serie A1"))
+        return "⚾";
+      if (liga.includes("Australian Open") || liga.includes("French Open") || liga.includes("US Open") || liga.includes("Wimbledon"))
+        return "🎾";
+      if (liga.includes("Badminton") || liga.includes("All England") || liga.includes("Indonesia Open"))
+        return "🏸";
+      if (liga.includes("Voli") || liga.includes("Volleyball"))
+        return "🏐";
+      // === Esports (pakai logo game khusus) ===
+      if (liga.includes("Dota") || liga.includes("Dota 2"))
+        return "🧙";
+      if (liga.includes("MLBB") || liga.includes("Mobile Legends"))
+        return "🗡️";
+      if (liga.includes("CS") || liga.includes("CSGO") || liga.includes("Counter Strike"))
+        return "💣";
+      if (liga.includes("PUBG") || liga.includes("Free Fire"))
+        return "🎯";
+      if (liga.includes("Valorant"))
+        return "🎯";
+      if (liga.includes("Esports") || liga.includes("Game"))
+        return "🎮";
+      if (liga.includes("Champions League") || liga.includes("Europa League") || liga.includes("Conference League") || liga.includes("World") || liga.includes("Club Friendly") || liga.includes("ASEAN") || liga.includes("Asia"))
+        return "🏆";
+      return "🌍";
     }
 
     // Render tabs kategori olahraga
@@ -374,7 +381,7 @@
         header.innerHTML = `
           <span class="accordion-title">
             <span class="league-icon">${getLigaIcon(league)}</span>
-            ${escapeHTML(league)}
+            <b>${escapeHTML(league)}</b>
           </span>
           <span class="accordion-arrow">&#9654;</span>`;
         header.onclick = () => {
@@ -405,8 +412,8 @@
               <tr>
                 <td>${escapeHTML(m.tanggal || '')}</td>
                 <td>${escapeHTML(m.jam || '')}</td>
-                <td>${escapeHTML(m.home || m.tima || '')}</td>
-                <td>${escapeHTML(m.away || m.timb || '')}</td>
+                <td>${escapeHTML(m.home || '')}</td>
+                <td>${escapeHTML(m.away || '')}</td>
                 <td>
                   <a class="bet-btn" href="${m.linkbet || '#'}" target="_blank" rel="noopener">BET</a>
                 </td>
@@ -441,7 +448,7 @@
         // Group by liga
         const ligaMap = {};
         jadwal.forEach(j => {
-          if (!j.liga || !j.tanggal || !j.jam || !(j.home || j.tima) || !(j.away || j.timb) || !j.linkbet) return;
+          if (!j.liga || !j.tanggal || !j.jam || !j.home || !j.away || !j.linkbet) return;
           if (!ligaMap[j.liga]) ligaMap[j.liga] = [];
           ligaMap[j.liga].push(j);
         });
@@ -449,7 +456,6 @@
         // Sort jadwal per liga by tanggal & jam
         Object.values(ligaMap).forEach(arr => {
           arr.sort((a, b) => {
-            // Format: YYYY-MM-DD or DD/MM/YYYY or "16 Juli 2025"
             let tglA = a.tanggal.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1');
             let tglB = b.tanggal.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1');
             let dateA = new Date(tglA + ' ' + a.jam);

@@ -299,36 +299,84 @@
       { key: 'esport', label: 'Esports', emoji: '🎮' }
     ];
 
-    // Mapping emoji kategori liga (100% emoji, aman offline/online)
+    // Mapping bendera negara super lengkap (ISO + populer), fallback 🏆
     function getLigaIcon(liga) {
-      if (liga.includes("Premier League") || liga.includes("LaLiga") || liga.includes("Serie A") || liga.includes("Bundesliga") || liga.includes("Ligue 1") || liga.includes("Copa") || liga.includes("Liga") || liga.includes("League") || liga.includes("Football"))
-        return "⚽";
-      if (liga.includes("NBA") || liga.includes("Basket") || liga.includes("EuroLeague") || liga.includes("ACB") || liga.includes("VBA"))
-        return "🏀";
-      if (liga.includes("Baseball") || liga.includes("KBO") || liga.includes("NPB") || liga.includes("CPBL") || liga.includes("MLB") || liga.includes("Serie A1"))
-        return "⚾";
-      if (liga.includes("Australian Open") || liga.includes("French Open") || liga.includes("US Open") || liga.includes("Wimbledon"))
-        return "🎾";
-      if (liga.includes("Badminton") || liga.includes("All England") || liga.includes("Indonesia Open"))
-        return "🏸";
-      if (liga.includes("Voli") || liga.includes("Volleyball"))
-        return "🏐";
-      // === Esports (pakai logo game khusus) ===
-      if (liga.includes("Dota") || liga.includes("Dota 2"))
-        return "🧙";
-      if (liga.includes("MLBB") || liga.includes("Mobile Legends"))
-        return "🗡️";
-      if (liga.includes("CS") || liga.includes("CSGO") || liga.includes("Counter Strike"))
-        return "💣";
-      if (liga.includes("PUBG") || liga.includes("Free Fire"))
-        return "🎯";
-      if (liga.includes("Valorant"))
-        return "🎯";
-      if (liga.includes("Esports") || liga.includes("Game"))
-        return "🎮";
-      if (liga.includes("Champions League") || liga.includes("Europa League") || liga.includes("Conference League") || liga.includes("World") || liga.includes("Club Friendly") || liga.includes("ASEAN") || liga.includes("Asia"))
-        return "🏆";
-      return "🌍";
+      if (!liga) return "🏆";
+      liga = liga.toLowerCase();
+      // Partial mapping, extend for all ISO country names/codes
+      if (liga.includes("argentina")) return "🇦🇷";
+      if (liga.includes("brazil")) return "🇧🇷";
+      if (liga.includes("ecuador")) return "🇪🇨";
+      if (liga.includes("chile")) return "🇨🇱";
+      if (liga.includes("peru")) return "🇵🇪";
+      if (liga.includes("uruguay")) return "🇺🇾";
+      if (liga.includes("colombia")) return "🇨🇴";
+      if (liga.includes("venezuela")) return "🇻🇪";
+      if (liga.includes("paraguay")) return "🇵🇾";
+      if (liga.includes("bolivia")) return "🇧🇴";
+      if (liga.includes("mexico")) return "🇲🇽";
+      if (liga.includes("usa") || liga.includes("united states")) return "🇺🇸";
+      if (liga.includes("canada")) return "🇨🇦";
+      if (liga.includes("spain")) return "🇪🇸";
+      if (liga.includes("france")) return "🇫🇷";
+      if (liga.includes("italy")) return "🇮🇹";
+      if (liga.includes("germany")) return "🇩🇪";
+      if (liga.includes("portugal")) return "🇵🇹";
+      if (liga.includes("netherlands")) return "🇳🇱";
+      if (liga.includes("belgium")) return "🇧🇪";
+      if (liga.includes("switzerland")) return "🇨🇭";
+      if (liga.includes("austria")) return "🇦🇹";
+      if (liga.includes("england") || liga.includes("premier league")) return "🏴";
+      if (liga.includes("scotland")) return "🏴";
+      if (liga.includes("ireland")) return "🇮🇪";
+      if (liga.includes("norway")) return "🇳🇴";
+      if (liga.includes("sweden")) return "🇸🇪";
+      if (liga.includes("denmark")) return "🇩🇰";
+      if (liga.includes("finland")) return "🇫🇮";
+      if (liga.includes("russia")) return "🇷🇺";
+      if (liga.includes("ukraine")) return "🇺🇦";
+      if (liga.includes("poland")) return "🇵🇱";
+      if (liga.includes("czech")) return "🇨🇿";
+      if (liga.includes("slovakia")) return "🇸🇰";
+      if (liga.includes("serbia")) return "🇷🇸";
+      if (liga.includes("croatia")) return "🇭🇷";
+      if (liga.includes("slovenia")) return "🇸🇮";
+      if (liga.includes("greece")) return "🇬🇷";
+      if (liga.includes("turkey")) return "🇹🇷";
+      if (liga.includes("romania")) return "🇷🇴";
+      if (liga.includes("bulgaria")) return "🇧🇬";
+      if (liga.includes("hungary")) return "🇭🇺";
+      if (liga.includes("israel")) return "🇮🇱";
+      if (liga.includes("egypt")) return "🇪🇬";
+      if (liga.includes("morocco")) return "🇲🇦";
+      if (liga.includes("algeria")) return "🇩🇿";
+      if (liga.includes("saudi arabia")) return "🇸🇦";
+      if (liga.includes("qatar")) return "🇶🇦";
+      if (liga.includes("uae") || liga.includes("united arab emirates")) return "🇦🇪";
+      if (liga.includes("china")) return "🇨🇳";
+      if (liga.includes("japan")) return "🇯🇵";
+      if (liga.includes("south korea")) return "🇰🇷";
+      if (liga.includes("vietnam")) return "🇻🇳";
+      if (liga.includes("thailand")) return "🇹🇭";
+      if (liga.includes("indonesia")) return "🇮🇩";
+      if (liga.includes("malaysia")) return "🇲🇾";
+      if (liga.includes("singapore")) return "🇸🇬";
+      if (liga.includes("philippines")) return "🇵🇭";
+      if (liga.includes("taiwan")) return "🇹🇼";
+      if (liga.includes("india")) return "🇮🇳";
+      if (liga.includes("australia")) return "🇦🇺";
+      if (liga.includes("new zealand")) return "🇳🇿";
+      if (liga.includes("world") || liga.includes("champions league") || liga.includes("europa league") || liga.includes("asean") || liga.includes("asia")) return "🌍";
+      // Extend: All ISO country names/codes (add more as needed)
+      // Fallback
+      return "🏆";
+    }
+
+    // Escape HTML
+    function escapeHTML(str) {
+      return String(str || '').replace(/[&<>"']/g, function(m) {
+        return ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'})[m];
+      });
     }
 
     // Render tabs kategori olahraga
@@ -363,14 +411,14 @@
     }
 
     // Render liga dan pertandingan
-    function renderLeagues(leagues) {
+    function renderLeagues(ligaMap, sportKey) {
       const main = document.getElementById('main-content');
       main.innerHTML = '';
-      if (!leagues || Object.keys(leagues).length === 0) {
+      if (!ligaMap || Object.keys(ligaMap).length === 0) {
         main.innerHTML = '<div class="error-msg">Tidak ada jadwal tersedia.</div>';
         return;
       }
-      Object.entries(leagues).forEach(([league, matches], idx) => {
+      Object.entries(ligaMap).forEach(([liga, matches], idx) => {
         // Accordion
         const accordion = document.createElement('div');
         accordion.className = 'accordion' + (idx === 0 ? ' expanded' : '');
@@ -380,8 +428,8 @@
         header.className = 'accordion-header';
         header.innerHTML = `
           <span class="accordion-title">
-            <span class="league-icon">${getLigaIcon(league)}</span>
-            <b>${escapeHTML(league)}</b>
+            <span class="league-icon">${getLigaIcon(liga)}</span>
+            <b>${escapeHTML(liga)}</b>
           </span>
           <span class="accordion-arrow">&#9654;</span>`;
         header.onclick = () => {
@@ -397,6 +445,11 @@
         tableWrap.className = 'league-table-wrap';
         const table = document.createElement('table');
         table.className = 'league-table';
+
+        // Esport: cek jika sportKey === 'esport'
+        let isEsport = sportKey === 'esport';
+
+        // Table header
         table.innerHTML = `
           <thead>
             <tr>
@@ -404,16 +457,18 @@
               <th>Jam</th>
               <th>Home</th>
               <th>Away</th>
+              ${isEsport ? '<th>Skor</th>' : ''}
               <th>BET</th>
             </tr>
           </thead>
           <tbody>
             ${matches.map(m => `
               <tr>
-                <td>${escapeHTML(m.tanggal || '')}</td>
-                <td>${escapeHTML(m.jam || '')}</td>
-                <td>${escapeHTML(m.home || '')}</td>
-                <td>${escapeHTML(m.away || '')}</td>
+                <td>${escapeHTML(m.tanggal)}</td>
+                <td>${escapeHTML(m.jam)}</td>
+                <td>${escapeHTML(isEsport ? m.tima : m.tima || m.home)}</td>
+                <td>${escapeHTML(isEsport ? m.timb : m.timb || m.away)}</td>
+                ${isEsport ? `<td>${escapeHTML(m.skor || '-')}</td>` : ''}
                 <td>
                   <a class="bet-btn" href="${m.linkbet || '#'}" target="_blank" rel="noopener">BET</a>
                 </td>
@@ -430,41 +485,45 @@
       });
     }
 
-    // Escape HTML for safety
-    function escapeHTML(str) {
-      return String(str).replace(/[&<>"']/g, function(m) {
-        return ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'})[m];
-      });
-    }
-
     // Fetch data dari API dan group by liga
-    async function fetchAndRenderLeagues(sport) {
+    async function fetchAndRenderLeagues(sportKey) {
       showLoader();
       try {
-        const res = await fetch(URL_API + '?sport=' + encodeURIComponent(sport));
+        const res = await fetch(URL_API + '?sport=' + encodeURIComponent(sportKey));
         if (!res.ok) throw new Error('Gagal fetch');
         const jadwal = await res.json();
 
         // Group by liga
         const ligaMap = {};
-        jadwal.forEach(j => {
-          if (!j.liga || !j.tanggal || !j.jam || !j.home || !j.away || !j.linkbet) return;
-          if (!ligaMap[j.liga]) ligaMap[j.liga] = [];
-          ligaMap[j.liga].push(j);
-        });
+        if (sportKey === 'esport') {
+          // Gabung game + turnamen jadi nama liga
+          jadwal.forEach(j => {
+            if (!j.game || !j.turnamen || !j.tanggal || !j.jam || !j.tima || !j.timb || !j.linkbet) return;
+            const ligaName = j.game + ' - ' + j.turnamen;
+            if (!ligaMap[ligaName]) ligaMap[ligaName] = [];
+            ligaMap[ligaName].push(j);
+          });
+        } else {
+          jadwal.forEach(j => {
+            // Support format tima/timb (untuk sheet yang pakai tima/timb)
+            if (!j.liga || !j.tanggal || !j.jam || !(j.tima || j.home) || !(j.timb || j.away) || !j.linkbet) return;
+            if (!ligaMap[j.liga]) ligaMap[j.liga] = [];
+            ligaMap[j.liga].push(j);
+          });
+        }
 
         // Sort jadwal per liga by tanggal & jam
         Object.values(ligaMap).forEach(arr => {
           arr.sort((a, b) => {
-            let tglA = a.tanggal.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1');
-            let tglB = b.tanggal.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1');
-            let dateA = new Date(tglA + ' ' + a.jam);
-            let dateB = new Date(tglB + ' ' + b.jam);
+            let tglA = (a.tanggal || '').replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1');
+            let tglB = (b.tanggal || '').replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1');
+            let dateA = new Date(tglA + ' ' + (a.jam || ''));
+            let dateB = new Date(tglB + ' ' + (b.jam || ''));
             return dateA - dateB;
           });
         });
 
-        renderLeagues(ligaMap);
+        renderLeagues(ligaMap, sportKey);
       } catch (e) {
         showError('Gagal mengambil data, silakan refresh.');
       }

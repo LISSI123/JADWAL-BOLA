@@ -201,7 +201,7 @@
       transform: rotate(90deg);
     }
     .accordion-content {
-      max-height: 0;
+      max-height: 0;D
       overflow: hidden;
       transition: max-height 0.4s cubic-bezier(.4,0,.2,1), padding 0.3s;
       background: var(--bg-card);
@@ -209,7 +209,8 @@
     }
     .accordion.expanded .accordion-content {
       padding: 14px 18px 18px 18px;
-      max-height: 1200px;
+      max-height: none !important;
+     overflow: visible !important;
     }
     .league-table-wrap {
       width: 100%;

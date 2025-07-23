@@ -50,64 +50,358 @@
       text-rendering: optimizeLegibility;
       overflow-x: hidden;
     }
-    /* Welcome Screen */
+    /* Enhanced Welcome Screen - Modern & Attractive */
     #welcome-screen {
       position: fixed;
       z-index: 9999;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: #fff;
+      background: linear-gradient(135deg, #667aff 0%, #f093fb 100%);
       display: flex;
       align-items: center;
       justify-content: center;
       min-height: 100vh;
-      transition: opacity 0.5s var(--transition);
+      transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow: hidden;
     }
+    
+    /* Animated Background Shapes */
+    #welcome-screen::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
+      animation: floatBackground 20s linear infinite;
+    }
+    
+    @keyframes floatBackground {
+      0% { transform: translate(0, 0) rotate(0deg); }
+      100% { transform: translate(-60px, -60px) rotate(360deg); }
+    }
+    
     .welcome-card {
-      background: #fff;
-      border-radius: 22px;
-      box-shadow: 0 6px 32px rgba(25, 118, 210, 0.10), 0 1.5px 8px rgba(0,0,0,0.08);
-      padding: 38px 32px 32px 32px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border-radius: 32px;
+      box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.15),
+        0 8px 32px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+      padding: 48px 40px 40px 40px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      min-width: 320px;
-      max-width: 94vw;
-      animation: fadeIn 0.7s var(--transition);
+      min-width: 380px;
+      max-width: 90vw;
+      position: relative;
+      overflow: hidden;
+      transform: translateY(20px);
+      animation: slideUpFade 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
     }
+    
+    @keyframes slideUpFade {
+      0% {
+        opacity: 0;
+        transform: translateY(40px) scale(0.9);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+    
+    /* Glowing border effect */
+    .welcome-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 32px;
+      padding: 2px;
+      background: linear-gradient(45deg, #667aff, #f093fb, #667aff);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask-composite: exclude;
+      opacity: 0.6;
+      animation: borderGlow 3s ease-in-out infinite alternate;
+    }
+    
+    @keyframes borderGlow {
+      0% { opacity: 0.6; }
+      100% { opacity: 1; }
+    }
+    /* Enhanced Logo Section */
     .welcome-logo {
-      width: 180px;
-      max-width: 80vw;
-      margin-bottom: 28px;
-      display: block;
+      position: relative;
+      margin-bottom: 32px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      animation: logoEntrance 1.2s cubic-bezier(0.4, 0, 0.2, 1) 0.5s both;
     }
+    
+    @keyframes logoEntrance {
+      0% {
+        opacity: 0;
+        transform: translateY(30px) scale(0.8);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+    
+    /* Main Logo Container */
+    .logo-container {
+      position: relative;
+      margin-bottom: 16px;
+      animation: logoFloat 3s ease-in-out infinite;
+    }
+    
+    @keyframes logoFloat {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+    }
+    
+    /* Circular Logo Background */
+    .logo-bg {
+      width: 100px;
+      height: 100px;
+      background: linear-gradient(135deg, #667aff 0%, #f093fb 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 
+        0 12px 32px rgba(102, 122, 255, 0.3),
+        0 4px 16px rgba(240, 147, 251, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    /* Pulsing effect for logo */
+    .logo-bg::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(135deg, #667aff, #f093fb);
+      border-radius: 50%;
+      z-index: -1;
+      animation: logoPulse 2s ease-in-out infinite;
+    }
+    
+    @keyframes logoPulse {
+      0%, 100% { transform: scale(1); opacity: 0.8; }
+      50% { transform: scale(1.1); opacity: 1; }
+    }
+    
+    .logo-text {
+      font-size: 42px;
+      font-weight: 900;
+      color: white;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      animation: logoTextGlow 2s ease-in-out infinite alternate;
+    }
+    
+    @keyframes logoTextGlow {
+      0% { text-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+      100% { text-shadow: 0 2px 8px rgba(0,0,0,0.2), 0 0 20px rgba(255,255,255,0.3); }
+    }
+    
+    /* Floating Sport Icons Around Logo */
+    .sport-icons {
+      position: absolute;
+      width: 160px;
+      height: 160px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation: iconsRotate 20s linear infinite;
+    }
+    
+    @keyframes iconsRotate {
+      0% { transform: translate(-50%, -50%) rotate(0deg); }
+      100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+    
+    .sport-icon {
+      position: absolute;
+      width: 28px;
+      height: 28px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      animation: iconFloat 3s ease-in-out infinite;
+    }
+    
+    @keyframes iconFloat {
+      0%, 100% { transform: translateY(0px) scale(1); }
+      50% { transform: translateY(-4px) scale(1.1); }
+    }
+    
+    .sport-icon:nth-child(1) { top: 0; left: 50%; transform: translateX(-50%); animation-delay: 0s; }
+    .sport-icon:nth-child(2) { top: 25%; right: 0; animation-delay: 0.5s; }
+    .sport-icon:nth-child(3) { bottom: 25%; right: 0; animation-delay: 1s; }
+    .sport-icon:nth-child(4) { bottom: 0; left: 50%; transform: translateX(-50%); animation-delay: 1.5s; }
+    .sport-icon:nth-child(5) { bottom: 25%; left: 0; animation-delay: 2s; }
+    .sport-icon:nth-child(6) { top: 25%; left: 0; animation-delay: 2.5s; }
+    /* Enhanced Welcome Title */
     .welcome-title {
-      font-size: 2.1rem;
-      font-weight: bold;
-      color: var(--accent);
+      font-size: 2.4rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #667aff 0%, #f093fb 50%, #667aff 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-size: 200% 100%;
       text-align: center;
-      margin-bottom: 28px;
-      letter-spacing: 1px;
-      font-family: 'Segoe UI', Arial, Roboto, sans-serif;
+      margin-bottom: 24px;
+      letter-spacing: 1.2px;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      position: relative;
+      animation: titleGradientMove 3s ease-in-out infinite, titleSlideIn 1s cubic-bezier(0.4, 0, 0.2, 1) 0.8s both;
     }
+    
+    @keyframes titleGradientMove {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+    
+    @keyframes titleSlideIn {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* Subtitle with typing effect */
+    .welcome-subtitle {
+      font-size: 1.1rem;
+      color: #666;
+      text-align: center;
+      margin-bottom: 32px;
+      font-weight: 500;
+      line-height: 1.5;
+      animation: subtitleFadeIn 1s cubic-bezier(0.4, 0, 0.2, 1) 1.2s both;
+      position: relative;
+    }
+    
+    @keyframes subtitleFadeIn {
+      0% {
+        opacity: 0;
+        transform: translateY(15px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* Typing cursor effect */
+    .welcome-subtitle::after {
+      content: '|';
+      color: #667aff;
+      animation: blink 1s infinite;
+      margin-left: 2px;
+    }
+    
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0; }
+    }
+    /* Enhanced Welcome Button */
     .welcome-btn {
-      background: var(--accent);
+      background: linear-gradient(135deg, #667aff 0%, #f093fb 100%);
       color: #fff;
-      font-size: 1.25rem;
-      font-weight: bold;
+      font-size: 1.3rem;
+      font-weight: 700;
       border: none;
-      border-radius: 12px;
-      padding: 18px 38px;
+      border-radius: 20px;
+      padding: 20px 48px;
       cursor: pointer;
-      box-shadow: 0 2px 12px rgba(25,118,210,0.08);
-      transition: background 0.2s, color 0.2s;
-      margin-top: 12px;
-      letter-spacing: 1px;
+      box-shadow: 
+        0 8px 32px rgba(102, 122, 255, 0.3),
+        0 4px 16px rgba(240, 147, 251, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      margin-top: 16px;
+      letter-spacing: 1.2px;
       text-align: center;
       outline: none;
+      position: relative;
+      overflow: hidden;
+      transform: translateY(0);
+      animation: buttonSlideIn 1s cubic-bezier(0.4, 0, 0.2, 1) 1.5s both;
     }
+    
+    @keyframes buttonSlideIn {
+      0% {
+        opacity: 0;
+        transform: translateY(30px) scale(0.9);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+    
+    /* Shimmer effect on button */
+    .welcome-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: 0.6s;
+    }
+    
+    .welcome-btn:hover::before {
+      left: 100%;
+    }
+    
     .welcome-btn:hover, .welcome-btn:focus {
-      background: var(--accent-dark);
+      background: linear-gradient(135deg, #5a6cff 0%, #e785f0 100%);
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 
+        0 12px 40px rgba(102, 122, 255, 0.4),
+        0 6px 20px rgba(240, 147, 251, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
       color: #fff;
+    }
+    
+    .welcome-btn:active {
+      transform: translateY(-1px) scale(1.02);
+      box-shadow: 
+        0 6px 24px rgba(102, 122, 255, 0.3),
+        0 3px 12px rgba(240, 147, 251, 0.2);
+    }
+    
+    /* Button text with glow effect */
+    .welcome-btn span {
+      position: relative;
+      z-index: 1;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+      transition: text-shadow 0.3s ease;
+    }
+    
+    .welcome-btn:hover span {
+      text-shadow: 0 1px 2px rgba(0,0,0,0.1), 0 0 20px rgba(255,255,255,0.3);
     }
     @keyframes fadeIn {
       from { opacity: 0;}
@@ -1253,6 +1547,108 @@
         min-width: 260px;
       }
       
+      /* Enhanced Welcome Screen Mobile Responsive */
+      .welcome-card {
+        min-width: 300px;
+        max-width: 85vw;
+        padding: 36px 28px 32px 28px;
+        border-radius: 24px;
+        margin: 20px;
+      }
+      
+      .logo-bg {
+        width: 80px;
+        height: 80px;
+      }
+      
+      .logo-text {
+        font-size: 32px;
+      }
+      
+      .sport-icons {
+        width: 130px;
+        height: 130px;
+      }
+      
+      .sport-icon {
+        width: 24px;
+        height: 24px;
+        font-size: 12px;
+      }
+      
+      .welcome-title {
+        font-size: 1.8rem;
+        margin-bottom: 20px;
+        line-height: 1.3;
+        letter-spacing: 1px;
+      }
+      
+      .welcome-subtitle {
+        font-size: 1rem;
+        margin-bottom: 28px;
+        line-height: 1.4;
+        padding: 0 10px;
+      }
+      
+      .welcome-btn {
+        font-size: 1.1rem;
+        padding: 16px 36px;
+        border-radius: 16px;
+        letter-spacing: 1px;
+      }
+    }
+    
+    /* Extra Small Mobile - Enhanced Welcome */
+    @media (max-width: 480px) {
+      .welcome-card {
+        min-width: 280px;
+        max-width: 90vw;
+        padding: 30px 20px 26px 20px;
+        border-radius: 20px;
+        margin: 15px;
+      }
+      
+      .logo-bg {
+        width: 70px;
+        height: 70px;
+      }
+      
+      .logo-text {
+        font-size: 28px;
+      }
+      
+      .sport-icons {
+        width: 110px;
+        height: 110px;
+      }
+      
+      .sport-icon {
+        width: 20px;
+        height: 20px;
+        font-size: 10px;
+      }
+      
+      .welcome-title {
+        font-size: 1.5rem;
+        margin-bottom: 16px;
+        line-height: 1.2;
+        letter-spacing: 0.8px;
+      }
+      
+      .welcome-subtitle {
+        font-size: 0.9rem;
+        margin-bottom: 24px;
+        line-height: 1.3;
+        padding: 0 5px;
+      }
+      
+      .welcome-btn {
+        font-size: 1rem;
+        padding: 14px 28px;
+        border-radius: 14px;
+        letter-spacing: 0.8px;
+      }
+      
       .welcome-logo {
         width: 100px;
         margin-bottom: 16px;
@@ -1274,9 +1670,26 @@
 <body>
   <div id="welcome-screen">
     <div class="welcome-card">
-      <img class="welcome-logo" src="https://i.ibb.co/ksD92H7L/sg-logo-200x90-20211713191713-2.png" alt="Logo SLOTGOKIL">
-      <div class="welcome-title">JADWAL SPORT SLOTGOKIL</div>
-      <button class="welcome-btn" id="welcome-btn">LIHAT JADWAL SPORT</button>
+      <div class="welcome-logo">
+        <div class="logo-container">
+          <div class="logo-bg">
+            <div class="logo-text">SG</div>
+          </div>
+          <div class="sport-icons">
+            <div class="sport-icon">⚽</div>
+            <div class="sport-icon">🏀</div>
+            <div class="sport-icon">🎾</div>
+            <div class="sport-icon">🏐</div>
+            <div class="sport-icon">🏸</div>
+            <div class="sport-icon">⚾</div>
+          </div>
+        </div>
+      </div>
+      <div class="welcome-title">JADWAL SPORT TERLENGKAP</div>
+      <div class="welcome-subtitle">Dapatkan jadwal pertandingan real-time terlengkap dan terupdate</div>
+      <button class="welcome-btn" id="welcome-btn">
+        <span>🚀 MASUK KE JADWAL SPORT</span>
+      </button>
     </div>
   </div>
   <div class="container" style="display: none;">

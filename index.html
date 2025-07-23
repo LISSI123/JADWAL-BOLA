@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>JADWAL SPORT SLOTGOKIL</title>
+  <title>JADWAL SPORT LDBPLAY</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     :root {
@@ -109,6 +109,40 @@
       justify-content: space-between;
       margin: 0;
       padding: 18px 0 0 0;
+    }
+    .date-filter {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      padding: 0 8px;
+    }
+    .date-filter label {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-main);
+      white-space: nowrap;
+    }
+    .date-select {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-main);
+      font-size: 1rem;
+      font-weight: 500;
+      padding: 8px 12px;
+      cursor: pointer;
+      outline: none;
+      transition: border-color 0.2s, background 0.2s;
+      min-width: 140px;
+    }
+    .date-select:focus {
+      border-color: var(--accent);
+      background: var(--bg-hover);
+    }
+    .date-select option {
+      background: var(--bg-card);
+      color: var(--text-main);
     }
     .sports-tabs {
       display: flex;
@@ -302,6 +336,25 @@
       background: #135ba1;
       color: #fff;
     }
+    .dark-mode .date-select {
+      background: var(--bg-card);
+      color: var(--text-main);
+      border-color: var(--border);
+    }
+    .dark-mode .date-select option {
+      background: var(--bg-card);
+      color: var(--text-main);
+    }
+    .dark-mode .accordion-title {
+      color: var(--text-main);
+    }
+    .dark-mode .league-table th {
+      color: var(--text-muted);
+      background: var(--bg-accent);
+    }
+    .dark-mode .league-table td {
+      color: var(--text-main);
+    }
     @media (max-width: 700px) {
       .container { max-width: 100vw; padding: 0 2px 24px 2px; }
       .sports-tabs { font-size: 0.97rem; gap: 4px; }
@@ -309,24 +362,75 @@
       .accordion-header { font-size: 1rem; padding: 11px 10px; }
       .accordion-content { padding: 0 10px; }
       .accordion.expanded .accordion-content { padding: 10px 10px 14px 10px; }
-      table.league-table th, table.league-table td { padding: 6px 2px; font-size: 0.95rem; }
+      table.league-table th, table.league-table td { 
+        padding: 6px 2px; 
+        font-size: 0.95rem; 
+        word-wrap: break-word;
+        max-width: 80px;
+      }
       .bet-btn { padding: 5px 10px; font-size: 0.95rem; }
       .welcome-card { padding: 18px 8px 18px 8px; min-width: 0; }
       .welcome-logo { width: 120px; }
       .welcome-title { font-size: 1.1rem; margin-bottom: 18px; }
       .welcome-btn { font-size: 1rem; padding: 10px 18px; }
+      .date-filter { 
+        padding: 0 2px; 
+        flex-wrap: wrap; 
+        gap: 4px;
+        justify-content: center;
+      }
+      .date-select { 
+        min-width: 120px; 
+        font-size: 0.95rem;
+        flex: 1;
+        max-width: 200px;
+      }
+      .league-table-wrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
     }
     @media (max-width: 480px) {
-      table.league-table { min-width: 320px; font-size: 0.93rem; }
-      .league-table-wrap { padding: 0; }
+      table.league-table { 
+        min-width: 320px; 
+        font-size: 0.93rem; 
+      }
+      .league-table-wrap { 
+        padding: 0; 
+        margin: 0 -10px;
+      }
+      table.league-table th, table.league-table td {
+        padding: 4px 2px;
+        font-size: 0.9rem;
+        text-align: center;
+      }
+      .bet-btn {
+        padding: 4px 8px;
+        font-size: 0.85rem;
+        min-width: 35px;
+      }
+      .date-filter {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+      }
+      .date-filter label {
+        text-align: center;
+        font-size: 0.95rem;
+      }
+      .date-select {
+        width: 100%;
+        min-width: auto;
+        max-width: none;
+      }
     }
   </style>
 </head>
 <body>
   <div id="welcome-screen">
     <div class="welcome-card">
-      <img class="welcome-logo" src="https://i.ibb.co/ksD92H7L/sg-logo-200x90-20211713191713-2.png" alt="Logo Slotgokil">
-      <div class="welcome-title">JADWAL SPORT SLOTGOKIL</div>
+      <img class="welcome-logo" src="https://i.ibb.co/ksD92H7L/sg-logo-200x90-20211713191713-2.png" alt="Logo LDBPLAY">
+      <div class="welcome-title">JADWAL SPORT LDBPLAY</div>
       <button class="welcome-btn" id="welcome-btn">LIHAT JADWAL SPORT</button>
     </div>
   </div>
@@ -335,11 +439,22 @@
       <div class="sports-tabs" id="sports-tabs"></div>
       <button class="dark-toggle-btn" id="dark-toggle" title="Toggle dark mode">🌙</button>
     </div>
+    <div class="date-filter">
+      <label for="date-select">📅 Pilih Tanggal:</label>
+      <select id="date-select" class="date-select">
+        <option value="all">Semua Tanggal</option>
+      </select>
+    </div>
     <div id="main-content"></div>
   </div>
   <script>
     // Ganti URL_API sesuai endpoint Anda
     const URL_API = 'https://script.google.com/macros/s/AKfycbzoIifvsbqAcfiVvBhNdYsUqSGpu2AwpD2CntfeTseVk8rKatfOJ9pXCH0e4Ox1U1hU-A/exec';
+
+    // Global variables untuk filter tanggal
+    let allMatchesData = {};
+    let currentSportData = null;
+    let selectedDate = 'all';
 
     // Kategori olahraga + emoji
     const SPORTS = [
@@ -643,15 +758,106 @@
         `<div class="error-msg">${msg}</div>`;
     }
 
+    // Get today's date in DD/MM/YYYY format
+    function getTodayDate() {
+      const today = new Date();
+      const day = String(today.getDate()).padStart(2, '0');
+      const month = String(today.getMonth() + 1).padStart(2, '0');
+      const year = today.getFullYear();
+      return `${day}/${month}/${year}`;
+    }
+
+    // Populate date select options
+    function populateDateOptions(leagues) {
+      const dateSelect = document.getElementById('date-select');
+      const dates = new Set();
+      
+      // Collect all unique dates
+      Object.values(leagues).forEach(matches => {
+        matches.forEach(match => {
+          if (match.tanggal) {
+            dates.add(match.tanggal);
+          }
+        });
+      });
+      
+      // Sort dates
+      const sortedDates = Array.from(dates).sort((a, b) => {
+        let dateA = a.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1');
+        let dateB = b.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1');
+        return new Date(dateA) - new Date(dateB);
+      });
+      
+      // Clear existing options except "Semua Tanggal"
+      dateSelect.innerHTML = '<option value="all">Semua Tanggal</option>';
+      
+      // Get today's date
+      const today = getTodayDate();
+      let todayExists = false;
+      
+      // Add date options
+      sortedDates.forEach(date => {
+        const option = document.createElement('option');
+        option.value = date;
+        option.textContent = date;
+        
+        // Check if this is today's date
+        if (date === today) {
+          todayExists = true;
+          option.textContent = date + ' (Hari Ini)';
+          option.style.fontWeight = 'bold';
+          option.style.color = '#1976d2';
+        }
+        
+        if (date === selectedDate) {
+          option.selected = true;
+        }
+        dateSelect.appendChild(option);
+      });
+      
+      // Auto-select today's date if it exists and no date is currently selected
+      if (todayExists && selectedDate === 'all') {
+        selectedDate = today;
+        dateSelect.value = today;
+      }
+    }
+
+    // Filter leagues by selected date
+    function filterLeaguesByDate(leagues, targetDate) {
+      if (targetDate === 'all') {
+        return leagues;
+      }
+      
+      const filtered = {};
+      Object.entries(leagues).forEach(([league, matches]) => {
+        const filteredMatches = matches.filter(match => match.tanggal === targetDate);
+        if (filteredMatches.length > 0) {
+          filtered[league] = filteredMatches;
+        }
+      });
+      
+      return filtered;
+    }
+
     // Render liga dan pertandingan
     function renderLeagues(leagues, sportKey) {
       const main = document.getElementById('main-content');
       main.innerHTML = '';
-      if (!leagues || Object.keys(leagues).length === 0) {
-        main.innerHTML = '<div class="error-msg">Tidak ada jadwal tersedia.</div>';
+      
+      // Store original data
+      currentSportData = leagues;
+      
+      // Populate date options
+      populateDateOptions(leagues);
+      
+      // Filter by selected date
+      const filteredLeagues = filterLeaguesByDate(leagues, selectedDate);
+      
+      if (!filteredLeagues || Object.keys(filteredLeagues).length === 0) {
+        main.innerHTML = '<div class="error-msg">Tidak ada jadwal tersedia untuk tanggal yang dipilih.</div>';
         return;
       }
-      Object.entries(leagues).forEach(([league, matches], idx) => {
+      Object.entries(filteredLeagues).forEach(([league, matches], idx) => {
         // Accordion
         const accordion = document.createElement('div');
         accordion.className = 'accordion' + (idx === 0 ? ' expanded' : '');
@@ -759,6 +965,14 @@
         showError('Gagal mengambil data, silakan refresh.');
       }
     }
+
+    // Date filter event listener
+    document.getElementById('date-select').addEventListener('change', function() {
+      selectedDate = this.value;
+      if (currentSportData) {
+        renderLeagues(currentSportData, window.currentSport);
+      }
+    });
 
     // Dark mode toggle
     const darkToggleBtn = document.getElementById('dark-toggle');

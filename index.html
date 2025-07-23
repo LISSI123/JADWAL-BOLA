@@ -541,22 +541,43 @@
       margin-top: 2px;
       text-align: center;
       line-height: 1.2;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .match-status::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.6s ease;
+    }
+    
+    .match-status:hover::before {
+      left: 100%;
     }
     
     .match-status.upcoming {
-      background: #e3f2fd;
+      background: linear-gradient(135deg, #e3f2fd, #bbdefb);
       color: #1976d2;
+      border: 1px solid rgba(25, 118, 210, 0.2);
     }
     
     .match-status.live {
-      background: #ffebee;
+      background: linear-gradient(135deg, #ffebee, #ffcdd2);
       color: #d32f2f;
       animation: pulse 2s infinite;
+      border: 1px solid rgba(211, 47, 47, 0.3);
+      box-shadow: 0 0 10px rgba(211, 47, 47, 0.2);
     }
     
     .match-status.finished {
-      background: #e8f5e8;
+      background: linear-gradient(135deg, #e8f5e8, #c8e6c9);
       color: #2e7d32;
+      border: 1px solid rgba(46, 125, 50, 0.2);
     }
     
     .match-countdown {
@@ -637,6 +658,22 @@
       text-align: center;
       margin-left: 5px;
       font-size: 11px;
+      transition: all 0.3s ease;
+    }
+    
+    .team-score.live-score {
+      background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+      color: white;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 900;
+      box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+      animation: scoreGlow 2s infinite alternate;
+    }
+    
+    @keyframes scoreGlow {
+      0% { box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3); }
+      100% { box-shadow: 0 4px 16px rgba(255, 107, 107, 0.6); }
     }
     
     .match-bet {
@@ -645,25 +682,44 @@
     }
     
     .bet-btn {
-      background: var(--accent);
+      background: linear-gradient(135deg, var(--accent), var(--accent-dark));
       color: white;
       border: none;
-      border-radius: 3px;
-      padding: 3px 8px;
+      border-radius: 6px;
+      padding: 4px 10px;
       font-size: 9px;
       font-weight: 800;
       cursor: pointer;
       text-decoration: none;
-      transition: var(--transition);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       display: inline-block;
       line-height: 1.3;
       letter-spacing: 0.3px;
+      position: relative;
+      overflow: hidden;
+      text-transform: uppercase;
+      box-shadow: 0 2px 8px rgba(0, 166, 63, 0.2);
+    }
+    
+    .bet-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s ease;
+    }
+    
+    .bet-btn:hover::before {
+      left: 100%;
     }
     
     .bet-btn:hover {
-      background: var(--accent-dark);
+      background: linear-gradient(135deg, var(--accent-dark), #006400);
       transform: translateY(-2px) scale(1.05);
-      box-shadow: 0 4px 12px rgba(255, 69, 0, 0.3);
+      box-shadow: 0 6px 20px rgba(0, 166, 63, 0.4);
     }
     
     .bet-btn:active {
@@ -1537,12 +1593,12 @@
               <div class="team-row">
                 <span class="team-label home" data-sport="${sportKey}">${homeLabel}</span>
                 <span class="team-name">${escapeHTML(homeTeam)}</span>
-                <span class="team-score">-</span>
+                <span class="team-score ${matchStatus.isLive ? 'live-score' : ''}">${match.scorea || '-'}</span>
               </div>
               <div class="team-row">
                 <span class="team-label away" data-sport="${sportKey}">${awayLabel}</span>
                 <span class="team-name">${escapeHTML(awayTeam)}</span>
-                <span class="team-score">-</span>
+                <span class="team-score ${matchStatus.isLive ? 'live-score' : ''}">${match.scoreb || '-'}</span>
               </div>
             </div>
             <div class="match-bet">
@@ -1916,7 +1972,64 @@
       // Start timer updates
       updateMatchTimers();
       
+      // Setup notifications
+      setupNotifications();
+      
       console.log('✅ App initialized successfully');
+    }
+    
+    // Notification system for upcoming matches
+    function setupNotifications() {
+      // Request notification permission
+      if ('Notification' in window && Notification.permission === 'default') {
+        Notification.requestPermission();
+      }
+      
+      // Check for upcoming matches every 5 minutes
+      setInterval(() => {
+        checkUpcomingMatches();
+      }, 300000); // 5 minutes
+    }
+    
+    function checkUpcomingMatches() {
+      const matchRows = document.querySelectorAll('.match-row');
+      matchRows.forEach(row => {
+        const timeElement = row.querySelector('.match-time div:nth-child(2)');
+        if (!timeElement) return;
+        
+        const timeText = timeElement.textContent.replace(/[^0-9:]/g, '').trim();
+        const now = new Date();
+        const currentTime = now.getHours() * 60 + now.getMinutes();
+        
+        if (timeText.includes(':')) {
+          const [hours, minutes] = timeText.split(':').map(Number);
+          const matchTime = hours * 60 + minutes;
+          const timeDiff = matchTime - currentTime;
+          
+          // Notify 15 minutes before match
+          if (timeDiff === 15) {
+            const teamNames = row.querySelectorAll('.team-name');
+            if (teamNames.length >= 2) {
+              showMatchNotification(teamNames[0].textContent, teamNames[1].textContent, '15 minutes');
+            }
+          }
+        }
+      });
+    }
+    
+    function showMatchNotification(team1, team2, timeLeft) {
+      if ('Notification' in window && Notification.permission === 'granted') {
+        const notification = new Notification(`⚽ Match Starting Soon!`, {
+          body: `${team1} vs ${team2} starts in ${timeLeft}`,
+          icon: 'https://i.ibb.co/ksD92H7L/sg-logo-200x90-20211713191713-2.png',
+          badge: 'https://i.ibb.co/ksD92H7L/sg-logo-200x90-20211713191713-2.png'
+        });
+        
+        // Auto close after 5 seconds
+        setTimeout(() => {
+          notification.close();
+        }, 5000);
+      }
     }
 
     // Update real-time clock

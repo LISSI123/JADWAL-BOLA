@@ -1708,9 +1708,27 @@
         <option value="all">Semua Tanggal</option>
       </select>
       <div class="quick-filters">
-        <button class="quick-filter-btn" data-filter="today">Hari Ini</button>
+        <button class="quick-filter-btn active" data-filter="today">Hari Ini</button>
         <button class="quick-filter-btn" data-filter="tomorrow">Besok</button>
         <button class="quick-filter-btn" data-filter="week">Minggu Ini</button>
+      </div>
+      
+      <!-- Flashscore-style Date Navigator -->
+      <div class="flashscore-dates" style="margin-top: 15px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+        <div class="date-navigation" style="display: flex; align-items: center; gap: 5px;">
+          <button id="prevDateNav" class="nav-btn" style="padding: 8px 12px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; font-weight: bold;">‹</button>
+          <span id="currentDateDisplay" style="padding: 8px 15px; background: var(--bg-accent); border-radius: 6px; font-weight: 600; min-width: 100px; text-align: center;">24/07/2025</span>
+          <button id="nextDateNav" class="nav-btn" style="padding: 8px 12px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; font-weight: bold;">›</button>
+        </div>
+        <div class="quick-date-buttons" style="display: flex; gap: 5px; flex-wrap: wrap;">
+          <button class="quick-date-btn" data-offset="-3" style="padding: 6px 10px; border: 1px solid var(--border); background: var(--bg-card); border-radius: 4px; cursor: pointer; font-size: 11px;">-3d</button>
+          <button class="quick-date-btn" data-offset="-2" style="padding: 6px 10px; border: 1px solid var(--border); background: var(--bg-card); border-radius: 4px; cursor: pointer; font-size: 11px;">-2d</button>
+          <button class="quick-date-btn" data-offset="-1" style="padding: 6px 10px; border: 1px solid var(--border); background: var(--bg-card); border-radius: 4px; cursor: pointer; font-size: 11px;">-1d</button>
+          <button class="quick-date-btn active" data-offset="0" style="padding: 6px 10px; border: 1px solid var(--accent); background: var(--accent); color: white; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold;">HARI INI</button>
+          <button class="quick-date-btn" data-offset="1" style="padding: 6px 10px; border: 1px solid var(--border); background: var(--bg-card); border-radius: 4px; cursor: pointer; font-size: 11px;">+1d</button>
+          <button class="quick-date-btn" data-offset="2" style="padding: 6px 10px; border: 1px solid var(--border); background: var(--bg-card); border-radius: 4px; cursor: pointer; font-size: 11px;">+2d</button>
+          <button class="quick-date-btn" data-offset="3" style="padding: 6px 10px; border: 1px solid var(--border); background: var(--bg-card); border-radius: 4px; cursor: pointer; font-size: 11px;">+3d</button>
+        </div>
       </div>
     </div>
     <div class="search-bar">
@@ -1719,6 +1737,7 @@
     </div>
     <div id="main-content"></div>
   </div>
+  
   <script>
     console.log('🚀 Script loading...');
     
@@ -1730,7 +1749,7 @@
     let currentSportData = null;
     let selectedDate = 'all';
     let searchQuery = '';
-    let currentFilter = 'today';
+    let currentFilter = 'all'; // Default to show all instead of 'today'
 
     // Kategori olahraga + emoji
     const SPORTS = [
@@ -1883,11 +1902,19 @@
         dateSelect.appendChild(option);
       });
       
-      // Auto-select today's date jika selectedDate masih 'all' dan hari ini ada
+      console.log('📅 Today exists in data:', todayExists);
+      console.log('📅 Current selectedDate:', selectedDate);
+      
+      // Auto-select today's date jika selectedDate masih 'all' dan hari ini ada  
       if (todayExists && selectedDate === 'all') {
         selectedDate = today;
         dateSelect.value = today;
-        console.log('Auto-selected today:', today);
+      } else if (!todayExists && selectedDate === 'all') {
+        // Jika today gak ada, pilih tanggal pertama yang tersedia
+        if (sortedDates.length > 0) {
+          selectedDate = sortedDates[0];
+          dateSelect.value = sortedDates[0];
+        }
       }
     }
 
@@ -2183,8 +2210,22 @@
       console.log('Fetching data for:', sport);
       showLoader();
       
+      // Map sport key to API endpoint
+      const sportMap = {
+        'bola': 'Sepak Bola',
+        'basket': 'Bola Basket', 
+        'tennis': 'Tennis',
+        'voli': 'Bola Voli',
+        'badminton': 'Badminton',
+        'baseball': 'Baseball',
+        'esport': 'E-Sports'
+      };
+      
+      const apiSport = sportMap[sport] || sport;
+      console.log('API Sport:', apiSport);
+      
       try {
-        const res = await fetch(URL_API + '?sport=' + encodeURIComponent(sport));
+        const res = await fetch(URL_API + '?sport=' + encodeURIComponent(apiSport));
         const jadwal = await res.json();
         
         console.log('Data received:', jadwal.length, 'matches');
@@ -2218,6 +2259,13 @@
         });
 
         renderLeagues(ligaMap, sport);
+        
+        // Setup filter and search after data is loaded
+        setTimeout(() => {
+          console.log('🎯 Setting up filters and search after data load');
+          setupFilterAndSearch();
+          applyFilters();
+        }, 200);
       } catch (e) {
         console.error('Fetch error:', e);
         showError('Error loading data. <button onclick="location.reload()">Refresh</button>');
@@ -2278,6 +2326,8 @@
 
     // Setup filter and search functionality
     function setupFilterAndSearch() {
+      console.log('🚀 SETUP FILTER START');
+      
       const searchInput = document.getElementById('search-input');
       const dateSelect = document.getElementById('date-select');
       const clearBtn = document.getElementById('clear-search');
@@ -2308,44 +2358,262 @@
         });
       }
       
-      // Quick filter buttons
-      document.querySelectorAll('.quick-filter-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
+      // Filter buttons - SIMPLE DAN LANGSUNG
+      const filterButtons = document.querySelectorAll('.quick-filter-btn');
+      console.log('🔧 Found filter buttons:', filterButtons.length);
+      
+      filterButtons.forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          console.log('🎯 Filter clicked:', this.dataset.filter);
+          
+          // Update filter
           currentFilter = this.dataset.filter;
-          document.querySelectorAll('.quick-filter-btn').forEach(b => b.classList.remove('active'));
+          
+          // Update button states
+          document.querySelectorAll('.quick-filter-btn').forEach(function(b) {
+            b.classList.remove('active');
+          });
           this.classList.add('active');
+          
+          // Apply filter
           applyFilters();
         });
+        
+        // Set initial active state based on currentFilter
+        if (btn.dataset.filter === currentFilter) {
+          btn.classList.add('active');
+        }
+      });
+      
+      console.log('✅ Filter setup complete');
+      
+      // Setup Flashscore-style Date Navigator
+      setupDateNavigator();
+    }
+    
+    // Setup Date Navigator functionality
+    function setupDateNavigator() {
+      const currentDateDisplay = document.getElementById('currentDateDisplay');
+      const prevDateNav = document.getElementById('prevDateNav');
+      const nextDateNav = document.getElementById('nextDateNav');
+      const quickDateBtns = document.querySelectorAll('.quick-date-btn');
+      
+      // Current date tracking
+      let currentViewDate = new Date();
+      
+      // Update date display
+      function updateDateDisplay() {
+        const formatted = `${currentViewDate.getDate().toString().padStart(2, '0')}/${(currentViewDate.getMonth() + 1).toString().padStart(2, '0')}/${currentViewDate.getFullYear()}`;
+        if (currentDateDisplay) {
+          currentDateDisplay.textContent = formatted;
+        }
+        
+        // Apply filter for this specific date
+        filterBySpecificDate(formatted);
+      }
+      
+      // Previous date
+      if (prevDateNav) {
+        prevDateNav.addEventListener('click', () => {
+          currentViewDate.setDate(currentViewDate.getDate() - 1);
+          updateDateDisplay();
+          updateQuickDateButtons();
+        });
+      }
+      
+      // Next date  
+      if (nextDateNav) {
+        nextDateNav.addEventListener('click', () => {
+          currentViewDate.setDate(currentViewDate.getDate() + 1);
+          updateDateDisplay();
+          updateQuickDateButtons();
+        });
+      }
+      
+      // Quick date buttons
+      quickDateBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const offset = parseInt(btn.dataset.offset);
+          const today = new Date();
+          currentViewDate = new Date(today);
+          currentViewDate.setDate(today.getDate() + offset);
+          
+          updateDateDisplay();
+          updateQuickDateButtons();
+          
+          // Update active state
+          quickDateBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+        });
+      });
+      
+      // Update quick date button states
+      function updateQuickDateButtons() {
+        const today = new Date();
+        const dayDiff = Math.floor((currentViewDate - today) / (1000 * 60 * 60 * 24));
+        
+        quickDateBtns.forEach(btn => {
+          btn.classList.remove('active');
+          if (parseInt(btn.dataset.offset) === dayDiff) {
+            btn.classList.add('active');
+          }
+        });
+      }
+      
+      // Initialize
+      updateDateDisplay();
+    }
+    
+    // Filter by specific date (like Flashscore)
+    function filterBySpecificDate(targetDate) {
+      console.log('🎯 FILTERING BY SPECIFIC DATE:', targetDate);
+      
+      const matchRows = document.querySelectorAll('.match-row');
+      let visibleCount = 0;
+      
+      matchRows.forEach((row, index) => {
+        const matchTimeDiv = row.querySelector('.match-time');
+        let shouldShow = false;
+        
+        if (matchTimeDiv) {
+          const dateDiv = matchTimeDiv.querySelector('div:first-child');
+          if (dateDiv) {
+            const dateText = dateDiv.textContent.trim();
+            shouldShow = dateText.includes(targetDate) || dateText === targetDate;
+            
+            console.log(`📅 Row ${index}: "${dateText}" matches "${targetDate}" = ${shouldShow}`);
+          }
+        }
+        
+        if (shouldShow) {
+          row.style.display = '';
+          visibleCount++;
+        } else {
+          row.style.display = 'none';
+        }
+      });
+      
+      console.log(`✅ ${visibleCount} matches shown for ${targetDate}`);
+      
+      // Hide empty sections
+      const ligaSections = document.querySelectorAll('.liga-section');
+      ligaSections.forEach(section => {
+        const visibleRows = section.querySelectorAll('.match-row[style=""]');
+        if (visibleRows.length === 0) {
+          section.style.display = 'none';
+        } else {
+          section.style.display = '';
+        }
       });
     }
 
     // Apply filters
     function applyFilters() {
       const matchRows = document.querySelectorAll('.match-row');
+      
+      if (!matchRows.length) {
+        return;
+      }
+
+      // Get current date information dynamically using local browser time
       const today = new Date();
+      today.setHours(0, 0, 0, 0); // Reset to start of day
+      
       const tomorrow = new Date(today);
       tomorrow.setDate(today.getDate() + 1);
-      const weekEnd = new Date(today);
-      weekEnd.setDate(today.getDate() + 7);
+      
+      // Format dates to DD/MM/YYYY for comparison - exactly as requirements
+      const todayFormatted = `${String(today.getDate()).padStart(2, '0')}/${String(today.getMonth() + 1).padStart(2, '0')}/${today.getFullYear()}`;
+      const tomorrowFormatted = `${String(tomorrow.getDate()).padStart(2, '0')}/${String(tomorrow.getMonth() + 1).padStart(2, '0')}/${tomorrow.getFullYear()}`;
+      
+      console.log(' Current filter:', currentFilter);
 
-      matchRows.forEach(row => {
+      let visibleCount = 0;
+
+      matchRows.forEach((row, index) => {
         let shouldShow = true;
 
-        // Apply search filter
+        // Apply search filter first
         if (searchQuery) {
           const teamNames = row.querySelectorAll('.team-name');
           const searchText = Array.from(teamNames).map(t => t.textContent).join(' ').toLowerCase();
           shouldShow = searchText.includes(searchQuery);
         }
 
-        row.style.display = shouldShow ? 'flex' : 'none';
+        // Apply date filter if search passed
+        if (shouldShow && currentFilter !== 'all') {
+          const matchTimeDiv = row.querySelector('.match-time');
+          if (matchTimeDiv) {
+            const dateDiv = matchTimeDiv.querySelector('div:first-child');
+            if (dateDiv) {
+              const dateText = dateDiv.textContent.trim();
+              
+              console.log(`🔍 Row ${index}: Date="${dateText}", Filter="${currentFilter}"`);
+              
+              if (currentFilter === 'today') {
+                // Check for today using dynamic calculation
+                shouldShow = dateText === todayFormatted;
+              } 
+              else if (currentFilter === 'tomorrow') {
+                // Check for tomorrow using dynamic calculation - exactly as requirements
+                shouldShow = dateText === tomorrowFormatted;
+                console.log(`🎯 TOMORROW CHECK: "${dateText}" === "${tomorrowFormatted}" = ${shouldShow}`);
+                
+                // Additional debug info for troubleshooting
+                if (index === 0) { // Only log for first match to avoid spam
+                  console.log(`📋 Available dates in first few matches:`);
+                  const allDateElements = document.querySelectorAll('.match-time div:first-child');
+                  Array.from(allDateElements).slice(0, 5).forEach((el, i) => {
+                    console.log(`  Match ${i+1}: "${el.textContent.trim()}"`);
+                  });
+                }
+              } 
+              else if (currentFilter === 'week') {
+                // Check for this week (current week from today)
+                shouldShow = false;
+                const weekStart = new Date(today);
+                weekStart.setDate(today.getDate() - today.getDay()); // Start of week (Sunday)
+                const weekEnd = new Date(weekStart);
+                weekEnd.setDate(weekStart.getDate() + 6); // End of week (Saturday)
+                
+                // Parse the match date
+                const [day, month, year] = dateText.split('/').map(Number);
+                const matchDate = new Date(year, month - 1, day);
+                
+                shouldShow = matchDate >= weekStart && matchDate <= weekEnd;
+              }
+            }
+          }
+        }
+
+        // Show/hide the row - GUNAKAN DISPLAY BLOCK BUKAN FLEX
+        if (shouldShow) {
+          row.style.display = '';
+          visibleCount++;
+        } else {
+          row.style.display = 'none';
+        }
       });
 
-      // Hide empty sections
+      // Hide empty sections but keep structure intact
       document.querySelectorAll('.accordion').forEach(accordion => {
-        const visibleMatches = accordion.querySelectorAll('.match-row[style*="flex"]');
-        accordion.style.display = visibleMatches.length > 0 ? 'block' : 'none';
+        const visibleMatches = accordion.querySelectorAll('.match-row:not([style*="none"])');
+        if (visibleMatches.length > 0) {
+          accordion.style.display = '';
+        } else {
+          accordion.style.display = 'none';
+        }
       });
+      
+      console.log(`🎉 Filter applied! Showing ${visibleCount} out of ${matchRows.length} matches`);
+      
+      // Show message if no matches visible for debugging
+      if (visibleCount === 0 && currentFilter !== 'all') {
+        console.log(`⚠️ No matches found for filter "${currentFilter}".`);
+        console.log(`📅 Available dates in DOM:`, 
+          Array.from(document.querySelectorAll('.match-time div:first-child')).map(el => el.textContent.trim()).slice(0, 10));
+      }
     }
 
     // Dark mode toggle
@@ -2373,11 +2641,14 @@
       // Render sports tabs
       renderSportsTabs(window.currentSport);
       
+      // Setup filter and search IMMEDIATELY
+      setupFilterAndSearch();
+      
+      // Setup date navigator
+      setupDateNavigator();
+      
       // Fetch and render leagues
       fetchAndRenderLeagues(window.currentSport);
-      
-      // Setup filter and search
-      setupFilterAndSearch();
       
       // Setup dark mode
       setupDarkMode();

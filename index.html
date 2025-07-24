@@ -1995,11 +1995,12 @@
     const URL_API = 'https://script.google.com/macros/s/AKfycbzoIifvsbqAcfiVvBhNdYsUqSGpu2AwpD2CntfeTseVk8rKatfOJ9pXCH0e4Ox1U1hU-A/exec';
 
     // Global variables untuk filter tanggal dan search
-    let allMatchesData = {};
+    let allMatchesData = {}; // Cache untuk semua data yang sudah di-fetch
     let currentSportData = null;
     let selectedDate = 'all';
     let searchQuery = '';
-    let currentFilter = 'all'; // Default to show all instead of 'today'
+    let currentFilter = null; // Set to null to show all by default
+    let currentActiveDate = null; // Tanggal yang sedang aktif di navigator
 
     // Kategori olahraga + emoji
     const SPORTS = [
@@ -2056,12 +2057,8 @@
           if (window.currentSport !== sport.key) {
             console.log('Switching to sport:', sport.key);
             
-            // Reset filter ke hari ini ketika ganti sport
-            selectedDate = 'all';
-            const dateSelect = document.getElementById('date-select');
-            if (dateSelect) {
-              dateSelect.value = 'all';
-            }
+            // Simpan tanggal aktif saat ini
+            const previousActiveDate = currentActiveDate;
             
             // Update active state
             document.querySelectorAll('.sport-btn').forEach(b => b.classList.remove('active'));
@@ -2070,7 +2067,16 @@
             // Switch sport
             window.currentSport = sport.key;
             renderSportsTabs(sport.key);
-            fetchAndRenderLeagues(sport.key);
+            
+            // Fetch data untuk sport baru
+            fetchAndRenderLeagues(sport.key).then(() => {
+              // Setelah data dimuat, kembalikan ke tanggal yang sama jika ada
+              if (previousActiveDate) {
+                setTimeout(() => {
+                  filterBySpecificDate(previousActiveDate);
+                }, 300);
+              }
+            });
           }
         };
         tabs.appendChild(btn);
@@ -2100,6 +2106,65 @@
       const month = String(today.getMonth() + 1).padStart(2, '0');
       const year = today.getFullYear();
       return `${day}/${month}/${year}`;
+    }
+
+    // FUNGSI TEST UNTUK VERIFIKASI FORMAT TANGGAL
+    function testDateFormatting() {
+      console.log("🧪 TESTING DATE FORMATTING CONSISTENCY:");
+      
+      // Test hari ini
+      const today = new Date();
+      const hariIniFormatted = formatDateToDDMMYYYY(today);
+      console.log("✅ Hari Ini:", hariIniFormatted);
+      
+      // Test besok
+      const besokFormatted = getTomorrowFormatted();
+      console.log("✅ Besok:", besokFormatted);
+      
+      // Test dengan offset
+      const plus1d = getDateWithOffsetFormatted(1);
+      const minus1d = getDateWithOffsetFormatted(-1);
+      console.log("✅ +1 hari:", plus1d);
+      console.log("✅ -1 hari:", minus1d);
+      
+      // Test perbandingan string
+      const testDate = "25/07/2025";
+      const isToday = testDate === hariIniFormatted;
+      console.log(`✅ Test perbandingan: "${testDate}" === "${hariIniFormatted}" = ${isToday}`);
+      
+      console.log("🎯 Format yang digunakan: DD/MM/YYYY dengan padStart(2, '0')");
+      console.log("🎯 Semua perbandingan menggunakan string === string");
+    }
+
+    // FUNGSI PEMROSESAN TANGGAL - FORMAT DD/MM/YYYY KONSISTEN
+    // Convert Date object to DD/MM/YYYY string format (sesuai format spreadsheet)
+    function formatDateToDDMMYYYY(date) {
+      const dd = String(date.getDate()).padStart(2, '0');
+      const mm = String(date.getMonth() + 1).padStart(2, '0');
+      const yyyy = date.getFullYear();
+      const formatted = `${dd}/${mm}/${yyyy}`;
+      console.log('📅 Date formatted to DD/MM/YYYY:', formatted);
+      return formatted;
+    }
+
+    // Helper: Get today's date in DD/MM/YYYY format
+    function getTodayFormatted() {
+      const today = new Date();
+      return formatDateToDDMMYYYY(today);
+    }
+
+    // Helper: Get tomorrow's date in DD/MM/YYYY format
+    function getTomorrowFormatted() {
+      const besok = new Date();
+      besok.setDate(besok.getDate() + 1);
+      return formatDateToDDMMYYYY(besok);
+    }
+
+    // Helper: Get date with offset in DD/MM/YYYY format
+    function getDateWithOffsetFormatted(offsetDays) {
+      const date = new Date();
+      date.setDate(date.getDate() + offsetDays);
+      return formatDateToDDMMYYYY(date);
     }
 
     // Populate date select options
@@ -2449,9 +2514,30 @@
       });
     }
 
-    // Fetch and render leagues
+    // Fetch and render leagues dengan caching system
     async function fetchAndRenderLeagues(sport) {
       console.log('Fetching data for:', sport);
+      
+      // Cek apakah data sudah ada di cache
+      if (allMatchesData[sport]) {
+        console.log('📦 Using cached data for:', sport);
+        currentSportData = allMatchesData[sport];
+        renderLeagues(allMatchesData[sport], sport);
+        
+        // Setup filter and search
+        setTimeout(() => {
+          setupFilterAndSearch();
+          // Jika ada tanggal aktif, filter ke tanggal tersebut
+          if (currentActiveDate) {
+            filterBySpecificDate(currentActiveDate);
+          } else {
+            applyFilters();
+          }
+        }, 100);
+        return;
+      }
+      
+      // Jika belum ada di cache, fetch dari API
       showLoader();
       
       // Map sport key to API endpoint
@@ -2504,11 +2590,20 @@
 
         renderLeagues(ligaMap, sport);
         
+        // Store data in cache untuk sport ini
+        allMatchesData[sport] = ligaMap;
+        
         // Setup filter and search after data is loaded
         setTimeout(() => {
           console.log('🎯 Setting up filters and search after data load');
           setupFilterAndSearch();
-          applyFilters();
+          
+          // Jika ada tanggal aktif, filter ke tanggal tersebut
+          if (currentActiveDate) {
+            filterBySpecificDate(currentActiveDate);
+          } else {
+            applyFilters();
+          }
         }, 200);
       } catch (e) {
         console.error('Fetch error:', e);
@@ -2601,17 +2696,18 @@
         });
       }
       
-      // Filter buttons - SIMPLE DAN LANGSUNG
+      // Filter buttons - MENGGUNAKAN FORMAT STRING YANG KONSISTEN
       const filterButtons = document.querySelectorAll('.quick-filter-btn');
       console.log('🔧 Found filter buttons:', filterButtons.length);
       
       filterButtons.forEach(function(btn) {
         btn.addEventListener('click', function(e) {
           e.preventDefault();
-          console.log('🎯 Filter clicked:', this.dataset.filter);
+          const filterType = this.dataset.filter;
+          console.log('🎯 Filter clicked:', filterType);
           
           // Update filter
-          currentFilter = this.dataset.filter;
+          currentFilter = filterType;
           
           // Update button states
           document.querySelectorAll('.quick-filter-btn').forEach(function(b) {
@@ -2619,14 +2715,24 @@
           });
           this.classList.add('active');
           
-          // Apply filter
-          applyFilters();
+          // Apply filter dengan format tanggal yang KONSISTEN DD/MM/YYYY
+          if (filterType === 'today') {
+            const hariIniFormatted = getTodayFormatted();
+            console.log("🎯 FILTERING HARI INI:", hariIniFormatted);
+            filterBySpecificDate(hariIniFormatted);
+          } else if (filterType === 'tomorrow') {
+            const besokFormatted = getTomorrowFormatted();
+            console.log("🎯 FILTERING BESOK:", besokFormatted);
+            filterBySpecificDate(besokFormatted);
+          } else if (filterType === 'week') {
+            // Untuk minggu ini, gunakan applyFilters biasa
+            applyFilters();
+          } else {
+            applyFilters();
+          }
         });
         
-        // Set initial active state based on currentFilter
-        if (btn.dataset.filter === currentFilter) {
-          btn.classList.add('active');
-        }
+        // No initial active state - show all by default
       });
       
       console.log('✅ Filter setup complete');
@@ -2682,13 +2788,14 @@
         element.addEventListener('dragstart', (e) => e.preventDefault());
       }
       
-      // Update date display
+      // Update date display dengan format DD/MM/YYYY yang konsisten
       function updateDateDisplay() {
-        const formatted = `${currentViewDate.getDate().toString().padStart(2, '0')}/${(currentViewDate.getMonth() + 1).toString().padStart(2, '0')}/${currentViewDate.getFullYear()}`;
+        const formatted = formatDateToDDMMYYYY(currentViewDate);
         if (currentDateDisplay) {
           currentDateDisplay.textContent = formatted;
         }
         
+        console.log("🎯 Date Navigator Filter:", formatted);
         // Apply filter for this specific date
         filterBySpecificDate(formatted);
       }
@@ -2744,50 +2851,175 @@
       activateCenterNavigation();
     }
     
-    // Filter by specific date (like Flashscore)
+    // Filter by specific date (like Flashscore) dengan data filtering yang tepat
     function filterBySpecificDate(targetDate) {
       console.log('🎯 FILTERING BY SPECIFIC DATE:', targetDate);
       
-      const matchRows = document.querySelectorAll('.match-row');
-      let visibleCount = 0;
+      // Set current active date
+      currentActiveDate = targetDate;
       
-      matchRows.forEach((row, index) => {
-        const matchTimeDiv = row.querySelector('.match-time');
-        let shouldShow = false;
-        
-        if (matchTimeDiv) {
-          const dateDiv = matchTimeDiv.querySelector('div:first-child');
-          if (dateDiv) {
-            const dateText = dateDiv.textContent.trim();
-            shouldShow = dateText.includes(targetDate) || dateText === targetDate;
-            
-            console.log(`📅 Row ${index}: "${dateText}" matches "${targetDate}" = ${shouldShow}`);
+      // Jika tidak ada data sport saat ini, return
+      if (!currentSportData) {
+        console.log('❌ No current sport data available');
+        showNoMatchesMessage(targetDate);
+        return;
+      }
+      
+      // Filter data berdasarkan tanggal dengan string comparison
+      const filteredData = {};
+      let totalMatches = 0;
+      let debugCount = 0;
+      
+      Object.entries(currentSportData).forEach(([league, matches]) => {
+        const filteredMatches = matches.filter(match => {
+          const rowTanggal = match.tanggal; // Data dari spreadsheet (DD/MM/YYYY)
+          const isMatch = rowTanggal === targetDate; // Perbandingan string langsung
+          
+          // Debug logging untuk verifikasi perbandingan
+          if (debugCount < 5) {
+            console.log("📊 FILTER COMPARISON:");
+            console.log("  Target Date:", targetDate);
+            console.log("  Row Tanggal:", rowTanggal);
+            console.log("  Match Result:", isMatch);
+            console.log("  Type Check:", typeof targetDate, "===", typeof rowTanggal);
+            debugCount++;
           }
-        }
+          
+          return isMatch;
+        });
         
-        if (shouldShow) {
-          row.style.display = '';
-          visibleCount++;
-        } else {
-          row.style.display = 'none';
+        if (filteredMatches.length > 0) {
+          filteredData[league] = filteredMatches;
+          totalMatches += filteredMatches.length;
         }
       });
       
-      console.log(`✅ ${visibleCount} matches shown for ${targetDate}`);
+      console.log(`📊 Found ${totalMatches} matches for ${targetDate}`);
       
-      // Hide empty sections
-      const ligaSections = document.querySelectorAll('.liga-section');
-      ligaSections.forEach(section => {
-        const visibleRows = section.querySelectorAll('.match-row[style=""]');
-        if (visibleRows.length === 0) {
-          section.style.display = 'none';
-        } else {
-          section.style.display = '';
-        }
+      // Render filtered data
+      if (totalMatches > 0) {
+        renderFilteredLeagues(filteredData, window.currentSport);
+      } else {
+        showNoMatchesMessage(targetDate);
+      }
+    }
+    
+    // Render filtered leagues untuk tanggal tertentu
+    function renderFilteredLeagues(leagues, sportKey) {
+      const main = document.getElementById('main-content');
+      if (!main) return;
+      
+      main.innerHTML = '';
+      
+      Object.entries(leagues).forEach(([league, matches], idx) => {
+        // Accordion
+        const accordion = document.createElement('div');
+        accordion.className = 'accordion' + (idx === 0 ? ' expanded' : '');
+
+        // Header
+        const header = document.createElement('div');
+        header.className = 'accordion-header';
+        header.innerHTML = `
+          <span class="accordion-title">
+            <span class="league-icon">${getLigaIcon(league)}</span>
+            ${escapeHTML(league)}
+          </span>
+          <span class="accordion-arrow">▶</span>`;
+        
+        header.onclick = () => {
+          const wasExpanded = accordion.classList.contains('expanded');
+          
+          // Close all other accordions
+          document.querySelectorAll('.accordion.expanded').forEach(acc => {
+            if (acc !== accordion) {
+              acc.classList.remove('expanded');
+            }
+          });
+          
+          // Toggle current accordion
+          if (wasExpanded) {
+            accordion.classList.remove('expanded');
+          } else {
+            accordion.classList.add('expanded');
+          }
+        };
+
+        // Content
+        const content = document.createElement('div');
+        content.className = 'accordion-content';
+
+        // Create match rows
+        matches.forEach(match => {
+          const matchRow = document.createElement('div');
+          matchRow.className = 'match-row';
+          
+          const homeTeam = match.home || match.tima || '';
+          const awayTeam = match.away || match.timb || '';
+          const matchTime = match.jam || '';
+          const matchDate = match.tanggal || '';
+          
+          // Determine appropriate labels based on sport type
+          let homeLabel = 'HOME';
+          let awayLabel = 'AWAY';
+          
+          if (sportKey === 'tennis' || sportKey === 'badminton') {
+            homeLabel = 'PLAYER 1';
+            awayLabel = 'PLAYER 2';
+          } else if (sportKey === 'esport') {
+            homeLabel = 'TEAM 1';
+            awayLabel = 'TEAM 2';
+          }
+          
+          // Generate match status
+          const matchStatus = getMatchStatus(matchTime, { tanggal: matchDate, ...match });
+          
+          matchRow.innerHTML = `
+            <div class="match-time">
+              <div>${escapeHTML(matchDate)}</div>
+              <div>${escapeHTML(matchTime)}</div>
+              <div class="match-status ${matchStatus.statusClass}">${matchStatus.statusText}</div>
+              ${matchStatus.countdown ? `<div class="match-countdown">${matchStatus.countdown}</div>` : ''}
+            </div>
+            <div class="match-teams">
+              <div class="team-row">
+                <span class="team-label home" data-sport="${sportKey}">${homeLabel}</span>
+                <span class="team-name">${escapeHTML(homeTeam)}</span>
+                <span class="team-score ${matchStatus.isLive ? 'live-score' : ''}">${match.scorea || '-'}</span>
+              </div>
+              <div class="team-row">
+                <span class="team-label away" data-sport="${sportKey}">${awayLabel}</span>
+                <span class="team-name">${escapeHTML(awayTeam)}</span>
+                <span class="team-score ${matchStatus.isLive ? 'live-score' : ''}">${match.scoreb || '-'}</span>
+              </div>
+            </div>
+            <div class="match-bet">
+              <a class="bet-btn" href="${match.linkbet || '#'}" target="_blank" rel="noopener">BET</a>
+            </div>
+          `;
+          
+          content.appendChild(matchRow);
+        });
+
+        accordion.appendChild(header);
+        accordion.appendChild(content);
+        main.appendChild(accordion);
       });
     }
+    
+    // Show message when no matches found
+    function showNoMatchesMessage(targetDate) {
+      const main = document.getElementById('main-content');
+      if (main) {
+        main.innerHTML = `
+          <div class="error-msg">
+            <h3>📅 Tidak ada pertandingan di tanggal ${targetDate}</h3>
+            <p>Silakan pilih tanggal lain atau coba kategori olahraga yang berbeda.</p>
+          </div>
+        `;
+      }
+    }
 
-    // Apply filters
+    // Apply filters dengan string comparison yang tepat
     function applyFilters() {
       const matchRows = document.querySelectorAll('.match-row');
       
@@ -2795,18 +3027,13 @@
         return;
       }
 
-      // Get current date information dynamically using local browser time
-      const today = new Date();
-      today.setHours(0, 0, 0, 0); // Reset to start of day
+      // Get current date information menggunakan fungsi baru yang konsisten
+      const todayFormatted = getTodayFormatted();
+      const tomorrowFormatted = getTomorrowFormatted();
       
-      const tomorrow = new Date(today);
-      tomorrow.setDate(today.getDate() + 1);
-      
-      // Format dates to DD/MM/YYYY for comparison - exactly as requirements
-      const todayFormatted = `${String(today.getDate()).padStart(2, '0')}/${String(today.getMonth() + 1).padStart(2, '0')}/${today.getFullYear()}`;
-      const tomorrowFormatted = `${String(tomorrow.getDate()).padStart(2, '0')}/${String(tomorrow.getMonth() + 1).padStart(2, '0')}/${tomorrow.getFullYear()}`;
-      
-      console.log(' Current filter:', currentFilter);
+      console.log('📅 Today (DD/MM/YYYY):', todayFormatted);
+      console.log('📅 Tomorrow (DD/MM/YYYY):', tomorrowFormatted);
+      console.log('🎯 Current filter:', currentFilter);
 
       let visibleCount = 0;
 
@@ -2833,42 +3060,56 @@
               // Filter berdasarkan dropdown date selector
               if (selectedDate && selectedDate !== 'all') {
                 shouldShow = dateText === selectedDate;
+                if (!shouldShow && index < 3) {
+                  console.warn("Dropdown filter mismatch:", selectedDate, "vs", dateText);
+                }
               }
               
-              // Filter berdasarkan tombol quick filter (Hari Ini, Besok, Minggu Ini)
-              if (shouldShow && currentFilter !== 'all') {
+              // Filter berdasarkan tombol quick filter dengan PERBANDINGAN STRING
+              if (shouldShow && currentFilter && currentFilter !== 'all') {
                 if (currentFilter === 'today') {
-                // Check for today using dynamic calculation
-                shouldShow = dateText === todayFormatted;
-              } 
-              else if (currentFilter === 'tomorrow') {
-                // Check for tomorrow using dynamic calculation - exactly as requirements
-                shouldShow = dateText === tomorrowFormatted;
-                console.log(`🎯 TOMORROW CHECK: "${dateText}" === "${tomorrowFormatted}" = ${shouldShow}`);
-                
-                // Additional debug info for troubleshooting
-                if (index === 0) { // Only log for first match to avoid spam
-                  console.log(`📋 Available dates in first few matches:`);
-                  const allDateElements = document.querySelectorAll('.match-time div:first-child');
-                  Array.from(allDateElements).slice(0, 5).forEach((el, i) => {
-                    console.log(`  Match ${i+1}: "${el.textContent.trim()}"`);
-                  });
+                  console.log("📊 TODAY FILTER COMPARISON:");
+                  console.log("  Target (Hari Ini):", todayFormatted);
+                  console.log("  Row Tanggal:", dateText);
+                  console.log("  Match:", dateText === todayFormatted);
+                  shouldShow = dateText === todayFormatted;
+                  if (!shouldShow && index < 3) {
+                    console.warn("❌ Today filter mismatch:", todayFormatted, "vs", dateText);
+                  }
+                } 
+                else if (currentFilter === 'tomorrow') {
+                  console.log("📊 TOMORROW FILTER COMPARISON:");
+                  console.log("  Target (Besok):", tomorrowFormatted);
+                  console.log("  Row Tanggal:", dateText);
+                  console.log("  Match:", dateText === tomorrowFormatted);
+                  shouldShow = dateText === tomorrowFormatted;
+                  if (!shouldShow && index < 3) {
+                    console.warn("❌ Tomorrow filter mismatch:", tomorrowFormatted, "vs", dateText);
+                  }
+                } 
+                else if (currentFilter === 'week') {
+                  // Check for this week (current week from today) - GUNAKAN DATE PARSING YANG BENAR
+                  shouldShow = false;
+                  const today = new Date();
+                  const weekStart = new Date(today);
+                  weekStart.setDate(today.getDate() - today.getDay()); // Start of week (Sunday)
+                  const weekEnd = new Date(weekStart);
+                  weekEnd.setDate(weekStart.getDate() + 6); // End of week (Saturday)
+                  
+                  // Parse the match date dari format DD/MM/YYYY
+                  const [day, month, year] = dateText.split('/').map(Number);
+                  const matchDate = new Date(year, month - 1, day);
+                  
+                  shouldShow = matchDate >= weekStart && matchDate <= weekEnd;
+                  
+                  if (index < 3) {
+                    console.log("📊 WEEK FILTER:");
+                    console.log("  Week Start:", formatDateToDDMMYYYY(weekStart));
+                    console.log("  Week End:", formatDateToDDMMYYYY(weekEnd));
+                    console.log("  Match Date:", dateText);
+                    console.log("  In Range:", shouldShow);
+                  }
                 }
-              } 
-              else if (currentFilter === 'week') {
-                // Check for this week (current week from today)
-                shouldShow = false;
-                const weekStart = new Date(today);
-                weekStart.setDate(today.getDate() - today.getDay()); // Start of week (Sunday)
-                const weekEnd = new Date(weekStart);
-                weekEnd.setDate(weekStart.getDate() + 6); // End of week (Saturday)
-                
-                // Parse the match date
-                const [day, month, year] = dateText.split('/').map(Number);
-                const matchDate = new Date(year, month - 1, day);
-                
-                shouldShow = matchDate >= weekStart && matchDate <= weekEnd;
-              }
               } // End of quick filter check
             }
           }
@@ -2917,6 +3158,9 @@
     // Initialize app
     function initializeApp() {
       console.log('🎯 Initializing app...');
+      
+      // Test format tanggal terlebih dahulu
+      testDateFormatting();
       
       // Set current sport
       window.currentSport = SPORTS[0].key;

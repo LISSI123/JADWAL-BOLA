@@ -1071,6 +1071,32 @@
       animation: pulse 2s infinite;
     }
     
+    /* LIVE Badge untuk pertandingan yang sedang berlangsung */
+    .live-badge {
+      background: linear-gradient(45deg, #ff0000, #ff3333) !important;
+      color: white !important;
+      padding: 2px 6px !important;
+      border-radius: 3px !important;
+      font-size: 10px !important;
+      font-weight: bold !important;
+      margin-left: 5px !important;
+      animation: livePulse 1.5s infinite !important;
+      box-shadow: 0 0 5px rgba(255, 0, 0, 0.5) !important;
+      text-shadow: 0 0 2px rgba(0, 0, 0, 0.5) !important;
+    }
+
+    @keyframes livePulse {
+      0% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.7; transform: scale(1.05); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    /* Highlight untuk row yang LIVE */
+    .match-row.live-match {
+      background: linear-gradient(90deg, rgba(255, 0, 0, 0.1), rgba(255, 0, 0, 0.05)) !important;
+      border-left: 3px solid #ff0000 !important;
+    }
+
     @keyframes pulse {
       0% { opacity: 1; transform: scale(1); }
       50% { opacity: 0.5; transform: scale(1.2); }
@@ -1991,8 +2017,37 @@
   <script>
     console.log('🚀 Script loading...');
     
-    // Ganti URL_API sesuai endpoint Anda
-    const URL_API = 'https://script.google.com/macros/s/AKfycbzoIifvsbqAcfiVvBhNdYsUqSGpu2AwpD2CntfeTseVk8rKatfOJ9pXCH0e4Ox1U1hU-A/exec';
+    // ✅ URL DEPLOYMENT TERBARU DARI GOOGLE APPS SCRIPT
+    const URL_API = 'https://script.google.com/macros/s/AKfycbz3CM9slPjHNOe223cQU946jaDKhZsFTZEdS8PQH6UZmjAc4jaunLsCZYfxQBqXYYAuGQ/exec';
+    
+    console.log('✅ API URL Updated:', URL_API);
+    
+    // 🧪 TEST LANGSUNG URL API
+    console.log('🧪 Testing API immediately...');
+    fetch(URL_API + '?sport=bola')
+      .then(res => {
+        console.log('🧪 API Test Response Status:', res.status);
+        console.log('🧪 API Test Response OK:', res.ok);
+        return res.text();
+      })
+      .then(text => {
+        console.log('🧪 API Test Raw Response (first 500 chars):', text.substring(0, 500));
+        try {
+          const data = JSON.parse(text);
+          console.log('🧪 API Test Parsed JSON:', data);
+          if (data.error) {
+            console.error('🧪 API Test - Server Error:', data.error);
+          } else {
+            console.log('🧪 API Test - Success! Leagues:', Object.keys(data));
+          }
+        } catch (e) {
+          console.error('🧪 API Test - JSON Parse Error:', e);
+          console.error('🧪 Response is not valid JSON');
+        }
+      })
+      .catch(err => {
+        console.error('🧪 API Test - Fetch Error:', err);
+      });
 
     // Global variables untuk filter tanggal dan search
     let allMatchesData = {}; // Cache untuk semua data yang sudah di-fetch
@@ -2106,6 +2161,50 @@
       const month = String(today.getMonth() + 1).padStart(2, '0');
       const year = today.getFullYear();
       return `${day}/${month}/${year}`;
+    }
+
+    // FUNGSI DETEKSI PERTANDINGAN LIVE - BERDASARKAN WAKTU WIB
+    function checkIfMatchIsLive(matchTime, matchDate) {
+      try {
+        // Ambil waktu sekarang dalam WIB (UTC+7)
+        const now = new Date();
+        const wibOffset = 7 * 60; // WIB = UTC+7 (dalam menit)
+        const nowWIB = new Date(now.getTime() + (wibOffset * 60000));
+        
+        // Parse tanggal pertandingan (DD/MM/YYYY)
+        const [day, month, year] = matchDate.split('/').map(Number);
+        
+        // Parse waktu pertandingan (HH:MM WIB atau HH:MM)
+        const timeString = matchTime.replace(' WIB', '').trim();
+        const [hours, minutes] = timeString.split(':').map(Number);
+        
+        // Buat Date object untuk pertandingan dalam WIB
+        const matchDateTime = new Date(year, month - 1, day, hours, minutes);
+        
+        // Hitung selisih waktu dalam menit
+        const timeDiffMinutes = (nowWIB.getTime() - matchDateTime.getTime()) / (1000 * 60);
+        
+        // Pertandingan dianggap LIVE jika:
+        // 1. Waktu sudah lewat (timeDiffMinutes > 0)
+        // 2. Belum lebih dari 120 menit (2 jam)
+        const isLive = timeDiffMinutes > 0 && timeDiffMinutes <= 120;
+        
+        console.log(`🔴 LIVE Check: ${matchDate} ${matchTime}`);
+        console.log(`   Now WIB: ${nowWIB.toLocaleString('id-ID')}`);
+        console.log(`   Match Time: ${matchDateTime.toLocaleString('id-ID')}`);
+        console.log(`   Diff Minutes: ${Math.round(timeDiffMinutes)}`);
+        console.log(`   Is LIVE: ${isLive}`);
+        
+        return isLive;
+      } catch (error) {
+        console.warn('Error checking live status:', error);
+        return false;
+      }
+    }
+
+    // Helper function untuk membuat badge LIVE
+    function createLiveBadge() {
+      return '<span class="live-badge" style="background: #ff0000; color: white; padding: 2px 6px; border-radius: 3px; font-size: 10px; font-weight: bold; margin-left: 5px; animation: pulse 1.5s infinite;">🔴 LIVE</span>';
     }
 
     // FUNGSI TEST UNTUK VERIFIKASI FORMAT TANGGAL
@@ -2540,43 +2639,107 @@
       // Jika belum ada di cache, fetch dari API
       showLoader();
       
-      // Map sport key to API endpoint
+      // Map sport key to API endpoint - SESUAI DENGAN GOOGLE APPS SCRIPT
       const sportMap = {
-        'bola': 'Sepak Bola',
-        'basket': 'Bola Basket', 
-        'tennis': 'Tennis',
-        'voli': 'Bola Voli',
-        'badminton': 'Badminton',
-        'baseball': 'Baseball',
-        'esport': 'E-Sports'
+        'bola': 'bola',
+        'basket': 'basket', 
+        'tennis': 'tennis',
+        'voli': 'voli',
+        'badminton': 'badminton',
+        'baseball': 'baseball',
+        'esport': 'esport'
       };
       
       const apiSport = sportMap[sport] || sport;
-      console.log('API Sport:', apiSport);
+      console.log('📋 Sport Mapping:', {
+        requestedSport: sport,
+        mappedToAPI: apiSport,
+        availableMappings: Object.keys(sportMap)
+      });
       
       try {
+        console.log('🚀 Fetching from:', URL_API + '?sport=' + encodeURIComponent(apiSport));
+        console.log('🚀 Expected backend sheet names:', {
+          'bola': 'SEPAKBOLA',
+          'basket': 'JADWALBASKET', 
+          'tennis': 'JADWALTENNIS',
+          'voli': 'JADWALVOLI',
+          'badminton': 'JADWALBADMINTON',
+          'baseball': 'JADWAL BASEBALL',
+          'esport': 'JADWALESPORTS'
+        });
         const res = await fetch(URL_API + '?sport=' + encodeURIComponent(apiSport));
+        
+        console.log('📡 Response status:', res.status);
+        console.log('📡 Response ok:', res.ok);
+        
+        if (!res.ok) {
+          console.error('❌ HTTP Error:', res.status, res.statusText);
+          console.error('❌ Response headers:', [...res.headers.entries()]);
+          throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+        }
+        
         const jadwal = await res.json();
         
-        console.log('Data received:', jadwal.length, 'matches');
-
-        // Group by liga
-        const ligaMap = {};
-        if (sport === 'esport') {
-          jadwal.forEach(j => {
-            if (!j.game || !j.turnamen || !j.tanggal || !j.jam || !j.tima || !j.timb || !j.linkbet) return;
-            const ligaName = j.game + ' - ' + j.turnamen;
-            if (!ligaMap[ligaName]) ligaMap[ligaName] = [];
-            ligaMap[ligaName].push(j);
-          });
-        } else {
-          jadwal.forEach(j => {
-            if (!j.liga || !j.tanggal || !j.jam || !(j.home || j.tima) || !(j.away || j.timb) || !j.linkbet) return;
-            if (!ligaMap[j.liga]) ligaMap[j.liga] = [];
-            ligaMap[j.liga].push(j);
-          });
+        console.log('📊 Raw data received:', jadwal);
+        console.log('📊 Data type:', typeof jadwal);
+        console.log('📊 Is array:', Array.isArray(jadwal));
+        console.log('📊 Object keys:', Object.keys(jadwal));
+        
+        // Cek jika ada error dari server
+        if (jadwal.error) {
+          console.error('❌ Server error:', jadwal.error);
+          showError(`Server error: ${jadwal.error}<br>Available sheets: ${jadwal.availableSheets?.join(', ') || 'Unknown'}`);
+          return;
         }
-
+        
+        // Data sudah dalam format ligaMap dari Google Apps Script
+        // Format: { "Liga Name": [ {match1}, {match2}, ... ] }
+        const ligaMap = jadwal;
+        
+        console.log('✅ Leagues found:', Object.keys(ligaMap).length);
+        console.log('📋 League names:', Object.keys(ligaMap));
+        
+        // Debug: Show sample data from first league
+        const firstLeague = Object.keys(ligaMap)[0];
+        if (firstLeague && ligaMap[firstLeague] && ligaMap[firstLeague].length > 0) {
+          console.log('🔍 Sample match from', firstLeague, ':', ligaMap[firstLeague][0]);
+          
+          // Analisis struktur field dalam match
+          const sampleMatch = ligaMap[firstLeague][0];
+          console.log('🔍 Match fields available:', Object.keys(sampleMatch));
+          console.log('🔍 Date field value:', sampleMatch.tanggal);
+          console.log('🔍 Time field value:', sampleMatch.jam);
+          console.log('🔍 Home team field:', sampleMatch.home || sampleMatch.timhome);
+          console.log('🔍 Away team field:', sampleMatch.away || sampleMatch.timaway);
+        }
+        
+        // Hitung total matches
+        let totalMatches = 0;
+        Object.values(ligaMap).forEach(matches => {
+          totalMatches += matches.length;
+        });
+        console.log('📊 Total matches:', totalMatches);
+        
+        // Jika tidak ada data, tampilkan pesan
+        if (totalMatches === 0) {
+          console.log('⚠️ No matches found for sport:', sport);
+          
+          // Mapping sheet names untuk referensi
+          const sheetMapping = {
+            'bola': 'SEPAKBOLA',
+            'basket': 'JADWALBASKET', 
+            'tennis': 'JADWALTENNIS',
+            'voli': 'JADWALVOLI',
+            'badminton': 'JADWALBADMINTON',
+            'baseball': 'JADWAL BASEBALL',
+            'esport': 'JADWALESPORTS'
+          };
+          
+          showError(`Tidak ada data pertandingan untuk ${sport}. Pastikan sheet "${sheetMapping[sport] || 'UNKNOWN'}" ada dan berisi data.`);
+          return;
+        }
+        
         // Sort jadwal per liga by tanggal & jam
         Object.values(ligaMap).forEach(arr => {
           arr.sort((a, b) => {
@@ -2588,6 +2751,9 @@
           });
         });
 
+        // Store current sport data untuk filtering
+        currentSportData = ligaMap;
+        
         renderLeagues(ligaMap, sport);
         
         // Store data in cache untuk sport ini
@@ -2948,7 +3114,7 @@
         const content = document.createElement('div');
         content.className = 'accordion-content';
 
-        // Create match rows
+        // Create match rows dengan LIVE detection
         matches.forEach(match => {
           const matchRow = document.createElement('div');
           matchRow.className = 'match-row';
@@ -2957,6 +3123,14 @@
           const awayTeam = match.away || match.timb || '';
           const matchTime = match.jam || '';
           const matchDate = match.tanggal || '';
+          
+          // Check if match is LIVE berdasarkan waktu WIB
+          const isLive = checkIfMatchIsLive(matchTime, matchDate);
+          
+          // Add LIVE class to row if match is live
+          if (isLive) {
+            matchRow.classList.add('live-match');
+          }
           
           // Determine appropriate labels based on sport type
           let homeLabel = 'HOME';
@@ -2973,6 +3147,9 @@
           // Generate match status
           const matchStatus = getMatchStatus(matchTime, { tanggal: matchDate, ...match });
           
+          // Create LIVE badge untuk home team jika pertandingan sedang live
+          const liveBadge = isLive ? createLiveBadge() : '';
+          
           matchRow.innerHTML = `
             <div class="match-time">
               <div>${escapeHTML(matchDate)}</div>
@@ -2983,13 +3160,13 @@
             <div class="match-teams">
               <div class="team-row">
                 <span class="team-label home" data-sport="${sportKey}">${homeLabel}</span>
-                <span class="team-name">${escapeHTML(homeTeam)}</span>
-                <span class="team-score ${matchStatus.isLive ? 'live-score' : ''}">${match.scorea || '-'}</span>
+                <span class="team-name">${escapeHTML(homeTeam)}${liveBadge}</span>
+                <span class="team-score ${matchStatus.isLive || isLive ? 'live-score' : ''}">${match.scorea || '-'}</span>
               </div>
               <div class="team-row">
                 <span class="team-label away" data-sport="${sportKey}">${awayLabel}</span>
                 <span class="team-name">${escapeHTML(awayTeam)}</span>
-                <span class="team-score ${matchStatus.isLive ? 'live-score' : ''}">${match.scoreb || '-'}</span>
+                <span class="team-score ${matchStatus.isLive || isLive ? 'live-score' : ''}">${match.scoreb || '-'}</span>
               </div>
             </div>
             <div class="match-bet">
@@ -3144,6 +3321,47 @@
       }
     }
 
+    // Update LIVE status secara berkala
+    function updateLiveMatches() {
+      console.log('🔄 Updating LIVE match status...');
+      
+      const matchRows = document.querySelectorAll('.match-row');
+      let liveCount = 0;
+      
+      matchRows.forEach(row => {
+        const timeDiv = row.querySelector('.match-time div:nth-child(2)');
+        const dateDiv = row.querySelector('.match-time div:first-child');
+        const homeTeamNameSpan = row.querySelector('.team-row .team-name');
+        
+        if (timeDiv && dateDiv && homeTeamNameSpan) {
+          const matchTime = timeDiv.textContent.trim();
+          const matchDate = dateDiv.textContent.trim();
+          const isLive = checkIfMatchIsLive(matchTime, matchDate);
+          
+          // Remove existing LIVE badge
+          const existingBadge = homeTeamNameSpan.querySelector('.live-badge');
+          if (existingBadge) {
+            existingBadge.remove();
+          }
+          
+          // Remove existing live-match class
+          row.classList.remove('live-match');
+          
+          if (isLive) {
+            // Add LIVE badge
+            homeTeamNameSpan.innerHTML += createLiveBadge();
+            
+            // Add live-match class
+            row.classList.add('live-match');
+            
+            liveCount++;
+          }
+        }
+      });
+      
+      console.log(`🔴 Found ${liveCount} LIVE matches`);
+    }
+
     // Dark mode toggle
     function setupDarkMode() {
       const darkToggleBtn = document.getElementById('dark-toggle');
@@ -3189,6 +3407,11 @@
       
       // Setup notifications
       setupNotifications();
+      
+      // Setup LIVE match detection - update setiap 30 detik
+      setInterval(() => {
+        updateLiveMatches();
+      }, 30000);
       
       console.log('✅ App initialized successfully');
     }

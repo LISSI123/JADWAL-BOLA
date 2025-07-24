@@ -5,6 +5,44 @@
   <title>JADWAL SPORT SLOTGOKIL</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
+    /* Global Professional Enhancements */
+    * {
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    /* Allow text selection only where needed */
+    input, textarea, .selectable-text {
+      -webkit-user-select: text;
+      -moz-user-select: text;
+      -ms-user-select: text;
+      user-select: text;
+    }
+
+    /* Improve button interactions */
+    button, .clickable {
+      cursor: pointer;
+      outline: none;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+
+    button:focus, .clickable:focus {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    @media (hover: none) {
+      button:focus, .clickable:focus {
+        outline: none;
+      }
+    }
+
     :root {
       --bg-main: #f2f4f5;
       --bg-card: #ffffff;
@@ -647,6 +685,218 @@
       border-color: var(--accent);
       transform: translateY(-1px);
     }
+
+    /* Professional Date Navigation Styles */
+    .date-navigator {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 16px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      margin-bottom: 16px;
+    }
+
+    .date-navigation {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .nav-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+    }
+
+    .nav-btn:hover {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+      transform: translateY(-1px);
+      box-shadow: 0 2px 6px rgba(0, 166, 63, 0.3);
+    }
+
+    #currentDateDisplay {
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      min-width: 110px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
+      border: 2px solid transparent;
+    }
+
+    #currentDateDisplay.active {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+      box-shadow: 0 2px 8px rgba(0, 166, 63, 0.3);
+    }
+
+    #currentDateDisplay:not(.active) {
+      background: var(--bg-card);
+      border: 2px solid var(--border);
+    }
+
+    #currentDateDisplay:hover:not(.active) {
+      border-color: var(--accent);
+      background: var(--bg-hover);
+    }
+
+    .quick-date-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .quick-date-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      user-select: none;
+      min-width: 44px;
+      text-align: center;
+    }
+
+    .quick-date-btn.active {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+      font-weight: 600;
+      box-shadow: 0 2px 6px rgba(0, 166, 63, 0.3);
+    }
+
+    .quick-date-btn:not(.active):hover {
+      background: var(--bg-hover);
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    /* Professional Mobile Responsive for Date Navigation */
+    @media (max-width: 768px) {
+      .date-navigator {
+        padding: 10px 12px;
+        margin: 10px -6px 12px -6px;
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+      }
+
+      .date-navigation {
+        margin-bottom: 10px;
+        gap: 6px;
+      }
+
+      .nav-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 12px;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+      }
+
+      #currentDateDisplay {
+        padding: 8px 16px;
+        font-size: 13px;
+        min-width: 100px;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+      }
+
+      .quick-date-buttons {
+        gap: 4px;
+        justify-content: space-between;
+      }
+
+      .quick-date-btn {
+        padding: 6px 8px;
+        font-size: 10px;
+        min-width: 38px;
+        flex: 1;
+        max-width: 46px;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .date-navigator {
+        padding: 8px 10px;
+      }
+
+      .nav-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 11px;
+      }
+
+      #currentDateDisplay {
+        padding: 6px 12px;
+        font-size: 12px;
+        min-width: 90px;
+      }
+
+      .quick-date-btn {
+        padding: 5px 6px;
+        font-size: 9px;
+        min-width: 32px;
+        max-width: 40px;
+      }
+    }
+
+    /* Additional Professional Touch Improvements */
+    @media (hover: none) and (pointer: coarse) {
+      /* Mobile/touch devices only */
+      .nav-btn:hover,
+      .quick-date-btn:not(.active):hover,
+      #currentDateDisplay:hover:not(.active) {
+        transform: none;
+        background: var(--bg-card);
+        border-color: var(--border);
+      }
+      
+      .nav-btn:active {
+        background: var(--accent);
+        color: white;
+        transform: scale(0.95);
+      }
+      
+      .quick-date-btn:not(.active):active {
+        background: var(--bg-hover);
+        transform: scale(0.95);
+      }
+      
+      #currentDateDisplay:not(.active):active {
+        background: var(--bg-hover);
+        transform: scale(0.98);
+      }
+    }
+
     .dark-toggle-btn {
       background: none;
       border: none;
@@ -1714,20 +1964,20 @@
       </div>
       
       <!-- Flashscore-style Date Navigator -->
-      <div class="flashscore-dates" style="margin-top: 15px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-        <div class="date-navigation" style="display: flex; align-items: center; gap: 5px;">
-          <button id="prevDateNav" class="nav-btn" style="padding: 8px 12px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; font-weight: bold;">‹</button>
-          <span id="currentDateDisplay" style="padding: 8px 15px; background: var(--bg-accent); border-radius: 6px; font-weight: 600; min-width: 100px; text-align: center;">24/07/2025</span>
-          <button id="nextDateNav" class="nav-btn" style="padding: 8px 12px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; font-weight: bold;">›</button>
+      <div class="date-navigator">
+        <div class="date-navigation">
+          <button id="prevDateNav" class="nav-btn">‹</button>
+          <span id="currentDateDisplay" class="active">24/07/2025</span>
+          <button id="nextDateNav" class="nav-btn">›</button>
         </div>
-        <div class="quick-date-buttons" style="display: flex; gap: 5px; flex-wrap: wrap;">
-          <button class="quick-date-btn" data-offset="-3" style="padding: 6px 10px; border: 1px solid var(--border); background: var(--bg-card); border-radius: 4px; cursor: pointer; font-size: 11px;">-3d</button>
-          <button class="quick-date-btn" data-offset="-2" style="padding: 6px 10px; border: 1px solid var(--border); background: var(--bg-card); border-radius: 4px; cursor: pointer; font-size: 11px;">-2d</button>
-          <button class="quick-date-btn" data-offset="-1" style="padding: 6px 10px; border: 1px solid var(--border); background: var(--bg-card); border-radius: 4px; cursor: pointer; font-size: 11px;">-1d</button>
-          <button class="quick-date-btn active" data-offset="0" style="padding: 6px 10px; border: 1px solid var(--accent); background: var(--accent); color: white; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold;">HARI INI</button>
-          <button class="quick-date-btn" data-offset="1" style="padding: 6px 10px; border: 1px solid var(--border); background: var(--bg-card); border-radius: 4px; cursor: pointer; font-size: 11px;">+1d</button>
-          <button class="quick-date-btn" data-offset="2" style="padding: 6px 10px; border: 1px solid var(--border); background: var(--bg-card); border-radius: 4px; cursor: pointer; font-size: 11px;">+2d</button>
-          <button class="quick-date-btn" data-offset="3" style="padding: 6px 10px; border: 1px solid var(--border); background: var(--bg-card); border-radius: 4px; cursor: pointer; font-size: 11px;">+3d</button>
+        <div class="quick-date-buttons">
+          <button class="quick-date-btn" data-offset="-3">-3d</button>
+          <button class="quick-date-btn" data-offset="-2">-2d</button>
+          <button class="quick-date-btn" data-offset="-1">-1d</button>
+          <button class="quick-date-btn" data-offset="0">HARI INI</button>
+          <button class="quick-date-btn" data-offset="1">+1d</button>
+          <button class="quick-date-btn" data-offset="2">+2d</button>
+          <button class="quick-date-btn" data-offset="3">+3d</button>
         </div>
       </div>
     </div>
@@ -1905,16 +2155,12 @@
       console.log('📅 Today exists in data:', todayExists);
       console.log('📅 Current selectedDate:', selectedDate);
       
-      // Auto-select today's date jika selectedDate masih 'all' dan hari ini ada  
-      if (todayExists && selectedDate === 'all') {
-        selectedDate = today;
-        dateSelect.value = today;
-      } else if (!todayExists && selectedDate === 'all') {
-        // Jika today gak ada, pilih tanggal pertama yang tersedia
-        if (sortedDates.length > 0) {
-          selectedDate = sortedDates[0];
-          dateSelect.value = sortedDates[0];
-        }
+      // JANGAN auto-select tanggal apapun - biarkan user memilih sendiri
+      // Atau default ke 'all' untuk menampilkan semua
+      if (selectedDate === 'all') {
+        // Tetap di 'all' - tampilkan semua tanggal
+        selectedDate = 'all';
+        dateSelect.value = 'all';
       }
     }
 
@@ -1948,11 +2194,12 @@
       // Populate date options
       populateDateOptions(leagues);
       
-      // Filter by selected date
-      const filteredLeagues = filterLeaguesByDate(leagues, selectedDate);
+      // RENDER SEMUA DATA - tidak filter apapun saat render
+      // Filter hanya dilakukan oleh tombol "Hari Ini", "Besok", "Minggu Ini" via applyFilters()
+      const filteredLeagues = leagues; // Tampilkan SEMUA data
       
       if (!filteredLeagues || Object.keys(filteredLeagues).length === 0) {
-        main.innerHTML = '<div class="error-msg">Tidak ada jadwal tersedia untuk tanggal yang dipilih.</div>';
+        main.innerHTML = '<div class="error-msg">Tidak ada jadwal tersedia.</div>';
         return;
       }
       
@@ -2021,11 +2268,8 @@
           
           matchRow.innerHTML = `
             <div class="match-time">
-              <div style="font-size: 9px; color: var(--text-muted); line-height: 1.3; font-weight: 600;">${escapeHTML(matchDate)}</div>
-              <div style="font-weight: 800; font-size: 10px; line-height: 1.3; letter-spacing: 0.2px; position: relative;">
-                ${escapeHTML(matchTime)}
-                ${liveIndicator}
-              </div>
+              <div>${escapeHTML(matchDate)}</div>
+              <div>${escapeHTML(matchTime)}</div>
               <div class="match-status ${matchStatus.statusClass}">${matchStatus.statusText}</div>
               ${matchStatus.countdown ? `<div class="match-countdown">${matchStatus.countdown}</div>` : ''}
             </div>
@@ -2343,9 +2587,8 @@
       if (dateSelect) {
         dateSelect.addEventListener('change', function() {
           selectedDate = this.value;
-          if (currentSportData) {
-            renderLeagues(currentSportData, window.currentSport);
-          }
+          // Jangan re-render, hanya apply filter untuk menyembunyikan/menampilkan
+          applyFilters();
         });
       }
       
@@ -2401,6 +2644,43 @@
       
       // Current date tracking
       let currentViewDate = new Date();
+      let navigationMode = 'center'; // 'center' atau 'quick'
+      
+      // Function to clear all active states
+      function clearAllActiveStates() {
+        if (currentDateDisplay) {
+          currentDateDisplay.classList.remove('active');
+        }
+        quickDateBtns.forEach(btn => btn.classList.remove('active'));
+      }
+      
+      // Function to set center navigation as active
+      function activateCenterNavigation() {
+        clearAllActiveStates();
+        if (currentDateDisplay) {
+          currentDateDisplay.classList.add('active');
+        }
+        navigationMode = 'center';
+      }
+      
+      // Function to set quick button as active
+      function activateQuickButton(activeBtn) {
+        clearAllActiveStates();
+        activeBtn.classList.add('active');
+        navigationMode = 'quick';
+      }
+      
+      // Prevent double-click selection on buttons
+      function preventDoubleClick(element) {
+        element.style.userSelect = 'none';
+        element.style.webkitUserSelect = 'none';
+        element.style.msUserSelect = 'none';
+        element.style.webkitTouchCallout = 'none';
+        element.style.webkitTapHighlightColor = 'transparent';
+        
+        element.addEventListener('selectstart', (e) => e.preventDefault());
+        element.addEventListener('dragstart', (e) => e.preventDefault());
+      }
       
       // Update date display
       function updateDateDisplay() {
@@ -2415,54 +2695,53 @@
       
       // Previous date
       if (prevDateNav) {
-        prevDateNav.addEventListener('click', () => {
+        preventDoubleClick(prevDateNav);
+        prevDateNav.addEventListener('click', (e) => {
+          e.preventDefault();
           currentViewDate.setDate(currentViewDate.getDate() - 1);
           updateDateDisplay();
-          updateQuickDateButtons();
+          activateCenterNavigation();
         });
       }
       
       // Next date  
       if (nextDateNav) {
-        nextDateNav.addEventListener('click', () => {
+        preventDoubleClick(nextDateNav);
+        nextDateNav.addEventListener('click', (e) => {
+          e.preventDefault();
           currentViewDate.setDate(currentViewDate.getDate() + 1);
           updateDateDisplay();
-          updateQuickDateButtons();
+          activateCenterNavigation();
+        });
+      }
+
+      // Click pada center date display untuk mengaktifkannya
+      if (currentDateDisplay) {
+        preventDoubleClick(currentDateDisplay);
+        currentDateDisplay.addEventListener('click', (e) => {
+          e.preventDefault();
+          activateCenterNavigation();
         });
       }
       
       // Quick date buttons
       quickDateBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
+        preventDoubleClick(btn);
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
           const offset = parseInt(btn.dataset.offset);
           const today = new Date();
           currentViewDate = new Date(today);
           currentViewDate.setDate(today.getDate() + offset);
           
           updateDateDisplay();
-          updateQuickDateButtons();
-          
-          // Update active state
-          quickDateBtns.forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
+          activateQuickButton(btn);
         });
       });
       
-      // Update quick date button states
-      function updateQuickDateButtons() {
-        const today = new Date();
-        const dayDiff = Math.floor((currentViewDate - today) / (1000 * 60 * 60 * 24));
-        
-        quickDateBtns.forEach(btn => {
-          btn.classList.remove('active');
-          if (parseInt(btn.dataset.offset) === dayDiff) {
-            btn.classList.add('active');
-          }
-        });
-      }
-      
-      // Initialize
+      // Initialize - set center navigation as active by default
       updateDateDisplay();
+      activateCenterNavigation();
     }
     
     // Filter by specific date (like Flashscore)
@@ -2542,7 +2821,7 @@
         }
 
         // Apply date filter if search passed
-        if (shouldShow && currentFilter !== 'all') {
+        if (shouldShow) {
           const matchTimeDiv = row.querySelector('.match-time');
           if (matchTimeDiv) {
             const dateDiv = matchTimeDiv.querySelector('div:first-child');
@@ -2551,7 +2830,14 @@
               
               console.log(`🔍 Row ${index}: Date="${dateText}", Filter="${currentFilter}"`);
               
-              if (currentFilter === 'today') {
+              // Filter berdasarkan dropdown date selector
+              if (selectedDate && selectedDate !== 'all') {
+                shouldShow = dateText === selectedDate;
+              }
+              
+              // Filter berdasarkan tombol quick filter (Hari Ini, Besok, Minggu Ini)
+              if (shouldShow && currentFilter !== 'all') {
+                if (currentFilter === 'today') {
                 // Check for today using dynamic calculation
                 shouldShow = dateText === todayFormatted;
               } 
@@ -2583,6 +2869,7 @@
                 
                 shouldShow = matchDate >= weekStart && matchDate <= weekEnd;
               }
+              } // End of quick filter check
             }
           }
         }

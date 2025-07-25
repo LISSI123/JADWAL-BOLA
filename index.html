@@ -636,6 +636,35 @@
       outline: none;
       transition: var(--transition);
       min-width: 120px;
+      flex: 1;
+    }
+    
+    .date-select-container {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    
+    .apply-date-btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      white-space: nowrap;
+    }
+    
+    .apply-date-btn:hover {
+      background: var(--accent-dark);
+      transform: translateY(-1px);
+    }
+    
+    .apply-date-btn:active {
+      transform: translateY(0);
     }
     
     .date-select:focus {
@@ -1581,10 +1610,21 @@
       
       .date-filter { 
         padding: 8px 12px; 
-        flex-direction: row;
+        flex-direction: column;
         flex-wrap: wrap;
         gap: 8px;
-        align-items: center;
+        align-items: stretch;
+      }
+      
+      .date-select-container {
+        flex-direction: row;
+        width: 100%;
+      }
+      
+      .apply-date-btn {
+        padding: 6px 12px;
+        font-size: 10px;
+        min-width: 70px;
       }
       
       .date-filter label {
@@ -2000,6 +2040,7 @@
       .nav-btn, .sport-btn, .quick-filter-btn, .bet-btn {
         -webkit-touch-callout: none;
         -webkit-user-select: none;
+        user-select: none;
         -webkit-tap-highlight-color: transparent;
       }
     }
@@ -2327,11 +2368,14 @@
     </div>
     <div class="date-filter">
       <label for="date-select">📅 Pilih Tanggal:</label>
-      <select id="date-select" class="date-select">
-        <option value="all">Semua Tanggal</option>
-      </select>
+      <div class="date-select-container">
+        <select id="date-select" class="date-select">
+          <option value="all">Semua Tanggal</option>
+        </select>
+        <button id="apply-date-btn" class="apply-date-btn">Lihat Jadwal</button>
+      </div>
       <div class="quick-filters">
-        <button class="quick-filter-btn active" data-filter="today">Hari Ini</button>
+        <button class="quick-filter-btn" data-filter="today">Hari Ini</button>
         <button class="quick-filter-btn" data-filter="tomorrow">Besok</button>
         <button class="quick-filter-btn" data-filter="week">Minggu Ini</button>
       </div>
@@ -2554,6 +2598,7 @@
     let searchQuery = '';
     let currentFilter = null; // Set to null to show all by default
     let currentActiveDate = null; // Tanggal yang sedang aktif di navigator
+    let hasRenderedOnce = false; // Flag to prevent multiple renders on load
 
     // Kategori olahraga + emoji
     const SPORTS = [
@@ -2815,6 +2860,30 @@
       date.setDate(date.getDate() + offsetDays);
       return formatDateToDDMMYYYY(date);
     }
+    
+    // Helper: Get current week range (Monday to Sunday)
+    function getCurrentWeekRange() {
+      const today = new Date();
+      
+      // Calculate Monday as start of week
+      const dayOfWeek = today.getDay();
+      const mondayOffset = dayOfWeek === 0 ? -6 : -(dayOfWeek - 1);
+      
+      const weekStart = new Date(today);
+      weekStart.setDate(today.getDate() + mondayOffset);
+      weekStart.setHours(0, 0, 0, 0);
+      
+      const weekEnd = new Date(weekStart);
+      weekEnd.setDate(weekStart.getDate() + 6);
+      weekEnd.setHours(23, 59, 59, 999);
+      
+      return {
+        start: weekStart,
+        end: weekEnd,
+        startFormatted: formatDateToDDMMYYYY(weekStart),
+        endFormatted: formatDateToDDMMYYYY(weekEnd)
+      };
+    }
 
     // Populate date select options
     function populateDateOptions(leagues) {
@@ -2931,10 +3000,17 @@
       const main = document.getElementById('main-content');
       if (!main) return;
       
+      // Prevent multiple renders on initial load
+      if (hasRenderedOnce && !leagues) {
+        console.log('🚫 Preventing duplicate render on load');
+        return;
+      }
+      
       main.innerHTML = '';
       
       // Store original data
       currentSportData = leagues;
+      hasRenderedOnce = true; // Mark that we've rendered at least once
       
       // Populate date options
       populateDateOptions(leagues);
@@ -3198,15 +3274,33 @@
     function generateBetButton(match, matchStatus) {
       const scoreA = match.scorea || '-';
       const scoreB = match.scoreb || '-';
+      
+      // More comprehensive finished match detection
       const isFinished = matchStatus.statusClass === 'finished' || 
                         matchStatus.statusText.toLowerCase().includes('finished') ||
                         matchStatus.statusText.toLowerCase().includes('ft') ||
-                        (scoreA !== '-' && scoreB !== '-' && scoreA !== '' && scoreB !== '');
+                        matchStatus.statusText.toLowerCase().includes('selesai') ||
+                        matchStatus.statusText.toLowerCase().includes('final') ||
+                        (scoreA !== '-' && scoreB !== '-' && scoreA !== '' && scoreB !== '' && 
+                         matchStatus.statusText !== 'vs' && matchStatus.statusText !== 'Akan Datang');
       
-      if (isFinished) {
-        return `<span class="bet-btn disabled" title="Pertandingan sudah selesai">BET</span>`;
+      // Also disable for very old matches (more than 3 hours ago)
+      const now = new Date();
+      const matchTime = parseMatchDateTime(match.tanggal, match.jam);
+      const isVeryOld = matchTime && (now - matchTime) > (3 * 60 * 60 * 1000);
+      
+      if (isFinished || isVeryOld) {
+        return `<span class="bet-btn disabled" title="Pertandingan sudah selesai atau tidak tersedia">BET</span>`;
       } else {
-        return `<a class="bet-btn" href="${match.linkbet || '#'}" target="_blank" rel="noopener" title="Place your bet">BET</a>`;
+        // Enhanced BET button with better error handling
+        const betLink = match.linkbet && match.linkbet !== '#' ? match.linkbet : '#';
+        const isValidLink = betLink !== '#';
+        
+        if (isValidLink) {
+          return `<a class="bet-btn" href="${betLink}" target="_blank" rel="noopener" title="Place your bet">BET</a>`;
+        } else {
+          return `<span class="bet-btn disabled" title="Link betting tidak tersedia">BET</span>`;
+        }
       }
     }
 
@@ -3628,15 +3722,25 @@
       }
       
       if (dateSelect) {
+        // Remove auto-change behavior on mobile - now only updates selectedDate variable
         dateSelect.addEventListener('change', function() {
           selectedDate = this.value;
-          console.log('📅 Date dropdown changed to:', selectedDate);
+          console.log('📅 Date dropdown changed to (not applied yet):', selectedDate);
+          // Note: No auto-filtering here - user must click "Lihat Jadwal" button
+        });
+      }
+      
+      // Add "Lihat Jadwal" button functionality
+      const applyDateBtn = document.getElementById('apply-date-btn');
+      if (applyDateBtn) {
+        applyDateBtn.addEventListener('click', function() {
+          console.log('🎯 Applying date filter:', selectedDate);
           
           // Clear any active filter state when switching dates
           currentFilter = null;
           document.querySelectorAll('.quick-filter-btn').forEach(btn => btn.classList.remove('active'));
           
-          // If specific date selected, use filterBySpecificDate for accurate filtering
+          // Apply the selected date filter
           if (selectedDate && selectedDate !== 'all') {
             console.log('🎯 Filtering by specific date:', selectedDate);
             filterBySpecificDateWithFallback(selectedDate);
@@ -3693,7 +3797,18 @@
             console.log("🎯 FILTERING BESOK:", besokFormatted);
             filterBySpecificDateWithFallback(besokFormatted);
           } else if (filterType === 'week') {
-            // Untuk minggu ini, gunakan applyFilters biasa
+            // Set currentFilter to 'week' and apply week filtering
+            console.log("🎯 FILTERING MINGGU INI - Setting up week filter");
+            currentFilter = 'week';
+            selectedDate = 'all'; // Reset date selector to show all dates, but filter by week
+            
+            // Update date dropdown to show "all" since we're filtering by week range
+            const dateSelect = document.getElementById('date-select');
+            if (dateSelect) {
+              dateSelect.value = 'all';
+            }
+            
+            // Apply the week filter
             applyFiltersWithFallback();
           } else {
             applyFiltersWithFallback();
@@ -4075,26 +4190,38 @@
                   }
                 } 
                 else if (currentFilter === 'week') {
-                  // Check for this week (current week from today) - GUNAKAN DATE PARSING YANG BENAR
+                  // Check for this week (Monday to Sunday) - USING HELPER FUNCTION
                   shouldShow = false;
-                  const today = new Date();
-                  const weekStart = new Date(today);
-                  weekStart.setDate(today.getDate() - today.getDay()); // Start of week (Sunday)
-                  const weekEnd = new Date(weekStart);
-                  weekEnd.setDate(weekStart.getDate() + 6); // End of week (Saturday)
                   
-                  // Parse the match date dari format DD/MM/YYYY
-                  const [day, month, year] = dateText.split('/').map(Number);
-                  const matchDate = new Date(year, month - 1, day);
-                  
-                  shouldShow = matchDate >= weekStart && matchDate <= weekEnd;
-                  
-                  if (index < 3) {
-                    console.log("📊 WEEK FILTER:");
-                    console.log("  Week Start:", formatDateToDDMMYYYY(weekStart));
-                    console.log("  Week End:", formatDateToDDMMYYYY(weekEnd));
-                    console.log("  Match Date:", dateText);
-                    console.log("  In Range:", shouldShow);
+                  try {
+                    const weekRange = getCurrentWeekRange();
+                    
+                    // Parse the match date from DD/MM/YYYY format with proper validation
+                    if (dateText && dateText.includes('/')) {
+                      const dateParts = dateText.split('/');
+                      if (dateParts.length === 3) {
+                        const day = parseInt(dateParts[0], 10);
+                        const month = parseInt(dateParts[1], 10);
+                        const year = parseInt(dateParts[2], 10);
+                        
+                        if (!isNaN(day) && !isNaN(month) && !isNaN(year)) {
+                          const matchDate = new Date(year, month - 1, day);
+                          matchDate.setHours(12, 0, 0, 0); // Set to noon to avoid timezone issues
+                          
+                          shouldShow = matchDate >= weekRange.start && matchDate <= weekRange.end;
+                        }
+                      }
+                    }
+                    
+                    if (index < 5) {
+                      console.log("📊 WEEK FILTER DEBUG:");
+                      console.log("  Week Range:", weekRange.startFormatted, "to", weekRange.endFormatted);
+                      console.log("  Match Date Text:", dateText);
+                      console.log("  In Range:", shouldShow);
+                    }
+                  } catch (error) {
+                    console.warn('Error in week filter:', error);
+                    shouldShow = false;
                   }
                 }
               } // End of quick filter check
@@ -4771,6 +4898,42 @@
     }
     
     // Enhanced applyFilters dengan error handling dan date normalization
+    // Parse match date and time to Date object
+    function parseMatchDateTime(dateString, timeString) {
+      try {
+        if (!dateString || !timeString) return null;
+        
+        // Handle different date formats
+        let normalizedDate;
+        if (dateString.includes('-')) {
+          // Format: YYYY-MM-DD or DD-MM-YYYY
+          const parts = dateString.split('-');
+          if (parts[0].length === 4) {
+            normalizedDate = dateString; // Already YYYY-MM-DD
+          } else {
+            normalizedDate = `${parts[2]}-${parts[1]}-${parts[0]}`; // Convert DD-MM-YYYY to YYYY-MM-DD
+          }
+        } else if (dateString.includes('/')) {
+          // Format: DD/MM/YYYY
+          const parts = dateString.split('/');
+          normalizedDate = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+        } else {
+          return null;
+        }
+        
+        // Parse time (assuming HH:MM format)
+        const [hours, minutes] = timeString.split(':').map(Number);
+        
+        const matchDate = new Date(normalizedDate);
+        matchDate.setHours(hours || 0, minutes || 0, 0, 0);
+        
+        return matchDate;
+      } catch (error) {
+        console.warn('Error parsing match date/time:', error);
+        return null;
+      }
+    }
+
     function applyFiltersWithFallback() {
       try {
         if (typeof applyFilters === 'function') {

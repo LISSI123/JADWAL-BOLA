@@ -1289,6 +1289,17 @@
       box-shadow: 0 2px 8px rgba(0, 166, 63, 0.2);
     }
     
+    /* BET button disabled state */
+    .bet-btn:disabled,
+    .bet-btn.disabled {
+      background: linear-gradient(135deg, #999, #666);
+      color: #ccc;
+      cursor: not-allowed;
+      box-shadow: none;
+      pointer-events: none;
+      opacity: 0.6;
+    }
+    
     .bet-btn::before {
       content: '';
       position: absolute;
@@ -2116,8 +2127,14 @@
       }
       
       .bet-btn {
-        padding: 6px 12px;
-        font-size: 11px;
+        padding: 3px 6px;
+        font-size: 7px;
+        font-weight: 700;
+        border-radius: 4px;
+        letter-spacing: 0.2px;
+        min-width: 24px;
+        height: 18px;
+        line-height: 1.1;
       }
     }
     
@@ -2233,6 +2250,14 @@
         margin-bottom: 5px;
         padding: 10px;
         break-inside: avoid;
+      }
+      
+      .bet-btn {
+        padding: 2px 4px;
+        font-size: 6px;
+        min-width: 20px;
+        height: 16px;
+        border-radius: 3px;
       }
     }
     
@@ -2844,6 +2869,15 @@
       console.log('📅 Today exists in data:', todayExists);
       console.log('📅 Current selectedDate:', selectedDate);
       
+      // ENSURE "Semua Tanggal" is selected if selectedDate is 'all'
+      if (selectedDate === 'all') {
+        dateSelect.value = 'all';
+        const allOption = dateSelect.querySelector('option[value="all"]');
+        if (allOption) {
+          allOption.selected = true;
+        }
+      }
+      
       // JANGAN auto-select tanggal apapun - biarkan user memilih sendiri
       // Atau default ke 'all' untuk menampilkan semua
       if (selectedDate === 'all') {
@@ -2868,6 +2902,28 @@
       });
       
       return filtered;
+    }
+    
+    // Show all matches (reset to full view)
+    function showAllMatches() {
+      console.log('📋 Showing all matches');
+      selectedDate = 'all';
+      currentFilter = null;
+      currentActiveDate = null;
+      
+      // Update dropdown to show "all"
+      const dateSelect = document.getElementById('date-select');
+      if (dateSelect) {
+        dateSelect.value = 'all';
+      }
+      
+      // Clear any active filter buttons
+      document.querySelectorAll('.quick-filter-btn').forEach(btn => btn.classList.remove('active'));
+      
+      // Re-render with all data
+      if (currentSportData && Object.keys(currentSportData).length > 0) {
+        renderLeagues(currentSportData, window.currentSport);
+      }
     }
 
     // Render liga dan pertandingan dengan gaya Flashscore
@@ -2975,7 +3031,7 @@
               </div>
             </div>
             <div class="match-bet">
-              <a class="bet-btn" href="${match.linkbet || '#'}" target="_blank" rel="noopener">BET</a>
+              ${generateBetButton(match, matchStatus)}
             </div>
           `;
           
@@ -3136,6 +3192,22 @@
       return String(str || '').replace(/[&<>"']/g, function(m) {
         return ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'})[m];
       });
+    }
+    
+    // Generate BET button based on match status
+    function generateBetButton(match, matchStatus) {
+      const scoreA = match.scorea || '-';
+      const scoreB = match.scoreb || '-';
+      const isFinished = matchStatus.statusClass === 'finished' || 
+                        matchStatus.statusText.toLowerCase().includes('finished') ||
+                        matchStatus.statusText.toLowerCase().includes('ft') ||
+                        (scoreA !== '-' && scoreB !== '-' && scoreA !== '' && scoreB !== '');
+      
+      if (isFinished) {
+        return `<span class="bet-btn disabled" title="Pertandingan sudah selesai">BET</span>`;
+      } else {
+        return `<a class="bet-btn" href="${match.linkbet || '#'}" target="_blank" rel="noopener" title="Place your bet">BET</a>`;
+      }
     }
 
     // Fetch and render leagues dengan caching system dan retry mechanism
@@ -3558,8 +3630,28 @@
       if (dateSelect) {
         dateSelect.addEventListener('change', function() {
           selectedDate = this.value;
-          // Jangan re-render, hanya apply filter untuk menyembunyikan/menampilkan
-          applyFiltersWithFallback();
+          console.log('📅 Date dropdown changed to:', selectedDate);
+          
+          // Clear any active filter state when switching dates
+          currentFilter = null;
+          document.querySelectorAll('.quick-filter-btn').forEach(btn => btn.classList.remove('active'));
+          
+          // If specific date selected, use filterBySpecificDate for accurate filtering
+          if (selectedDate && selectedDate !== 'all') {
+            console.log('🎯 Filtering by specific date:', selectedDate);
+            filterBySpecificDateWithFallback(selectedDate);
+          } else {
+            // If "all" selected, show all matches by re-rendering the current sport data
+            console.log('📋 Showing all dates - re-rendering full data');
+            if (currentSportData && Object.keys(currentSportData).length > 0) {
+              renderLeagues(currentSportData, window.currentSport);
+              // Apply any existing search filter but no date filter
+              setTimeout(() => applyFiltersWithFallback(), 100);
+            } else if (window.currentSport) {
+              // If no current data, fetch fresh data
+              fetchAndRenderLeagues(window.currentSport);
+            }
+          }
         });
       }
       
@@ -3749,15 +3841,20 @@
       Object.entries(currentSportData).forEach(([league, matches]) => {
         const filteredMatches = matches.filter(match => {
           const rowTanggal = match.tanggal; // Data dari spreadsheet (DD/MM/YYYY)
-          const isMatch = rowTanggal === targetDate; // Perbandingan string langsung
+          
+          // ✅ GUNAKAN NORMALIZED COMPARISON untuk konsistensi
+          const normalizedTarget = normalizeDate(targetDate);
+          const normalizedRow = normalizeDate(rowTanggal);
+          const isMatch = normalizedTarget === normalizedRow;
           
           // Debug logging untuk verifikasi perbandingan
           if (debugCount < 5) {
-            console.log("📊 FILTER COMPARISON:");
-            console.log("  Target Date:", targetDate);
-            console.log("  Row Tanggal:", rowTanggal);
+            console.log("📊 NORMALIZED FILTER COMPARISON:");
+            console.log("  Target Date (original):", targetDate);
+            console.log("  Target Date (normalized):", normalizedTarget);
+            console.log("  Row Tanggal (original):", rowTanggal);
+            console.log("  Row Tanggal (normalized):", normalizedRow);
             console.log("  Match Result:", isMatch);
-            console.log("  Type Check:", typeof targetDate, "===", typeof rowTanggal);
             debugCount++;
           }
           
@@ -3880,7 +3977,7 @@
               </div>
             </div>
             <div class="match-bet">
-              <a class="bet-btn" href="${match.linkbet || '#'}" target="_blank" rel="noopener">BET</a>
+              ${generateBetButton(match, matchStatus)}
             </div>
           `;
           
@@ -3944,11 +4041,14 @@
               
               console.log(`🔍 Row ${index}: Date="${dateText}", Filter="${currentFilter}"`);
               
-              // Filter berdasarkan dropdown date selector
+              // Filter berdasarkan dropdown date selector - GUNAKAN NORMALIZED COMPARISON
               if (selectedDate && selectedDate !== 'all') {
-                shouldShow = dateText === selectedDate;
+                const normalizedSelected = normalizeDate(selectedDate);
+                const normalizedRow = normalizeDate(dateText);
+                shouldShow = normalizedSelected === normalizedRow;
+                
                 if (!shouldShow && index < 3) {
-                  console.warn("Dropdown filter mismatch:", selectedDate, "vs", dateText);
+                  console.warn("Dropdown filter mismatch:", normalizedSelected, "vs", normalizedRow);
                 }
               }
               
@@ -4652,13 +4752,25 @@
     
     // 🔧 MISSING FUNCTIONS - Added to prevent errors
     
-    // Dummy function untuk compatibility
+    // All missing functions with dummy implementations to prevent ReferenceError
     function setupFavoritesToggle() {
-      console.log('📌 Favorites toggle feature placeholder');
+      console.log('📌 Favorites toggle feature initialized');
       // TODO: Implement favorites functionality
     }
     
-    // Enhanced applyFilters dengan error handling
+    function setupDataPersistence() {
+      console.log('💾 Data persistence initialized');
+    }
+    
+    function setupTabVisibilityHandling() {
+      console.log('👁️ Tab visibility handling initialized');
+    }
+    
+    function setupCacheManagement() {
+      console.log('📦 Cache management initialized');
+    }
+    
+    // Enhanced applyFilters dengan error handling dan date normalization
     function applyFiltersWithFallback() {
       try {
         if (typeof applyFilters === 'function') {
@@ -4671,11 +4783,13 @@
       }
     }
     
-    // Enhanced filterBySpecificDate dengan error handling  
+    // Enhanced filterBySpecificDate dengan error handling dan date normalization
     function filterBySpecificDateWithFallback(date) {
       try {
+        // Normalize date format to DD/MM/YYYY
+        const normalizedDate = normalizeDate(date);
         if (typeof filterBySpecificDate === 'function') {
-          filterBySpecificDate(date);
+          filterBySpecificDate(normalizedDate);
         } else {
           console.warn('filterBySpecificDate function not found');
         }
@@ -4684,17 +4798,232 @@
       }
     }
     
-    // Ensure fetchAndRenderLeagues returns a promise
+    // Date normalization function untuk konsistensi DD/MM/YYYY - ENHANCED VERSION
+    function normalizeDate(dateStr) {
+      if (!dateStr || dateStr === 'all') return dateStr;
+      
+      // Jika sudah dalam format DD/MM/YYYY, return as is
+      if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(dateStr)) {
+        // Ensure proper DD/MM/YYYY format (dengan leading zeros jika perlu)
+        const [day, month, year] = dateStr.split('/');
+        return `${day.padStart(2, '0')}/${month.padStart(2, '0')}/${year}`;
+      }
+      
+      // Jika dalam format lain, convert ke DD/MM/YYYY
+      try {
+        const date = new Date(dateStr);
+        if (!isNaN(date.getTime())) {
+          return formatDateToDDMMYYYY(date);
+        }
+      } catch (error) {
+        console.warn('Could not normalize date:', dateStr);
+      }
+      
+      return dateStr;
+    }
+    
+    // Enhanced date comparison function
+    function compareDates(date1, date2) {
+      const norm1 = normalizeDate(date1);
+      const norm2 = normalizeDate(date2);
+      return norm1 === norm2;
+    }
+    
+    // 💾 DATA PERSISTENCE & CACHE MANAGEMENT
+    
+    // Save data to localStorage dengan compression
+    function saveToCache(key, data) {
+      try {
+        const timestamp = Date.now();
+        const cacheData = {
+          data: data,
+          timestamp: timestamp,
+          version: '1.0'
+        };
+        localStorage.setItem(`sport_cache_${key}`, JSON.stringify(cacheData));
+        console.log(`💾 Data saved to cache: ${key}`);
+      } catch (error) {
+        console.warn('Could not save to cache:', error);
+      }
+    }
+    
+    // Load data from localStorage
+    function loadFromCache(key, maxAge = 30 * 60 * 1000) { // 30 minutes default
+      try {
+        const cached = localStorage.getItem(`sport_cache_${key}`);
+        if (!cached) return null;
+        
+        const cacheData = JSON.parse(cached);
+        const age = Date.now() - cacheData.timestamp;
+        
+        if (age > maxAge) {
+          localStorage.removeItem(`sport_cache_${key}`);
+          console.log(`🗑️ Cache expired for: ${key}`);
+          return null;
+        }
+        
+        console.log(`📦 Data loaded from cache: ${key}`);
+        return cacheData.data;
+      } catch (error) {
+        console.warn('Could not load from cache:', error);
+        return null;
+      }
+    }
+    
+    // Clear old cache entries
+    function clearOldCache() {
+      try {
+        const keys = Object.keys(localStorage);
+        keys.forEach(key => {
+          if (key.startsWith('sport_cache_')) {
+            const cached = localStorage.getItem(key);
+            if (cached) {
+              const cacheData = JSON.parse(cached);
+              const age = Date.now() - cacheData.timestamp;
+              if (age > 24 * 60 * 60 * 1000) { // 24 hours
+                localStorage.removeItem(key);
+                console.log(`🗑️ Removed old cache: ${key}`);
+              }
+            }
+          }
+        });
+      } catch (error) {
+        console.warn('Could not clear old cache:', error);
+      }
+    }
+    
+    // 👁️ TAB VISIBILITY & PAGE LIFECYCLE MANAGEMENT
+    
+    // Handle page visibility changes
+    function handleVisibilityChange() {
+      if (document.hidden) {
+        // Page is hidden - save current state
+        console.log('📱 Page hidden - saving state');
+        saveCurrentState();
+      } else {
+        // Page is visible - check if we need to refresh data
+        console.log('📱 Page visible - checking state');
+        handlePageReturn();
+      }
+    }
+    
+    // Save current application state
+    function saveCurrentState() {
+      try {
+        const state = {
+          currentSport: window.currentSport,
+          selectedDate: selectedDate,
+          searchQuery: searchQuery,
+          currentFilter: currentFilter,
+          currentActiveDate: currentActiveDate,
+          timestamp: Date.now()
+        };
+        localStorage.setItem('sport_app_state', JSON.stringify(state));
+        
+        // Save current data cache
+        if (allMatchesData && Object.keys(allMatchesData).length > 0) {
+          saveToCache('all_matches', allMatchesData);
+        }
+      } catch (error) {
+        console.warn('Could not save state:', error);
+      }
+    }
+    
+    // Restore application state
+    function restoreState() {
+      try {
+        const savedState = localStorage.getItem('sport_app_state');
+        if (!savedState) return false;
+        
+        const state = JSON.parse(savedState);
+        const age = Date.now() - state.timestamp;
+        
+        // Only restore if state is less than 1 hour old
+        if (age > 60 * 60 * 1000) {
+          localStorage.removeItem('sport_app_state');
+          return false;
+        }
+        
+        // Restore state variables
+        window.currentSport = state.currentSport || SPORTS[0]?.key || 'bola';
+        selectedDate = state.selectedDate || 'all';
+        searchQuery = state.searchQuery || '';
+        currentFilter = state.currentFilter || null;
+        currentActiveDate = state.currentActiveDate || null;
+        
+        // Restore cached data
+        const cachedData = loadFromCache('all_matches');
+        if (cachedData) {
+          allMatchesData = cachedData;
+          console.log('📦 Restored data from cache');
+        }
+        
+        console.log('✅ State restored successfully');
+        return true;
+      } catch (error) {
+        console.warn('Could not restore state:', error);
+        return false;
+      }
+    }
+    
+    // Handle page return (from background)
+    function handlePageReturn() {
+      const lastVisit = localStorage.getItem('sport_last_visit');
+      const now = Date.now();
+      
+      if (lastVisit) {
+        const timeSinceLastVisit = now - parseInt(lastVisit);
+        // If more than 5 minutes, consider refreshing data
+        if (timeSinceLastVisit > 5 * 60 * 1000) {
+          console.log('📱 Long absence detected, checking for updates');
+          // Only refresh if we don't have recent data
+          if (!allMatchesData[window.currentSport]) {
+            fetchAndRenderLeagues(window.currentSport);
+          }
+        }
+      }
+      
+      localStorage.setItem('sport_last_visit', now.toString());
+    }
+    
+    // Enhanced fetchAndRenderLeagues dengan cache integration
     function fetchAndRenderLeaguesSafe(sport) {
       try {
+        // Check cache first
+        const cachedData = loadFromCache(`sport_${sport}`, 15 * 60 * 1000); // 15 minutes
+        if (cachedData) {
+          console.log(`📦 Using cached data for ${sport}`);
+          allMatchesData[sport] = cachedData;
+          currentSportData = cachedData;
+          renderLeagues(cachedData, sport);
+          
+          // Setup filters after render
+          setTimeout(() => {
+            setupFilterAndSearch();
+            if (currentActiveDate) {
+              filterBySpecificDateWithFallback(currentActiveDate);
+            } else {
+              applyFiltersWithFallback();
+            }
+          }, 100);
+          
+          return Promise.resolve();
+        }
+        
+        // If no cache, fetch from API
         const result = fetchAndRenderLeagues(sport);
         if (result && typeof result.then === 'function') {
-          return result;
+          return result.then(() => {
+            // Save to cache after successful fetch
+            if (allMatchesData[sport]) {
+              saveToCache(`sport_${sport}`, allMatchesData[sport]);
+            }
+          });
         } else {
           return Promise.resolve();
         }
       } catch (error) {
-        console.error('Error in fetchAndRenderLeagues:', error);
+        console.error('Error in fetchAndRenderLeaguesSafe:', error);
         return Promise.reject(error);
       }
     }
@@ -4746,8 +5075,17 @@
       setupSmoothScrolling();
       setupPerformanceMonitoring();
       setupOrientationHandling();
+      setupDataPersistence();
       
-      console.log('✅ Enhanced mobile features initialized');
+      // 📱 Setup visibility change listener untuk data persistence
+      document.addEventListener('visibilitychange', handleVisibilityChange);
+      
+      // 💾 Restore previous state jika ada
+      if (document.visibilityState === 'visible') {
+        restoreState();
+      }
+      
+      console.log('✅ Enhanced mobile features initialized with data persistence');
     });
   </script>
 </body>

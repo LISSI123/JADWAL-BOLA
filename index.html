@@ -3,25 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>JADWAL SPORT SLOTGOKIL</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
-  
-  <!-- PWA & Mobile Enhancement Meta Tags -->
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#00a63f">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="SportSchedule">
-  <meta name="msapplication-TileColor" content="#00a63f">
-  <meta name="mobile-web-app-capable" content="yes">
-  
-  <!-- Preconnect untuk performance -->
-  <link rel="preconnect" href="https://corsproxy.io">
-  <link rel="preconnect" href="https://script.google.com">
-  
-  <!-- DNS prefetch untuk faster loading -->
-  <link rel="dns-prefetch" href="//corsproxy.io">
-  <link rel="dns-prefetch" href="//script.google.com">
-  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     /* Global Professional Enhancements */
     * {
@@ -636,44 +618,6 @@
       outline: none;
       transition: var(--transition);
       min-width: 120px;
-      flex: 1;
-    }
-    
-    .date-select-container {
-      display: flex;
-      gap: 6px;
-      align-items: center;
-    }
-    
-    .apply-date-btn {
-      background: var(--accent);
-      color: white;
-      border: none;
-      border-radius: 4px;
-      padding: 4px 10px;
-      font-size: 11px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: var(--transition);
-      white-space: nowrap;
-    }
-    
-    .apply-date-btn:hover:not(:disabled) {
-      background: var(--accent-dark);
-      transform: translateY(-1px);
-    }
-    
-    .apply-date-btn:active:not(:disabled) {
-      transform: translateY(0);
-    }
-    
-    .apply-date-btn:disabled,
-    .apply-date-btn.disabled {
-      background: #999;
-      color: #ccc;
-      cursor: not-allowed;
-      opacity: 0.6;
-      transform: none;
     }
     
     .date-select:focus {
@@ -1147,6 +1091,21 @@
       100% { opacity: 1; transform: scale(1); }
     }
 
+    /* Live Count Badge */
+    .live-count-badge {
+      background: white !important;
+      color: #ff0000 !important;
+      border-radius: 50% !important;
+      padding: 2px 6px !important;
+      font-size: 10px !important;
+      font-weight: bold !important;
+      margin-left: 5px !important;
+      min-width: 16px !important;
+      text-align: center !important;
+      animation: livePulse 2s infinite !important;
+      box-shadow: 0 0 3px rgba(0,0,0,0.3) !important;
+    }
+
     /* Highlight untuk row yang LIVE */
     .match-row.live-match {
       background: linear-gradient(90deg, rgba(255, 0, 0, 0.1), rgba(255, 0, 0, 0.05)) !important;
@@ -1312,48 +1271,19 @@
       color: white;
       border: none;
       border-radius: 6px;
-      padding: 4px 8px;
-      font-size: 8px;
-      font-weight: 700;
+      padding: 4px 10px;
+      font-size: 9px;
+      font-weight: 800;
       cursor: pointer;
       text-decoration: none;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       display: inline-block;
-      line-height: 1.2;
-      letter-spacing: 0.2px;
+      line-height: 1.3;
+      letter-spacing: 0.3px;
       position: relative;
       overflow: hidden;
       text-transform: uppercase;
-      box-shadow: 0 1px 4px rgba(0, 166, 63, 0.15);
-      min-width: 28px;
-      height: 20px;
-      text-align: center;
-    }
-    
-    /* BET button disabled state - Enhanced */
-    .bet-btn:disabled,
-    .bet-btn.disabled {
-      background: linear-gradient(135deg, #d0d0d0, #999);
-      color: #666;
-      cursor: not-allowed;
-      box-shadow: none;
-      pointer-events: none;
-      opacity: 0.5;
-      transform: none;
-    }
-    
-    .bet-btn.finished {
-      background: linear-gradient(135deg, #f44336, #d32f2f);
-      color: white;
-      cursor: not-allowed;
-      pointer-events: none;
-      opacity: 0.7;
-    }
-    
-    .bet-btn.finished::after {
-      content: '✓';
-      font-size: 10px;
-      margin-left: 2px;
+      box-shadow: 0 2px 8px rgba(0, 166, 63, 0.2);
     }
     
     .bet-btn::before {
@@ -1379,6 +1309,37 @@
     
     .bet-btn:active {
       transform: translateY(0) scale(0.98);
+    }
+    
+    .bet-btn.disabled {
+      background: linear-gradient(135deg, #666, #555);
+      color: #999;
+      cursor: not-allowed;
+      opacity: 0.6;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .bet-btn.disabled:hover {
+      background: linear-gradient(135deg, #666, #555);
+      transform: none;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .bet-btn.disabled::before {
+      display: none;
+    }
+    
+    .bet-link.disabled {
+      background: linear-gradient(135deg, #666, #555);
+      color: #999;
+      cursor: not-allowed;
+      opacity: 0.6;
+      text-decoration: none;
+    }
+    
+    .bet-link.disabled:hover {
+      background: linear-gradient(135deg, #666, #555);
+      color: #999;
     }
     
     /* Remove old table styles */
@@ -1637,21 +1598,10 @@
       
       .date-filter { 
         padding: 8px 12px; 
-        flex-direction: column;
+        flex-direction: row;
         flex-wrap: wrap;
         gap: 8px;
-        align-items: stretch;
-      }
-      
-      .date-select-container {
-        flex-direction: row;
-        width: 100%;
-      }
-      
-      .apply-date-btn {
-        padding: 6px 12px;
-        font-size: 10px;
-        min-width: 70px;
+        align-items: center;
       }
       
       .date-filter label {
@@ -2037,338 +1987,6 @@
         padding: 12px 20px;
       }
     }
-    
-    /* 🚀 ENHANCED MOBILE RESPONSIVENESS & FEATURES */
-    
-    /* Animation untuk scroll reveal */
-    .animate-in {
-      animation: slideInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-    }
-    
-    @keyframes slideInUp {
-      0% {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    
-    /* Enhanced scroll behavior */
-    html {
-      scroll-behavior: smooth;
-      -webkit-overflow-scrolling: touch;
-    }
-    
-    /* Better touch targets untuk iOS */
-    @supports (-webkit-touch-callout: none) {
-      .nav-btn, .sport-btn, .quick-filter-btn, .bet-btn {
-        -webkit-touch-callout: none;
-        -webkit-user-select: none;
-        user-select: none;
-        -webkit-tap-highlight-color: transparent;
-      }
-    }
-    
-    /* Enhanced loading states */
-    .loading-shimmer {
-      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-      background-size: 200% 100%;
-      animation: shimmer 1.5s infinite;
-    }
-    
-    @keyframes shimmer {
-      0% { background-position: -200% 0; }
-      100% { background-position: 200% 0; }
-    }
-    
-    /* Enhanced match row interaction */
-    .match-row {
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    
-    .match-row:active {
-      transform: scale(0.98);
-      background: var(--bg-hover);
-    }
-    
-    /* Better focus indicators */
-    .nav-btn:focus,
-    .sport-btn:focus,
-    .quick-filter-btn:focus {
-      outline: 2px solid var(--accent);
-      outline-offset: 2px;
-    }
-    
-    /* Enhanced accordion animation */
-    .accordion-content {
-      transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    
-    .accordion.expanded .accordion-content {
-      max-height: 2000px;
-    }
-    
-    /* Network status indicator */
-    .network-status {
-      animation: slideInDown 0.3s ease;
-    }
-    
-    @keyframes slideInDown {
-      0% {
-        transform: translateY(-100%);
-      }
-      100% {
-        transform: translateY(0);
-      }
-    }
-    
-    /* Enhanced responsive breakpoints */
-    
-    /* Large Mobile (414px - 768px) */
-    @media (min-width: 414px) and (max-width: 768px) {
-      .container {
-        padding: 0 16px;
-      }
-      
-      .sports-tabs {
-        gap: 8px;
-        padding: 0 4px;
-      }
-      
-      .sport-btn {
-        padding: 12px 16px;
-        font-size: 13px;
-      }
-      
-      .match-row {
-        padding: 16px;
-      }
-      
-      .team-name {
-        font-size: 14px;
-      }
-    }
-    
-    /* Small Mobile (320px - 413px) */
-    @media (max-width: 413px) {
-      .container {
-        padding: 0 12px;
-      }
-      
-      .header-bar {
-        padding: 12px;
-      }
-      
-      .logo-title {
-        font-size: 18px;
-      }
-      
-      .current-time {
-        font-size: 11px;
-      }
-      
-      .sports-tabs {
-        gap: 4px;
-        padding: 0 2px;
-      }
-      
-      .sport-btn {
-        padding: 10px 12px;
-        font-size: 12px;
-        min-width: 45px;
-      }
-      
-      .match-row {
-        padding: 12px;
-      }
-      
-      .team-name {
-        font-size: 13px;
-      }
-      
-      .team-score {
-        font-size: 14px;
-        padding: 4px 8px;
-      }
-      
-      .bet-btn {
-        padding: 2px 4px;
-        font-size: 6px;
-        font-weight: 600;
-        border-radius: 3px;
-        letter-spacing: 0.1px;
-        min-width: 20px;
-        height: 16px;
-        line-height: 1;
-        box-shadow: 0 1px 2px rgba(0, 166, 63, 0.1);
-      }
-      
-      .bet-btn:hover {
-        transform: none; /* Disable transform on mobile */
-        box-shadow: 0 1px 3px rgba(0, 166, 63, 0.2);
-      }
-      
-      .bet-btn.disabled,
-      .bet-btn.finished {
-        font-size: 5px;
-        min-width: 18px;
-        height: 14px;
-      }
-    }
-    
-    /* Ultra Small Mobile (< 320px) */
-    @media (max-width: 319px) {
-      .container {
-        padding: 0 8px;
-      }
-      
-      .header-bar {
-        padding: 8px;
-        flex-direction: column;
-        gap: 8px;
-      }
-      
-      .sports-tabs {
-        overflow-x: auto;
-        scrollbar-width: none;
-        -ms-overflow-style: none;
-      }
-      
-      .sports-tabs::-webkit-scrollbar {
-        display: none;
-      }
-      
-      .sport-btn {
-        flex-shrink: 0;
-        padding: 8px 10px;
-        font-size: 11px;
-        min-width: 40px;
-      }
-      
-      .match-teams {
-        flex-direction: column;
-        gap: 4px;
-      }
-      
-      .team-row {
-        justify-content: space-between;
-      }
-    }
-    
-    /* Landscape orientation optimization */
-    @media (orientation: landscape) and (max-height: 500px) {
-      .welcome-card {
-        padding: 20px 30px;
-        max-height: 80vh;
-        overflow-y: auto;
-      }
-      
-      .header-bar {
-        padding: 8px 16px;
-      }
-      
-      .date-navigator {
-        margin: 8px 0;
-      }
-      
-      .accordion-header {
-        padding: 12px 16px;
-      }
-      
-      .match-row {
-        padding: 12px 16px;
-      }
-    }
-    
-    /* Dark mode enhancements untuk mobile */
-    @media (prefers-color-scheme: dark) {
-      .refresh-indicator {
-        background: var(--accent) !important;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
-      }
-      
-      .network-status {
-        background: #dc3545 !important;
-      }
-    }
-    
-    /* Print styles untuk jadwal */
-    @media print {
-      body {
-        background: white !important;
-        color: black !important;
-      }
-      
-      #welcome-screen,
-      .header-bar,
-      .sports-tabs,
-      .date-filter,
-      .search-bar,
-      .bet-btn {
-        display: none !important;
-      }
-      
-      .container {
-        display: block !important;
-        padding: 0 !important;
-      }
-      
-      .accordion {
-        break-inside: avoid;
-        margin-bottom: 20px;
-      }
-      
-      .accordion-content {
-        max-height: none !important;
-        overflow: visible !important;
-      }
-      
-      .match-row {
-        border: 1px solid #ddd;
-        margin-bottom: 5px;
-        padding: 10px;
-        break-inside: avoid;
-      }
-      
-      .bet-btn {
-        padding: 2px 4px;
-        font-size: 6px;
-        min-width: 20px;
-        height: 16px;
-        border-radius: 3px;
-      }
-    }
-    
-    /* Accessibility enhancements */
-    @media (prefers-reduced-motion: reduce) {
-      * {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-      }
-      
-      html {
-        scroll-behavior: auto;
-      }
-    }
-    
-    /* High contrast mode support */
-    @media (prefers-contrast: high) {
-      .bet-btn {
-        border: 2px solid currentColor;
-      }
-      
-      .live-badge {
-        border: 2px solid white;
-      }
-      
-      .sport-btn.active {
-        border: 3px solid var(--accent);
-      }
-    }
   </style>
 </head>
 <body>
@@ -2408,16 +2026,15 @@
     </div>
     <div class="date-filter">
       <label for="date-select">📅 Pilih Tanggal:</label>
-      <div class="date-select-container">
-        <select id="date-select" class="date-select">
-          <option value="all">Semua Tanggal</option>
-        </select>
-        <button id="apply-date-btn" class="apply-date-btn">Lihat Jadwal</button>
-      </div>
+      <select id="date-select" class="date-select">
+        <option value="all">Semua Tanggal</option>
+      </select>
       <div class="quick-filters">
+        <button class="quick-filter-btn" data-filter="live">🔴 LIVE</button>
         <button class="quick-filter-btn" data-filter="today">Hari Ini</button>
         <button class="quick-filter-btn" data-filter="tomorrow">Besok</button>
         <button class="quick-filter-btn" data-filter="week">Minggu Ini</button>
+        <button class="quick-filter-btn active" data-filter="all">Semua</button>
       </div>
       
       <!-- Flashscore-style Date Navigator -->
@@ -2448,94 +2065,96 @@
   <script>
     console.log('🚀 Script loading...');
     
-    // 🚀 PWA SERVICE WORKER REGISTRATION
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function() {
-        navigator.serviceWorker.register('/sw.js')
-          .then(function(registration) {
-            console.log('✅ ServiceWorker registration successful:', registration.scope);
-            
-            // Check for updates
-            registration.addEventListener('updatefound', () => {
-              const newWorker = registration.installing;
-              newWorker.addEventListener('statechange', () => {
-                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                  // New version available
-                  showUpdateAvailableNotification();
-                }
-              });
-            });
-          })
-          .catch(function(err) {
-            console.log('❌ ServiceWorker registration failed:', err);
-          });
-      });
-    }
+    // ✅ GOOGLE SHEETS API CONFIGURATION - 100% REAL DATA
+    const DIRECT_URL = "https://script.google.com/macros/s/AKfycbzLPPL9DmNg9k0qL5Ne6chJbmURVck7FOjTI1O53zY8xbfGQnYvu2DlJc7KT80u5y-HeQ/exec";
     
-    // Show update notification
-    function showUpdateAvailableNotification() {
-      const notification = document.createElement('div');
-      notification.style.cssText = `
-        position: fixed;
-        bottom: 20px;
-        left: 20px;
-        right: 20px;
-        background: var(--accent);
-        color: white;
-        padding: 16px;
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        z-index: 10000;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 14px;
-        font-weight: 500;
-      `;
-      notification.innerHTML = `
-        <span>🚀 Update tersedia! Refresh untuk mendapatkan fitur terbaru</span>
-        <button onclick="location.reload()" style="background: white; color: var(--accent); border: none; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer;">
-          Refresh
-        </button>
-      `;
-      document.body.appendChild(notification);
-      
-      // Auto hide setelah 10 detik
-      setTimeout(() => {
-        if (notification.parentNode) {
-          notification.remove();
-        }
-      }, 10000);
-    }
-    
-    // ✅ URL DEPLOYMENT TERBARU DARI GOOGLE APPS SCRIPT - Valid Endpoint dengan CORS Proxy
-    const URL_API = "https://corsproxy.io/?" + encodeURIComponent("https://script.google.com/macros/s/AKfycbzLPPL9DmNg9k0qL5Ne6chJbmURVck7FOjTI1O53zY8xbfGQnYvu2DlJc7KT80u5y-HeQ/exec");
-    
-    // Fallback URLs jika endpoint utama tidak berfungsi
-    const FALLBACK_URLS = [
-      "https://corsproxy.io/?" + encodeURIComponent("https://script.google.com/macros/s/AKfycbzLPPL9DmNg9k0qL5Ne6chJbmURVck7FOjTI1O53zY8xbfGQnYvu2DlJc7KT80u5y-HeQ/exec")
+    // Working CORS proxy services - CORRECTED APPROACH
+    const WORKING_PROXIES = [
+      "allorigins",
+      "cors-anywhere", 
+      "corsproxy",
+      "codetabs",
+      "htmldriven",
+      "thingproxy",
+      "direct"
     ];
     
-    console.log('✅ API URL Updated with CORS Proxy:', URL_API);
-    console.log('✅ Fallback URLs available:', FALLBACK_URLS.length);
+    // Enhanced FALLBACK URLs - COMPLETELY REBUILT
+    const FALLBACK_URLS = [
+      // AllOrigins raw proxy
+      `https://api.allorigins.win/raw?url=${encodeURIComponent(DIRECT_URL)}`,
+      // CORS Anywhere
+      `https://cors-anywhere.herokuapp.com/${DIRECT_URL}`,
+      // CORSProxy.io
+      `https://corsproxy.io/?${DIRECT_URL}`,
+      // CodeTabs proxy
+      `https://api.codetabs.com/v1/proxy?quest=${DIRECT_URL}`,
+      // HTMLDriven proxy
+      `https://cors-proxy.htmldriven.com/?url=${encodeURIComponent(DIRECT_URL)}`,
+      // ThingProxy
+      `https://thingproxy.freeboard.io/fetch/${DIRECT_URL}`,
+      // Direct call as last resort
+      DIRECT_URL
+    ];
+    
+    console.log('🚀 Total working URLs:', FALLBACK_URLS.length);
+    console.log('📋 Google Sheets URL:', DIRECT_URL);
+    
+    // Debug: Print all URLs for verification
+    console.log('🔍 All FALLBACK URLs:');
+    FALLBACK_URLS.forEach((url, index) => {
+      console.log(`${index + 1}. ${url.substring(0, 100)}...`);
+    });
+    
+    // Test real connectivity to Google Apps Script
+    async function testGoogleSheetsConnection() {
+      console.log('🧪 Testing direct connection to Google Apps Script...');
+      
+      try {
+        // Try direct connection first
+        const testUrl = `${DIRECT_URL}?test=true&timestamp=${Date.now()}`;
+        const response = await fetch(testUrl, {
+          method: 'GET',
+          mode: 'no-cors' // This will always succeed but we can't read the response
+        });
+        console.log('✅ Direct connection test completed (no-cors mode)');
+      } catch (error) {
+        console.log('⚠️ Direct connection test info:', error.message);
+      }
+      
+      // Try with proxy
+      try {
+        const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(DIRECT_URL + '?test=true')}`;
+        const response = await fetch(proxyUrl);
+        console.log('✅ Proxy connection test:', response.status);
+      } catch (error) {
+        console.log('⚠️ Proxy connection test failed:', error.message);
+      }
+    }
+    
+    // Test connection on load
+    testGoogleSheetsConnection();
     
     // 🧪 TEST LANGSUNG URL API dengan Enhanced Error Handling
     console.log('🧪 Testing API immediately...');
     
-    // Fungsi untuk test API dengan parameter yang lebih lengkap
+    // Fungsi untuk test API dengan CORS-friendly approach
     async function testAPIConnection() {
       try {
-        console.log('🧪 Testing API connection...');
-        const testUrl = `${URL_API}?sport=bola&date=${getTodayFormatted()}&timestamp=${Date.now()}`;
-        console.log('🧪 Test URL:', testUrl);
+        console.log('🧪 Testing API connection with CORS proxy...');
+        
+        // Langsung gunakan proxy untuk test karena local file pasti kena CORS
+        const proxyUrl = 'https://api.allorigins.win/raw?url=';
+        const targetUrl = `${DIRECT_URL}?sport=bola&timestamp=${Date.now()}`;
+        const testUrl = proxyUrl + encodeURIComponent(targetUrl);
+        
+        console.log('🧪 Test URL with proxy:', testUrl);
         
         const res = await fetch(testUrl, {
           method: 'GET',
           headers: {
-            'Accept': 'application/json',
-            'Cache-Control': 'no-cache'
-          },
-          mode: 'cors'
+            'Accept': 'application/json'
+          }
         });
         
         console.log('🧪 API Test Response Status:', res.status);
@@ -2548,18 +2167,25 @@
         const text = await res.text();
         console.log('🧪 API Test Raw Response (first 500 chars):', text.substring(0, 500));
         
-        const data = JSON.parse(text);
-        console.log('🧪 API Test Parsed JSON:', data);
-        
-        if (data.error) {
-          console.error('🧪 API Test - Server Error:', data.error);
+        try {
+          const data = JSON.parse(text);
+          console.log('🧪 API Test Parsed JSON:', data);
+          
+          if (data.error) {
+            console.error('🧪 API Test - Server Error:', data.error);
+            return false;
+          } else {
+            console.log('🧪 API Test - Success! Available data:', Object.keys(data).length, 'leagues');
+            return true;
+          }
+        } catch (parseError) {
+          console.error('🧪 API Test - JSON Parse Error:', parseError);
+          console.log('🧪 Raw response that failed to parse:', text);
           return false;
-        } else {
-          console.log('🧪 API Test - Success! Leagues:', Object.keys(data));
-          return true;
         }
       } catch (e) {
-        console.error('🧪 API Test - Error:', e);
+        console.error('🧪 API Test - Network Error:', e);
+        console.log('🧪 Will fallback to mock data for development');
         return false;
       }
     }
@@ -2567,11 +2193,12 @@
     // Jalankan test API
     testAPIConnection();
     
-    // Enhanced fetch function untuk mendukung parameter tanggal dan kategori
+    // Enhanced fetch function untuk mendukung parameter tanggal dan kategori dengan CORS fix
     async function fetchSportData(sport, dateFilter = null, category = null) {
       console.log('🚀 Enhanced fetch for:', { sport, dateFilter, category });
       
-      const urlsToTry = [URL_API, ...FALLBACK_URLS];
+      // Skip direct URL karena akan kena CORS untuk local file
+      const urlsToTry = FALLBACK_URLS; // Langsung ke proxy
       
       for (let i = 0; i < urlsToTry.length; i++) {
         const baseUrl = urlsToTry[i];
@@ -2595,14 +2222,13 @@
         try {
           console.log(`🔄 Attempt ${i + 1}/${urlsToTry.length}:`, fullUrl);
           
+          // Use try-catch untuk handle specific CORS errors
           const response = await fetch(fullUrl, {
             method: 'GET',
             headers: {
-              'Accept': 'application/json',
-              'Cache-Control': 'no-cache',
-              'Content-Type': 'application/json'
-            },
-            mode: 'cors'
+              'Accept': 'application/json'
+              // Remove problematic headers yang bisa cause CORS issues
+            }
           });
           
           if (!response.ok) {
@@ -2625,23 +2251,106 @@
             throw error; // Rethrow if this is the last attempt
           }
           
-          // Wait before trying next URL
-          await new Promise(resolve => setTimeout(resolve, 1000));
+          // Quick retry with minimal delay for faster fallback
+          await new Promise(resolve => setTimeout(resolve, 10));
         }
       }
     }
 
-    // Global variables untuk filter tanggal dan search
+    // Enhanced cache system dengan timestamp dan compression
     let allMatchesData = {}; // Cache untuk semua data yang sudah di-fetch
+    const CACHE_DURATION = 15 * 60 * 1000; // 15 minutes cache (lebih lama)
+    const FRESH_CACHE_DURATION = 5 * 60 * 1000; // 5 minutes untuk fresh data
+    
+    // Advanced cache management dengan compression
+    function loadCachedData() {
+      try {
+        const cached = localStorage.getItem('sportsDataCache_v2');
+        const cacheTime = localStorage.getItem('sportsDataCacheTime_v2');
+        const cacheVersion = localStorage.getItem('sportsDataVersion_v2');
+        
+        if (cached && cacheTime) {
+          const timeDiff = Date.now() - parseInt(cacheTime);
+          const isFresh = timeDiff < FRESH_CACHE_DURATION;
+          const isValid = timeDiff < CACHE_DURATION;
+          
+          if (isValid) {
+            try {
+              // Decompress if needed
+              const decompressed = cached.startsWith('LZString') ? 
+                LZString.decompress(cached.substring(8)) : cached;
+              
+              allMatchesData = JSON.parse(decompressed);
+              
+              console.log(`💾 Loaded cached data (${isFresh ? 'FRESH' : 'VALID'}) - ${Object.keys(allMatchesData).length} sports cached`);
+              
+              // Return cache quality info
+              return {
+                hasCache: true,
+                isFresh: isFresh,
+                dataCount: Object.keys(allMatchesData).length,
+                age: Math.round(timeDiff / 60000) // age in minutes
+              };
+            } catch (parseError) {
+              console.log('⚠️ Cache parse error, clearing cache');
+              clearExpiredCache();
+            }
+          } else {
+            console.log('⚠️ Cache expired, clearing...');
+            clearExpiredCache();
+          }
+        }
+      } catch (error) {
+        console.log('⚠️ Failed to load cached data:', error);
+        clearExpiredCache();
+      }
+      return { hasCache: false, isFresh: false, dataCount: 0, age: 0 };
+    }
+    
+    // Enhanced cache saving dengan optional compression
+    function saveCachedData() {
+      try {
+        const dataStr = JSON.stringify(allMatchesData);
+        const dataSize = new Blob([dataStr]).size;
+        
+        // Compress if data is large (>100KB)
+        let finalData = dataStr;
+        if (dataSize > 100000 && typeof LZString !== 'undefined') {
+          finalData = 'LZString' + LZString.compress(dataStr);
+          console.log(`💾 Compressing cache: ${dataSize} → ${new Blob([finalData]).size} bytes`);
+        }
+        
+        localStorage.setItem('sportsDataCache_v2', finalData);
+        localStorage.setItem('sportsDataCacheTime_v2', Date.now().toString());
+        localStorage.setItem('sportsDataVersion_v2', '2.0');
+        
+        console.log(`💾 Cache saved: ${Object.keys(allMatchesData).length} sports, ${Math.round(dataSize/1024)}KB`);
+      } catch (error) {
+        console.log('⚠️ Failed to save cache (quota exceeded?):', error);
+        // Try to free space
+        clearExpiredCache();
+      }
+    }
+    
+    // Clear expired cache
+    function clearExpiredCache() {
+      try {
+        localStorage.removeItem('sportsDataCache_v2');
+        localStorage.removeItem('sportsDataCacheTime_v2');
+        localStorage.removeItem('sportsDataVersion_v2');
+        // Clear old cache versions too
+        localStorage.removeItem('sportsDataCache');
+        localStorage.removeItem('sportsDataCacheTime');
+        console.log('🗑️ Expired cache cleared');
+      } catch (error) {
+        console.log('⚠️ Error clearing cache:', error);
+      }
+    }
     let currentSportData = null;
     let selectedDate = 'all';
     let searchQuery = '';
-    let currentFilter = null; // Set to null to show all by default
+    let currentFilter = 'all'; // Default ke 'all' untuk menampilkan semua data
     let currentActiveDate = null; // Tanggal yang sedang aktif di navigator
-    let hasRenderedOnce = false; // Flag to prevent multiple renders on load
-    let isInitialized = false; // Prevent multiple initializations
-    let isDataLoading = false; // Prevent concurrent data fetching
-    let visibilityChangeCount = 0; // Track page visibility changes
 
     // Kategori olahraga + emoji
     const SPORTS = [
@@ -2698,8 +2407,11 @@
           if (window.currentSport !== sport.key) {
             console.log('Switching to sport:', sport.key);
             
-            // Simpan tanggal aktif saat ini
-            const previousActiveDate = currentActiveDate;
+            // RESET semua filter dan tanggal ketika pindah sport
+            currentFilter = 'all';
+            selectedDate = 'all';
+            currentActiveDate = null;
+            searchQuery = '';
             
             // Update active state
             document.querySelectorAll('.sport-btn').forEach(b => b.classList.remove('active'));
@@ -2709,16 +2421,23 @@
             window.currentSport = sport.key;
             renderSportsTabs(sport.key);
             
+            // Reset date navigator ke hari ini
+            resetDateNavigatorToToday();
+            
             // Fetch data untuk sport baru
-            fetchAndRenderLeaguesSafe(sport.key).then(() => {
-              // Setelah data dimuat, kembalikan ke tanggal yang sama jika ada
-              if (previousActiveDate) {
-                setTimeout(() => {
-                  filterBySpecificDateWithFallback(previousActiveDate);
-                }, 300);
+            fetchAndRenderLeagues(sport.key).then(() => {
+              // Reset semua filter buttons ke state default
+              document.querySelectorAll('.quick-filter-btn').forEach(filterBtn => {
+                filterBtn.classList.remove('active');
+              });
+              
+              // Activate "Semua" filter button
+              const allFilterBtn = document.querySelector('[data-filter="all"]');
+              if (allFilterBtn) {
+                allFilterBtn.classList.add('active');
               }
-            }).catch(error => {
-              console.error('Error fetching sport data:', error);
+              
+              console.log('✅ Sport switched and filters reset to default');
             });
           }
         };
@@ -2726,12 +2445,103 @@
       });
     }
 
-    // Show loader
-    function showLoader() {
+    // Enhanced loader dengan progress dan timeout indicator
+    function showLoader(show = true) {
       const main = document.getElementById('main-content');
-      if (main) {
-        main.innerHTML = '<div class="loader">⚽ Loading...</div>';
+      if (!main) return;
+      
+      if (!show) {
+        main.innerHTML = '';
+        return;
       }
+      
+      const timeRemaining = Math.max(0, MAX_LOADING_TIME - (Date.now() - loadingStartTime));
+      const progress = Math.min(100, ((Date.now() - loadingStartTime) / MAX_LOADING_TIME) * 100);
+      
+      main.innerHTML = `
+        <div class="ultra-loader" style="
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          padding: 40px 20px;
+          text-align: center;
+          min-height: 200px;
+        ">
+          <div style="
+            width: 60px;
+            height: 60px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #007bff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+          "></div>
+          
+          <div style="
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #007bff;
+          ">⚡ Loading...</div>
+          
+          <div style="
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+          ">Loading data olahraga...</div>
+          
+          <div style="
+            width: 200px;
+            height: 6px;
+            background: #f0f0f0;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 10px;
+          ">
+            <div style="
+              width: ${progress}%;
+              height: 100%;
+              background: linear-gradient(90deg, #007bff, #28a745);
+              border-radius: 3px;
+              transition: width 0.3s ease;
+            "></div>
+          </div>
+          
+          <div style="
+            font-size: 12px;
+            color: #999;
+          ">${timeRemaining > 0 ? `${Math.ceil(timeRemaining/1000)}s remaining` : 'Optimizing...'}</div>
+        </div>
+        
+        <style>
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+        </style>
+      `;
+      
+      // Update progress setiap 100ms
+      const progressInterval = setInterval(() => {
+        const newTimeRemaining = Math.max(0, MAX_LOADING_TIME - (Date.now() - loadingStartTime));
+        const newProgress = Math.min(100, ((Date.now() - loadingStartTime) / MAX_LOADING_TIME) * 100);
+        
+        const progressBar = main.querySelector('.ultra-loader div:nth-child(4) div');
+        const timeText = main.querySelector('.ultra-loader div:last-child');
+        
+        if (progressBar) {
+          progressBar.style.width = `${newProgress}%`;
+        }
+        if (timeText) {
+          timeText.textContent = newTimeRemaining > 0 ? `${Math.ceil(newTimeRemaining/1000)}s remaining` : 'Optimizing...';
+        }
+        
+        // Clear interval jika loading selesai atau timeout
+        if (newTimeRemaining <= 0 || currentLoadingState !== LoadingState.LOADING) {
+          clearInterval(progressInterval);
+        }
+      }, 100);
     }
 
     // Show error dengan enhanced styling dan retry options
@@ -2806,21 +2616,43 @@
       try {
         // Ambil waktu sekarang dalam WIB (UTC+7)
         const now = new Date();
-        const wibOffset = 7 * 60; // WIB = UTC+7 (dalam menit)
-        const nowWIB = new Date(now.getTime() + (wibOffset * 60000));
+        
+        // Get timezone offset in minutes (WIB is UTC+7)
+        const wibOffset = 7 * 60; // 7 hours in minutes
+        const localOffset = now.getTimezoneOffset(); // Local timezone offset from UTC
+        const wibTime = new Date(now.getTime() + (wibOffset + localOffset) * 60000);
+        
+        console.log(`🕐 Current local time: ${now.toLocaleString()}`);
+        console.log(`🕐 Current WIB time: ${wibTime.toLocaleString()}`);
         
         // Parse tanggal pertandingan (DD/MM/YYYY)
+        if (!matchDate || !matchDate.includes('/')) {
+          console.warn('Invalid match date format:', matchDate);
+          return false;
+        }
+        
         const [day, month, year] = matchDate.split('/').map(Number);
         
         // Parse waktu pertandingan (HH:MM WIB atau HH:MM)
-        const timeString = matchTime.replace(' WIB', '').trim();
+        if (!matchTime || !matchTime.includes(':')) {
+          console.warn('Invalid match time format:', matchTime);
+          return false;
+        }
+        
+        const timeString = matchTime.replace(/WIB|wib/g, '').trim();
         const [hours, minutes] = timeString.split(':').map(Number);
+        
+        // Validate parsed values
+        if (isNaN(day) || isNaN(month) || isNaN(year) || isNaN(hours) || isNaN(minutes)) {
+          console.warn('Invalid date/time values:', { day, month, year, hours, minutes });
+          return false;
+        }
         
         // Buat Date object untuk pertandingan dalam WIB
         const matchDateTime = new Date(year, month - 1, day, hours, minutes);
         
         // Hitung selisih waktu dalam menit
-        const timeDiffMinutes = (nowWIB.getTime() - matchDateTime.getTime()) / (1000 * 60);
+        const timeDiffMinutes = (wibTime.getTime() - matchDateTime.getTime()) / (1000 * 60);
         
         // Pertandingan dianggap LIVE jika:
         // 1. Waktu sudah lewat (timeDiffMinutes > 0)
@@ -2828,7 +2660,7 @@
         const isLive = timeDiffMinutes > 0 && timeDiffMinutes <= 120;
         
         console.log(`🔴 LIVE Check: ${matchDate} ${matchTime}`);
-        console.log(`   Now WIB: ${nowWIB.toLocaleString('id-ID')}`);
+        console.log(`   Now WIB: ${wibTime.toLocaleString('id-ID')}`);
         console.log(`   Match Time: ${matchDateTime.toLocaleString('id-ID')}`);
         console.log(`   Diff Minutes: ${Math.round(timeDiffMinutes)}`);
         console.log(`   Is LIVE: ${isLive}`);
@@ -2903,30 +2735,6 @@
       date.setDate(date.getDate() + offsetDays);
       return formatDateToDDMMYYYY(date);
     }
-    
-    // Helper: Get current week range (Monday to Sunday)
-    function getCurrentWeekRange() {
-      const today = new Date();
-      
-      // Calculate Monday as start of week
-      const dayOfWeek = today.getDay();
-      const mondayOffset = dayOfWeek === 0 ? -6 : -(dayOfWeek - 1);
-      
-      const weekStart = new Date(today);
-      weekStart.setDate(today.getDate() + mondayOffset);
-      weekStart.setHours(0, 0, 0, 0);
-      
-      const weekEnd = new Date(weekStart);
-      weekEnd.setDate(weekStart.getDate() + 6);
-      weekEnd.setHours(23, 59, 59, 999);
-      
-      return {
-        start: weekStart,
-        end: weekEnd,
-        startFormatted: formatDateToDDMMYYYY(weekStart),
-        endFormatted: formatDateToDDMMYYYY(weekEnd)
-      };
-    }
 
     // Populate date select options
     function populateDateOptions(leagues) {
@@ -2981,22 +2789,6 @@
       console.log('📅 Today exists in data:', todayExists);
       console.log('📅 Current selectedDate:', selectedDate);
       
-      // ENSURE "Semua Tanggal" is selected if selectedDate is 'all'
-      if (selectedDate === 'all') {
-        dateSelect.value = 'all';
-        const allOption = dateSelect.querySelector('option[value="all"]');
-        if (allOption) {
-          allOption.selected = true;
-        }
-      }
-      
-      // Reset apply button state when dates are repopulated
-      setTimeout(() => {
-        if (typeof updateApplyButtonState === 'function') {
-          updateApplyButtonState(selectedDate);
-        }
-      }, 50);
-      
       // JANGAN auto-select tanggal apapun - biarkan user memilih sendiri
       // Atau default ke 'all' untuk menampilkan semua
       if (selectedDate === 'all') {
@@ -3022,57 +2814,16 @@
       
       return filtered;
     }
-    
-    // Show all matches (reset to full view)
-    function showAllMatches() {
-      console.log('📋 Showing all matches');
-      selectedDate = 'all';
-      currentFilter = null;
-      currentActiveDate = null;
-      
-      // Update dropdown to show "all"
-      const dateSelect = document.getElementById('date-select');
-      if (dateSelect) {
-        dateSelect.value = 'all';
-      }
-      
-      // Clear any active filter buttons
-      document.querySelectorAll('.quick-filter-btn').forEach(btn => btn.classList.remove('active'));
-      
-      // Re-render with all data
-      if (currentSportData && Object.keys(currentSportData).length > 0) {
-        renderLeagues(currentSportData, window.currentSport);
-      }
-    }
 
     // Render liga dan pertandingan dengan gaya Flashscore
     function renderLeagues(leagues, sportKey) {
       const main = document.getElementById('main-content');
       if (!main) return;
       
-      // Enhanced render prevention for mobile stability
-      if (isDataLoading) {
-        console.log('🚫 Data is currently loading, skipping render');
-        return;
-      }
-      
-      if (hasRenderedOnce && !leagues) {
-        console.log('🚫 Preventing duplicate render on load');
-        return;
-      }
-      
-      // Prevent duplicate renders of the same data
-      if (hasRenderedOnce && currentSportData === leagues && main.children.length > 0) {
-        console.log('🚫 Preventing duplicate render of same data');
-        return;
-      }
-      
-      console.log('🎨 Rendering leagues for:', sportKey);
       main.innerHTML = '';
       
       // Store original data
       currentSportData = leagues;
-      hasRenderedOnce = true; // Mark that we've rendered at least once
       
       // Populate date options
       populateDateOptions(leagues);
@@ -3128,10 +2879,20 @@
           const matchRow = document.createElement('div');
           matchRow.className = 'match-row';
           
-          const homeTeam = match.home || match.tima || '';
-          const awayTeam = match.away || match.timb || '';
-          const matchTime = match.jam || '';
-          const matchDate = match.tanggal || '';
+          // Mapping field yang konsisten untuk berbagai format data
+          const homeTeam = match.home || match.tima || match.timhome || match.team1 || '';
+          const awayTeam = match.away || match.timb || match.timaway || match.team2 || '';
+          const matchTime = match.jam || match.time || match.waktu || '';
+          const matchDate = match.tanggal || match.date || match.tgl || '';
+          const homeScore = match.scorea || match.score1 || match.homescore || '-';
+          const awayScore = match.scoreb || match.score2 || match.awayscore || '-';
+          const betLink = match.linkbet || match.link || match.bet || '#';
+          
+          // Validate data - skip if essential fields are missing
+          if (!homeTeam || !awayTeam || !matchTime || !matchDate) {
+            console.warn('⚠️ Skipping match with missing data:', match);
+            return;
+          }
           
           // Determine appropriate labels based on sport type
           let homeLabel = 'HOME';
@@ -3149,6 +2910,11 @@
           const matchStatus = getMatchStatus(matchTime, { tanggal: matchDate, ...match });
           const liveIndicator = matchStatus.isLive ? '<div class="live-indicator"></div>' : '';
           
+          // Disable bet button for finished matches
+          const betButtonClass = matchStatus.statusClass === 'finished' ? 'bet-btn disabled' : 'bet-btn';
+          const betButtonHref = matchStatus.statusClass === 'finished' ? '#' : betLink;
+          const betButtonOnClick = matchStatus.statusClass === 'finished' ? 'onclick="return false;"' : '';
+          
           matchRow.innerHTML = `
             <div class="match-time">
               <div>${escapeHTML(matchDate)}</div>
@@ -3160,16 +2926,16 @@
               <div class="team-row">
                 <span class="team-label home" data-sport="${sportKey}">${homeLabel}</span>
                 <span class="team-name">${escapeHTML(homeTeam)}</span>
-                <span class="team-score ${matchStatus.isLive ? 'live-score' : ''}">${match.scorea || '-'}</span>
+                <span class="team-score ${matchStatus.isLive ? 'live-score' : ''}">${homeScore}</span>
               </div>
               <div class="team-row">
                 <span class="team-label away" data-sport="${sportKey}">${awayLabel}</span>
                 <span class="team-name">${escapeHTML(awayTeam)}</span>
-                <span class="team-score ${matchStatus.isLive ? 'live-score' : ''}">${match.scoreb || '-'}</span>
+                <span class="team-score ${matchStatus.isLive ? 'live-score' : ''}">${awayScore}</span>
               </div>
             </div>
             <div class="match-bet">
-              ${generateBetButton(match, matchStatus)}
+              <a class="${betButtonClass}" href="${betButtonHref}" target="_blank" rel="noopener" ${betButtonOnClick}>${matchStatus.statusClass === 'finished' ? 'FINISHED' : 'BET'}</a>
             </div>
           `;
           
@@ -3184,6 +2950,11 @@
 
     // Fungsi untuk menentukan status match berdasarkan tanggal dan waktu yang 100% akurat
     function getMatchStatus(timeString, matchData = {}) {
+      // Skip jika timeString tidak valid atau dari skeleton data
+      if (!timeString || timeString.includes('⏳') || timeString.includes('--:--') || timeString.trim() === '') {
+        return { statusClass: 'finished', statusText: 'Finished', isLive: false, countdown: null };
+      }
+      
       // Gunakan waktu real-time saat ini dengan timezone Indonesia
       const now = new Date();
       const currentHour = now.getHours();
@@ -3216,12 +2987,30 @@
         }
       }
       
-      // Parse waktu pertandingan (format HH:MM)
-      const timeParts = timeString.split(':');
-      if (timeParts.length !== 2) return { statusClass: 'finished', statusText: 'Finished', isLive: false };
+      // Validasi dan parse waktu pertandingan (format HH:MM)
+      if (!timeString || typeof timeString !== 'string') {
+        return { statusClass: 'finished', statusText: 'Finished', isLive: false };
+      }
+      
+      // Clean time string dari karakter yang tidak diinginkan
+      const cleanTimeString = timeString.replace(/[^0-9:]/g, '').trim();
+      const timeParts = cleanTimeString.split(':');
+      
+      if (timeParts.length !== 2) {
+        return { statusClass: 'finished', statusText: 'Finished', isLive: false };
+      }
       
       const matchHours = parseInt(timeParts[0]);
       const matchMinutes = parseInt(timeParts[1]);
+      
+      // Validasi nilai yang diparsing
+      if (isNaN(matchHours) || isNaN(matchMinutes) || 
+          matchHours < 0 || matchHours > 23 || 
+          matchMinutes < 0 || matchMinutes > 59) {
+        console.warn('⚠️ Invalid time format:', timeString);
+        return { statusClass: 'finished', statusText: 'Invalid Time', isLive: false };
+      }
+      
       const matchTime = matchHours * 60 + matchMinutes; // Total menit pertandingan
       
       console.log(`⚽ Waktu pertandingan: ${String(matchHours).padStart(2, '0')}:${String(matchMinutes).padStart(2, '0')}`);
@@ -3325,84 +3114,795 @@
       };
     }
 
+    // Reset all filters and show all data
+    function resetAllFilters() {
+      console.log('🔄 Resetting all filters...');
+      
+      // Reset global variables
+      currentFilter = 'all';
+      selectedDate = 'all';
+      currentActiveDate = null;
+      searchQuery = '';
+      
+      // Reset UI elements
+      const searchInput = document.getElementById('search-input');
+      if (searchInput) {
+        searchInput.value = '';
+      }
+      
+      const clearBtn = document.getElementById('clear-search');
+      if (clearBtn) {
+        clearBtn.classList.remove('show');
+      }
+      
+      const dateSelect = document.getElementById('date-select');
+      if (dateSelect) {
+        dateSelect.value = 'all';
+      }
+      
+      // Reset filter buttons
+      document.querySelectorAll('.quick-filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.filter === 'all') {
+          btn.classList.add('active');
+        }
+      });
+      
+      // Reset date navigator
+      const currentDateDisplay = document.getElementById('currentDateDisplay');
+      if (currentDateDisplay) {
+        currentDateDisplay.classList.remove('active');
+      }
+      
+      document.querySelectorAll('.quick-date-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      
+      // Re-render all data
+      if (currentSportData) {
+        renderLeagues(currentSportData, window.currentSport);
+        showTemporaryNotification('✅ Filter direset, menampilkan semua data', 'success');
+      } else {
+        // Fetch fresh data if none available
+        fetchAndRenderLeagues(window.currentSport);
+      }
+    }
+
+    // Create mock data untuk testing dengan data LIVE yang realistis untuk semua sport
+    function createMockData() {
+      const today = getTodayFormatted();
+      const yesterday = getDateWithOffsetFormatted(-1);
+      const tomorrow = getTomorrowFormatted();
+      const dayAfter = getDateWithOffsetFormatted(2);
+      const threeDaysAgo = getDateWithOffsetFormatted(-3);
+      const threeDaysLater = getDateWithOffsetFormatted(3);
+      
+      // Generate waktu LIVE yang realistis (pertandingan yang sedang berlangsung)
+      const now = new Date();
+      const liveTime1 = new Date(now.getTime() - 45 * 60000); // Dimulai 45 menit lalu
+      const liveTime2 = new Date(now.getTime() - 75 * 60000); // Dimulai 75 menit lalu
+      const liveTime3 = new Date(now.getTime() - 30 * 60000); // Dimulai 30 menit lalu
+      const upcomingTime = new Date(now.getTime() + 120 * 60000); // 2 jam dari sekarang
+      const recentTime = new Date(now.getTime() + 15 * 60000); // 15 menit dari sekarang
+      
+      const formatTime = (date) => {
+        return String(date.getHours()).padStart(2, '0') + ':' + String(date.getMinutes()).padStart(2, '0');
+      };
+      
+      // Deteksi sport saat ini untuk memberikan data yang relevan
+      const currentSport = window.currentSport || 'bola';
+      
+      // Mock data berdasarkan sport
+      const mockDataBySport = {
+        'bola': {
+          "Premier League": [
+            {
+              tanggal: yesterday,
+              jam: "21:00",
+              home: "Manchester United",
+              away: "Liverpool",
+              scorea: "2",
+              scoreb: "1",
+              linkbet: "#"
+            },
+            {
+              tanggal: today,
+              jam: formatTime(liveTime1), // LIVE MATCH 1
+              home: "Arsenal",
+              away: "Chelsea",
+              scorea: "1",
+              scoreb: "1",
+              linkbet: "#"
+            },
+            {
+              tanggal: today,
+              jam: formatTime(upcomingTime), // UPCOMING
+              home: "Manchester City",
+              away: "Tottenham",
+              scorea: "-",
+              scoreb: "-",
+              linkbet: "#"
+            }
+          ],
+          "La Liga": [
+            {
+              tanggal: today,
+              jam: formatTime(liveTime2), // LIVE MATCH 2
+              home: "Real Madrid",
+              away: "Barcelona",
+              scorea: "0",
+              scoreb: "2",
+              linkbet: "#"
+            },
+            {
+              tanggal: tomorrow,
+              jam: "19:00",
+              home: "Atletico Madrid",
+              away: "Sevilla",
+              scorea: "-",
+              scoreb: "-",
+              linkbet: "#"
+            }
+          ]
+        },
+        
+        'basket': {
+          "NBA": [
+            {
+              tanggal: yesterday,
+              jam: "09:00",
+              home: "Los Angeles Lakers",
+              away: "Boston Celtics",
+              scorea: "112",
+              scoreb: "108",
+              linkbet: "#"
+            },
+            {
+              tanggal: today,
+              jam: formatTime(liveTime1), // LIVE MATCH
+              home: "Golden State Warriors",
+              away: "Miami Heat",
+              scorea: "85",
+              scoreb: "92",
+              linkbet: "#"
+            },
+            {
+              tanggal: today,
+              jam: formatTime(upcomingTime),
+              home: "Chicago Bulls",
+              away: "New York Knicks",
+              scorea: "-",
+              scoreb: "-",
+              linkbet: "#"
+            }
+          ],
+          "EuroLeague": [
+            {
+              tanggal: today,
+              jam: formatTime(liveTime2), // LIVE MATCH
+              home: "Real Madrid",
+              away: "Barcelona",
+              scorea: "68",
+              scoreb: "71",
+              linkbet: "#"
+            },
+            {
+              tanggal: tomorrow,
+              jam: "02:00",
+              home: "Fenerbahce",
+              away: "CSKA Moscow",
+              scorea: "-",
+              scoreb: "-",
+              linkbet: "#"
+            }
+          ]
+        },
+        
+        'tennis': {
+          "ATP Masters": [
+            {
+              tanggal: yesterday,
+              jam: "14:00",
+              player1: "Novak Djokovic",
+              player2: "Rafael Nadal",
+              score1: "6-4, 6-2",
+              score2: "4-6, 2-6",
+              linkbet: "#"
+            },
+            {
+              tanggal: today,
+              jam: formatTime(liveTime1), // LIVE MATCH
+              player1: "Carlos Alcaraz",
+              player2: "Daniil Medvedev",
+              score1: "6-3, 4-2",
+              score2: "3-6, 2-4",
+              linkbet: "#"
+            },
+            {
+              tanggal: today,
+              jam: formatTime(upcomingTime),
+              player1: "Stefanos Tsitsipas",
+              player2: "Alexander Zverev",
+              score1: "-",
+              score2: "-",
+              linkbet: "#"
+            }
+          ],
+          "WTA Tour": [
+            {
+              tanggal: today,
+              jam: formatTime(liveTime2), // LIVE MATCH
+              player1: "Iga Swiatek",
+              player2: "Coco Gauff",
+              score1: "3-6, 5-2",
+              score2: "6-3, 2-5",
+              linkbet: "#"
+            },
+            {
+              tanggal: tomorrow,
+              jam: "16:00",
+              player1: "Aryna Sabalenka",
+              player2: "Jessica Pegula",
+              score1: "-",
+              score2: "-",
+              linkbet: "#"
+            }
+          ]
+        },
+        
+        'voli': {
+          "Serie A1": [
+            {
+              tanggal: yesterday,
+              jam: "20:00",
+              home: "Trentino Volley",
+              away: "Perugia",
+              scorea: "3",
+              scoreb: "1",
+              linkbet: "#"
+            },
+            {
+              tanggal: today,
+              jam: formatTime(liveTime1), // LIVE MATCH
+              home: "Modena Volley",
+              away: "Milano",
+              scorea: "1",
+              scoreb: "2",
+              linkbet: "#"
+            },
+            {
+              tanggal: today,
+              jam: formatTime(upcomingTime),
+              home: "Civitanova",
+              away: "Monza",
+              scorea: "-",
+              scoreb: "-",
+              linkbet: "#"
+            }
+          ],
+          "Champions League": [
+            {
+              tanggal: today,
+              jam: formatTime(liveTime2), // LIVE MATCH
+              home: "Zenit Kazan",
+              away: "Fenerbahce",
+              scorea: "2",
+              scoreb: "0",
+              linkbet: "#"
+            },
+            {
+              tanggal: tomorrow,
+              jam: "21:30",
+              home: "ZAKSA",
+              away: "Jastrzebski",
+              scorea: "-",
+              scoreb: "-",
+              linkbet: "#"
+            }
+          ]
+        },
+        
+        'badminton': {
+          "BWF World Tour": [
+            {
+              tanggal: yesterday,
+              jam: "13:00",
+              player1: "Viktor Axelsen",
+              player2: "Kento Momota",
+              score1: "21-18, 21-15",
+              score2: "18-21, 15-21",
+              linkbet: "#"
+            },
+            {
+              tanggal: today,
+              jam: formatTime(liveTime1), // LIVE MATCH
+              player1: "Anthony Ginting",
+              player2: "Chen Long",
+              score1: "21-16, 12-8",
+              score2: "16-21, 8-12",
+              linkbet: "#"
+            },
+            {
+              tanggal: today,
+              jam: formatTime(upcomingTime),
+              player1: "Lee Zii Jia",
+              player2: "Jonatan Christie",
+              score1: "-",
+              score2: "-",
+              linkbet: "#"
+            }
+          ],
+          "All England": [
+            {
+              tanggal: today,
+              jam: formatTime(liveTime2), // LIVE MATCH
+              player1: "Kevin Sukamuljo/Marcus Gideon",
+              player2: "Mohammad Ahsan/Hendra Setiawan",
+              score1: "18-21, 15-10",
+              score2: "21-18, 10-15",
+              linkbet: "#"
+            },
+            {
+              tanggal: tomorrow,
+              jam: "15:30",
+              player1: "Greysia Polii/Apriyani Rahayu",
+              player2: "Chen Qingchen/Jia Yifan",
+              score1: "-",
+              score2: "-",
+              linkbet: "#"
+            }
+          ]
+        },
+        
+        'baseball': {
+          "MLB": [
+            {
+              tanggal: yesterday,
+              jam: "07:00",
+              home: "New York Yankees",
+              away: "Boston Red Sox",
+              scorea: "8",
+              scoreb: "5",
+              linkbet: "#"
+            },
+            {
+              tanggal: today,
+              jam: formatTime(liveTime1), // LIVE MATCH
+              home: "Los Angeles Dodgers",
+              away: "San Francisco Giants",
+              scorea: "4",
+              scoreb: "6",
+              linkbet: "#"
+            },
+            {
+              tanggal: today,
+              jam: formatTime(upcomingTime),
+              home: "Houston Astros",
+              away: "Oakland Athletics",
+              scorea: "-",
+              scoreb: "-",
+              linkbet: "#"
+            }
+          ],
+          "NPB": [
+            {
+              tanggal: today,
+              jam: formatTime(liveTime2), // LIVE MATCH
+              home: "Tokyo Giants",
+              away: "Hanshin Tigers",
+              scorea: "2",
+              scoreb: "3",
+              linkbet: "#"
+            },
+            {
+              tanggal: tomorrow,
+              jam: "18:00",
+              home: "Hiroshima Carp",
+              away: "Yakult Swallows",
+              scorea: "-",
+              scoreb: "-",
+              linkbet: "#"
+            }
+          ]
+        },
+        
+        'esport': {
+          "League of Legends": [
+            {
+              tanggal: yesterday,
+              jam: "18:00",
+              team1: "T1",
+              team2: "Gen.G",
+              score1: "3",
+              score2: "1",
+              linkbet: "#"
+            },
+            {
+              tanggal: today,
+              jam: formatTime(liveTime1), // LIVE MATCH
+              team1: "DRX",
+              team2: "KT Rolster",
+              score1: "1",
+              score2: "2",
+              linkbet: "#"
+            },
+            {
+              tanggal: today,
+              jam: formatTime(upcomingTime),
+              team1: "Damwon KIA",
+              team2: "Hanwha Life",
+              score1: "-",
+              score2: "-",
+              linkbet: "#"
+            }
+          ],
+          "CS:GO": [
+            {
+              tanggal: today,
+              jam: formatTime(liveTime2), // LIVE MATCH
+              team1: "Natus Vincere",
+              team2: "Astralis",
+              score1: "13",
+              score2: "16",
+              linkbet: "#"
+            },
+            {
+              tanggal: tomorrow,
+              jam: "22:00",
+              team1: "FaZe Clan",
+              team2: "Ninjas in Pyjamas",
+              score1: "-",
+              score2: "-",
+              linkbet: "#"
+            }
+          ]
+        }
+      };
+      
+      // Return data sesuai sport atau default ke bola
+      const sportData = mockDataBySport[currentSport] || mockDataBySport['bola'];
+      
+      // Normalize field names untuk konsistensi
+      const normalizedData = {};
+      Object.entries(sportData).forEach(([league, matches]) => {
+        normalizedData[league] = matches.map(match => {
+          // Normalize untuk tennis dan badminton (player -> home/away)
+          if (match.player1 && match.player2) {
+            return {
+              ...match,
+              home: match.player1,
+              away: match.player2,
+              scorea: match.score1 || '-',
+              scoreb: match.score2 || '-'
+            };
+          }
+          // Normalize untuk esports (team -> home/away)
+          if (match.team1 && match.team2) {
+            return {
+              ...match,
+              home: match.team1,
+              away: match.team2,
+              scorea: match.score1 || '-',
+              scoreb: match.score2 || '-'
+            };
+          }
+          // Default format sudah benar
+          return match;
+        });
+      });
+      
+      return normalizedData;
+    }
+
+    // Use mock data as fallback when real data fails
+    function useMockData(sport) {
+      console.log('📊 Using mock data for sport:', sport);
+      showLoader(false);
+      
+      try {
+        const mockData = createMockData();
+        
+        // Store mock data
+        allMatchesData[sport] = mockData;
+        currentSportData = mockData;
+        
+        // Render mock data
+        renderLeagues(mockData, sport);
+        setupFilterAndSearch();
+        
+        // Show notification about mock data
+        showTemporaryNotification(`📊 Menampilkan data demo untuk ${sport.toUpperCase()}. Data ini hanya untuk testing tampilan.`, 'info');
+        currentLoadingState = LoadingState.FALLBACK;
+        
+        console.log('✅ Mock data loaded successfully');
+        
+      } catch (error) {
+        console.error('❌ Error loading mock data:', error);
+        showError(`
+          <div style="text-align: center; padding: 40px 20px;">
+            <div style="font-size: 48px; margin-bottom: 20px;">❌</div>
+            <h2 style="color: #dc3545; margin-bottom: 15px;">Error Loading Demo Data</h2>
+            <p>Terjadi kesalahan saat memuat data demo.</p>
+            <button onclick="location.reload()" style="
+              background: #007bff; 
+              color: white; 
+              border: none; 
+              padding: 12px 24px; 
+              border-radius: 8px; 
+              cursor: pointer;
+              font-size: 14px;
+              margin-top: 15px;
+            ">🔄 Reload Halaman</button>
+          </div>
+        `);
+      }
+    }
+
+    // Retry with extended timeout for real data
+    function retryWithExtendedTimeout(sport) {
+      console.log('🔄 Retrying with extended timeout for real data...');
+      showLoader();
+      showTemporaryNotification('🔄 Retrying with extended timeout...', 'info');
+      
+      // Reset state
+      currentLoadingState = LoadingState.LOADING;
+      loadingStartTime = Date.now();
+      
+      // Try again with no timeout limit - wait for real data
+      setTimeout(() => {
+        fetchAndRenderLeagues(sport);
+      }, 1000);
+    }
+
     // Escape HTML for safety
     function escapeHTML(str) {
       return String(str || '').replace(/[&<>"']/g, function(m) {
         return ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'})[m];
       });
     }
+
+    // ✅ FAST LOADING SYSTEM - Target loading cepat
+    let isPreloading = false;
+    let loadingStartTime = 0;
+    const MAX_LOADING_TIME = 3000; // Loading timeout
     
-    // Generate BET button based on match status - Enhanced for mobile
-    function generateBetButton(match, matchStatus) {
-      const scoreA = match.scorea || '-';
-      const scoreB = match.scoreb || '-';
-      
-      // More comprehensive finished match detection
-      const isFinished = matchStatus.statusClass === 'finished' || 
-                        matchStatus.statusText.toLowerCase().includes('finished') ||
-                        matchStatus.statusText.toLowerCase().includes('ft') ||
-                        matchStatus.statusText.toLowerCase().includes('selesai') ||
-                        matchStatus.statusText.toLowerCase().includes('final') ||
-                        matchStatus.statusText.toLowerCase().includes('ended') ||
-                        match.status === 'Finished' ||
-                        (scoreA !== '-' && scoreB !== '-' && scoreA !== '' && scoreB !== '' && 
-                         matchStatus.statusText !== 'vs' && matchStatus.statusText !== 'Akan Datang');
-      
-      // Also disable for very old matches (more than 3 hours ago)
-      const now = new Date();
-      const matchTime = parseMatchDateTime(match.tanggal, match.jam);
-      const isVeryOld = matchTime && (now - matchTime) > (3 * 60 * 60 * 1000);
-      
-      if (isFinished || isVeryOld) {
-        // Show "SELESAI" instead of BET for finished matches
-        return `<span class="bet-btn finished" title="Pertandingan sudah selesai">SELESAI</span>`;
-      } else {
-        // Enhanced BET button with better error handling
-        const betLink = match.linkbet && match.linkbet !== '#' ? match.linkbet : '#';
-        const isValidLink = betLink !== '#';
+    // Advanced loading state management
+    const LoadingState = {
+      IDLE: 'idle',
+      LOADING: 'loading', 
+      CACHED: 'cached',
+      FALLBACK: 'fallback',
+      ERROR: 'error'
+    };
+    let currentLoadingState = LoadingState.IDLE;
+    
+    // Skeleton/Fallback data untuk loading cepat - DISABLED TO FORCE REAL DATA
+    function createSkeletonData(sport) {
+      // Return empty object to force real data loading
+      console.log('⚠️ Skeleton data disabled - forcing real Google Sheets data');
+      return {};
+    }
+    
+    // Force loading timeout untuk memastikan UI tetap responsive - EXTENDED FOR REAL DATA
+    function forceLoadingTimeout(sport) {
+      setTimeout(() => {
+        const timeElapsed = Date.now() - loadingStartTime;
+        console.log(`⏰ Loading timeout check: ${timeElapsed}ms elapsed`);
         
-        if (isValidLink) {
-          return `<a class="bet-btn" href="${betLink}" target="_blank" rel="noopener" title="Place your bet">BET</a>`;
-        } else {
-          return `<span class="bet-btn disabled" title="Link betting tidak tersedia">N/A</span>`;
+        if (currentLoadingState === LoadingState.LOADING && timeElapsed >= MAX_LOADING_TIME) {
+          console.log('⚠️ Loading timeout reached - but continuing to wait for real data');
+          
+          // Don't show skeleton data, keep waiting for real data
+          showTemporaryNotification('🎯 BETTING SPORT Aman Terpercaya Hanya Di SLOTGOKIL', 'warning');
+          
+          // Continue loading in background with extended timeout
+          setTimeout(() => {
+            continueBackgroundLoading(sport);
+          }, 100);
         }
+      }, MAX_LOADING_TIME);
+    }
+    
+    // Continue loading in background after timeout
+    async function continueBackgroundLoading(sport) {
+      try {
+        console.log('🔄 Continuing background loading for:', sport);
+        const data = await fetchSportDataFast(sport, true); // Background mode
+        
+        if (data && Object.keys(data).length > 0) {
+          allMatchesData[sport] = data;
+          currentSportData = data;
+          saveCachedData();
+          
+          // Quietly update UI
+          renderLeagues(data, sport);
+          setupFilterAndSearch();
+          
+          showTemporaryNotification('✅ Full data loaded successfully!', 'success');
+          currentLoadingState = LoadingState.CACHED;
+        }
+      } catch (error) {
+        console.log('⚠️ Background loading failed:', error.message);
+      }
+    }
+    
+    // Smart preloading dengan prioritas berdasarkan usage patterns
+    async function preloadAllSportsData() {
+      if (isPreloading) return;
+      isPreloading = true;
+      
+      console.log('🚀 Smart preloading all sports data...');
+      
+      // Prioritas sport berdasarkan popularitas (bola prioritas tertinggi)
+      const sportsToPreload = [
+        'bola',     // Highest priority
+        'basket',   // High priority  
+        'tennis',   // Medium priority
+        'voli',     // Medium priority
+        'badmingan', 
+        'baseball', 
+        'esport'    // Lower priority
+      ];
+      
+      // Preload dengan strategi staggered untuk menghindari overload
+      for (let i = 0; i < sportsToPreload.length; i++) {
+        const sport = sportsToPreload[i];
+        
+        if (!allMatchesData[sport]) {
+          try {
+            console.log(`📥 Smart preloading ${sport} (priority ${i+1})...`);
+            
+            // Delay berdasarkan prioritas (sport populer dimuat lebih dulu)
+            if (i > 0) {
+              await new Promise(resolve => setTimeout(resolve, i * 500)); // Staggered loading
+            }
+            
+            const data = await fetchSportDataFast(sport, true);
+            if (data && Object.keys(data).length > 0) {
+              allMatchesData[sport] = data;
+              console.log(`✅ ${sport} preloaded successfully (${Object.keys(data).length} leagues)`);
+              
+              // Save updated cache immediately for each sport
+              saveCachedData();
+              
+              // Update progress notification
+              const loaded = i + 1;
+              const total = sportsToPreload.length;
+              if (loaded <= 3) { // Only show for first few
+                showTemporaryNotification(`📥 Preloading sports... ${loaded}/${total} completed`, 'info');
+              }
+            }
+          } catch (error) {
+            console.log(`⚠️ ${sport} preload failed:`, error.message);
+          }
+        } else {
+          console.log(`✅ ${sport} already cached, skipping preload`);
+        }
+      }
+      
+      console.log('🎉 Smart preloading completed! All sports available for instant switching.');
+      showTemporaryNotification('🎉 Semua sport dimuat! Switching antar sport lebih cepat.', 'success');
+    }
+    
+    // Ultra-fast fetch function untuk preloading dengan timeout agresif
+    async function fetchSportDataFast(sport, isBackground = false) {
+      const sportMap = {
+        'bola': 'bola', 'basket': 'basket', 'tennis': 'tennis', 
+        'badminton': 'badminton', 'voli': 'voli', 'baseball': 'baseball', 'esport': 'esport'
+      };
+      
+      const apiSport = sportMap[sport] || sport;
+      const urlsToTry = FALLBACK_URLS;
+      const maxUrls = isBackground ? 3 : 2; // Try more URLs in background
+      const timeoutMs = isBackground ? 4000 : 2000; // Longer timeout for background
+      
+      for (let i = 0; i < Math.min(maxUrls, urlsToTry.length); i++) {
+        try {
+          const url = urlsToTry[i] + encodeURIComponent(`${DIRECT_URL}?sport=${apiSport}`);
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+          
+          const res = await fetch(url, { 
+            signal: controller.signal,
+            headers: { 
+              'Cache-Control': 'no-cache',
+              'Priority': isBackground ? 'low' : 'high'
+            }
+          });
+          clearTimeout(timeoutId);
+          
+          if (res.ok) {
+            const text = await res.text();
+            let data;
+            
+            if (urlsToTry[i].includes('allorigins.win/get')) {
+              const wrapped = JSON.parse(text);
+              data = JSON.parse(wrapped.contents);
+            } else {
+              data = JSON.parse(text);
+            }
+            
+            if (data && !data.error && Object.keys(data).length > 0) {
+              console.log(`✅ Fast fetch success for ${sport} (attempt ${i+1})`);
+              return data;
+            }
+          }
+        } catch (error) {
+          console.log(`⚠️ Fast fetch attempt ${i+1} failed for ${sport}:`, error.message);
+        }
+        
+        // Minimal delay between attempts
+        if (i < Math.min(maxUrls - 1, urlsToTry.length - 1)) {
+          await new Promise(resolve => setTimeout(resolve, isBackground ? 100 : 50));
+        }
+      }
+      
+      throw new Error(`Fast fetch failed for ${sport} after ${maxUrls} attempts`);
+    }
+    
+    // Background refresh untuk fresh data tanpa mengganggu UI
+    async function fetchFreshDataInBackground(sport) {
+      try {
+        console.log('🔄 Fetching fresh data in background for:', sport);
+        const freshData = await fetchSportDataFast(sport, true);
+        
+        if (freshData && Object.keys(freshData).length > 0) {
+          // Update cache quietly
+          allMatchesData[sport] = freshData;
+          saveCachedData();
+          
+          // Only update UI if user is still on the same sport
+          if (window.currentSport === sport) {
+            currentSportData = freshData;
+            showTemporaryNotification('🔄 Data updated with latest information', 'info');
+          }
+          
+          console.log('✅ Background refresh completed for:', sport);
+        }
+      } catch (error) {
+        console.log('⚠️ Background refresh failed for:', sport, error.message);
       }
     }
 
-    // Fetch and render leagues dengan caching system dan retry mechanism
+    // Fetch and render leagues dengan fast loading system
     async function fetchAndRenderLeagues(sport) {
-      console.log('🚀 Fetching data for sport:', sport);
+      console.log('🚀 Fast loading initiated for:', sport);
+      loadingStartTime = Date.now();
+      currentLoadingState = LoadingState.LOADING;
       
-      // Prevent concurrent fetching
-      if (isDataLoading) {
-        console.log('🚫 Data is already loading, skipping duplicate request');
-        return;
-      }
-      
-      // Cek apakah data sudah ada di cache
+      // Enhanced caching dengan instant loading untuk cached data
       if (allMatchesData[sport]) {
-        console.log('📦 Using cached data for:', sport);
+        console.log('⚡ INSTANT LOADING from cache for:', sport);
+        currentLoadingState = LoadingState.CACHED;
         currentSportData = allMatchesData[sport];
         renderLeagues(allMatchesData[sport], sport);
         
-        // Setup filter and search
-        setTimeout(() => {
-          setupFilterAndSearch();
-          // Jika ada tanggal aktif, filter ke tanggal tersebut
-          if (currentActiveDate) {
-            filterBySpecificDateWithFallback(currentActiveDate);
-          } else {
-            applyFiltersWithFallback();
-          }
-        }, 100);
+        // Immediate setup tanpa delay untuk cached data
+        setupFilterAndSearch();
+        // Jika ada tanggal aktif, filter ke tanggal tersebut
+        if (currentActiveDate) {
+          filterBySpecificDate(currentActiveDate);
+        } else {
+          applyFilters();
+        }
+        
+        const loadTime = Date.now() - loadingStartTime;
+        showTemporaryNotification(`⚡ DATA CACHE! Dimuat instan (${loadTime}ms)!`, 'success');
+        
+        // Background refresh for fresh data if cache is old
+        const cacheInfo = loadCachedData();
+        if (!cacheInfo.isFresh) {
+          setTimeout(() => {
+            console.log('🔄 Background refresh for fresh data...');
+            fetchFreshDataInBackground(sport);
+          }, 2000);
+        }
         return;
       }
       
-      // Set loading flag
-      isDataLoading = true;
-      
-      // Jika belum ada di cache, fetch dari API dengan retry mechanism
+      // Start loading animation and timeout protection
       showLoader();
+      forceLoadingTimeout(sport);
       
       // Map sport key to API endpoint - SESUAI DENGAN GOOGLE APPS SCRIPT
       const sportMap = {
@@ -3419,89 +3919,250 @@
       console.log('📋 Sport Mapping:', {
         requestedSport: sport,
         mappedToAPI: apiSport,
-        availableMappings: Object.keys(sportMap)
+        availableMappings: Object.keys(sportMap),
+        isKnownSport: sportMap.hasOwnProperty(sport)
       });
       
-      // Fungsi untuk mencoba fetch dengan URL tertentu
-      async function tryFetch(url, sport) {
-        const fullUrl = `${url}?sport=${encodeURIComponent(sport)}&timestamp=${Date.now()}`;
-        console.log('🚀 Trying to fetch from:', fullUrl);
+      // Enhanced fetch function untuk mengakses Google Apps Script API - FIXED LOGIC
+      async function tryFetch(url, sport, isAllOrigins = false) {
+        let fullUrl;
+        
+        // Check if this is a direct URL or proxy URL
+        if (url === DIRECT_URL) {
+          // Direct Google Apps Script call
+          fullUrl = `${url}?sport=${encodeURIComponent(sport)}&timestamp=${Date.now()}`;
+        } else {
+          // This is already a proxy URL with encoded target
+          // We need to rebuild it properly
+          const targetUrl = `${DIRECT_URL}?sport=${encodeURIComponent(sport)}&timestamp=${Date.now()}`;
+          
+          if (url.includes('api.allorigins.win/raw?url=')) {
+            fullUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`;
+          } else if (url.includes('cors-anywhere.herokuapp.com/')) {
+            fullUrl = `https://cors-anywhere.herokuapp.com/${targetUrl}`;
+          } else if (url.includes('corsproxy.io/?')) {
+            fullUrl = `https://corsproxy.io/?${targetUrl}`;
+          } else if (url.includes('api.codetabs.com/v1/proxy?quest=')) {
+            fullUrl = `https://api.codetabs.com/v1/proxy?quest=${targetUrl}`;
+          } else if (url.includes('cors-proxy.htmldriven.com/?url=')) {
+            fullUrl = `https://cors-proxy.htmldriven.com/?url=${encodeURIComponent(targetUrl)}`;
+          } else if (url.includes('thingproxy.freeboard.io/fetch/')) {
+            fullUrl = `https://thingproxy.freeboard.io/fetch/${targetUrl}`;
+          } else {
+            // Fallback
+            fullUrl = url + (url.includes('?') ? '&' : '?') + `sport=${encodeURIComponent(sport)}&timestamp=${Date.now()}`;
+          }
+        }
+        
+        console.log('🚀 Trying Google Sheets API:', url.includes('script.google.com') ? 'Direct Google Apps Script' : 'Proxy');
+        console.log('🔗 Full URL (first 100 chars):', fullUrl.substring(0, 100) + '...');
+        console.log('🌐 CORS mode:', 'Standard');
         
         try {
-          const res = await fetch(fullUrl, {
+          // Optimized timeout untuk kecepatan loading - Extended for real data
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 8000); // Extended to 8 seconds for real data
+          
+          const fetchOptions = {
             method: 'GET',
             headers: {
-              'Accept': 'application/json',
-              'Cache-Control': 'no-cache'
+              'Accept': 'application/json, text/plain, */*'
             },
+            signal: controller.signal,
             mode: 'cors'
-          });
+          };
           
-          console.log('📡 Response status:', res.status);
-          console.log('📡 Response ok:', res.ok);
+          const res = await fetch(fullUrl, fetchOptions);
+          clearTimeout(timeoutId);
+          
+          console.log('📡 Google Sheets Response:', res.status, res.statusText);
+          console.log('📡 Response Headers:', [...res.headers.entries()]);
           
           if (!res.ok) {
             throw new Error(`HTTP ${res.status}: ${res.statusText}`);
           }
           
           const text = await res.text();
-          console.log('📄 Raw response (first 200 chars):', text.substring(0, 200));
+          console.log('📄 Successfully fetched from Google Sheets (size:', text.length, 'chars)');
+          console.log('📄 First 200 chars of response:', text.substring(0, 200));
           
-          // Parse JSON
-          const jadwal = JSON.parse(text);
+          // Handle different response types dengan support untuk AllOrigins
+          let jadwal;
+          if (isAllOrigins && text.includes('"contents"')) {
+            // AllOrigins /get wraps response in { contents: "actual_data" }
+            try {
+              const wrapper = JSON.parse(text);
+              if (wrapper.contents) {
+                jadwal = JSON.parse(wrapper.contents);
+                console.log('✅ Successfully parsed AllOrigins wrapped Google Sheets data');
+              } else {
+                throw new Error('No contents in AllOrigins response');
+              }
+            } catch (parseError) {
+              throw new Error(`Failed to parse AllOrigins response: ${parseError.message}`);
+            }
+          } else {
+            // Regular JSON response or AllOrigins raw
+            if (text.includes('<!DOCTYPE html>') || text.includes('<html>')) {
+              throw new Error('Received HTML instead of JSON - possible CORS or server error');
+            }
+            
+            try {
+              jadwal = JSON.parse(text);
+              console.log('✅ Successfully parsed direct JSON response');
+            } catch (parseError) {
+              throw new Error(`Invalid JSON response: ${parseError.message}`);
+            }
+          }
           
-          console.log('📊 Parsed data received:', jadwal);
-          console.log('📊 Data type:', typeof jadwal);
-          console.log('📊 Is array:', Array.isArray(jadwal));
-          console.log('📊 Object keys:', Object.keys(jadwal));
+          console.log('✅ Successfully fetched data from Google Sheets!', typeof jadwal);
+          if (jadwal && typeof jadwal === 'object') {
+            console.log('📊 Google Sheets data keys:', Object.keys(jadwal));
+          }
           
           return jadwal;
         } catch (error) {
-          console.warn(`❌ Failed to fetch from ${url}:`, error);
+          console.warn(`❌ Failed to fetch from ${url.substring(0, 50)}...:`, error.message);
+          
+          // Provide detailed error information for debugging
+          if (error.name === 'AbortError') {
+            console.warn('⏱️ Request timed out after 3 seconds');
+          } else if (error.message.includes('CORS')) {
+            console.warn('🚫 CORS error - trying next proxy...');
+          } else if (error.message.includes('NetworkError')) {
+            console.warn('🌐 Network error - check internet connection');
+          } else if (error.message.includes('Failed to fetch')) {
+            console.warn('📡 Fetch failed - server may be unavailable');
+          }
+          
           throw error;
         }
       }
       
-      // Array URL untuk dicoba secara berurutan
-      const urlsToTry = [URL_API, ...FALLBACK_URLS];
+      // Enhanced fetch loop dengan smart fallback
+      const urlsToTry = FALLBACK_URLS;
       let jadwal = null;
       let lastError = null;
       
-      // Coba setiap URL sampai berhasil
+      console.log(`🚀 Will try ${urlsToTry.length} different endpoints...`);
+      
+      // Enhanced retry strategy untuk memaksimalkan koneksi Google Sheets
       for (let i = 0; i < urlsToTry.length; i++) {
         const url = urlsToTry[i];
+        const isAllOrigins = url.includes('allorigins.win');
+        const isDirect = url.includes('script.google.com');
+        
         try {
-          console.log(`🔄 Attempt ${i + 1}/${urlsToTry.length} with URL: ${url}`);
-          jadwal = await tryFetch(url, apiSport);
+          if (isDirect) {
+            console.log(`🔄 Attempt ${i + 1}/${urlsToTry.length}: Direct Google Apps Script`);
+          } else if (isAllOrigins) {
+            console.log(`🔄 Attempt ${i + 1}/${urlsToTry.length}: AllOrigins Proxy for Google Sheets`);
+          } else {
+            console.log(`🔄 Attempt ${i + 1}/${urlsToTry.length}: CORS Proxy for Google Sheets`);
+          }
           
-          if (jadwal) {
-            console.log(`✅ Successfully fetched data from URL ${i + 1}`);
+          // Adaptive strategy berdasarkan jenis endpoint
+          if (i === 0) {
+            // First attempt: Direct Google Apps Script URL
+            jadwal = await tryFetch(url, apiSport, false);
+          } else if (isAllOrigins) {
+            // AllOrigins dengan special handling untuk Google Sheets
+            jadwal = await tryFetch(url, apiSport, true);
+          } else {
+            // Regular proxy untuk Google Sheets
+            jadwal = await tryFetch(url, apiSport, false);
+          }
+          
+          // Validasi data dari Google Sheets
+          if (jadwal && (typeof jadwal === 'object') && Object.keys(jadwal).length > 0) {
+            const method = isDirect ? 'Direct Google Apps Script' : 
+                          isAllOrigins ? 'AllOrigins Proxy' : 'CORS Proxy';
+            console.log(`✅ Successfully fetched Google Sheets data via: ${method}`);
+            console.log(`✅ Attempt ${i + 1}/${urlsToTry.length} succeeded`);
+            console.log(`📊 Leagues found: ${Object.keys(jadwal).length}`);
+            
+            // Store the successful method for future reference
+            window.lastSuccessfulMethod = method;
+            window.lastSuccessfulAttempt = i + 1;
             break;
+          } else {
+            throw new Error('Empty or invalid response data');
           }
         } catch (error) {
           lastError = error;
-          console.warn(`❌ URL ${i + 1} failed:`, error.message);
+          console.warn(`❌ Attempt ${i + 1} failed:`, error.message);
           
+          // Fast retry strategy - minimal delay untuk loading cepat
           if (i < urlsToTry.length - 1) {
-            console.log('⏳ Trying next URL...');
-            await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1 second before retry
+            const isNetworkError = error.message.includes('NetworkError') || error.message.includes('CORS');
+            const delay = isNetworkError ? 50 : 10; // Ultra fast delays for instant loading
+            
+            console.log(`⏳ Quick retry in ${delay}ms...`);
+            await new Promise(resolve => setTimeout(resolve, delay));
           }
         }
       }
       
-      // Jika semua URL gagal
+      // Jika semua URL gagal, tampilkan error dengan opsi fallback - NO MOCK DATA
       if (!jadwal) {
-        console.error('❌ All URLs failed. Last error:', lastError);
+        console.error('❌ Cannot connect to Google Sheets API. Last error:', lastError);
+        
+        // Force retry dengan delay lebih lama untuk data asli
+        showLoader(false);
+        
         showError(`
-          <div>❌ Gagal mengambil data dari semua endpoint</div>
-          <div style="font-size: 12px; margin-top: 10px; color: #666;">
-            Error: ${lastError?.message || 'Network error'}<br>
-            URLs tried: ${urlsToTry.length}<br>
-            <button onclick="fetchAndRenderLeagues('${sport}')" style="margin-top: 10px; padding: 5px 10px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
-              🔄 Coba Lagi
-            </button>
+          <div style="text-align: center; padding: 40px 20px;">
+            <div style="font-size: 48px; margin-bottom: 20px;">�</div>
+            <h2 style="color: #dc3545; margin-bottom: 15px;">Loading Real Data from Google Sheets...</h2>
+            <p style="margin-bottom: 20px; line-height: 1.5;">
+              Trying to get 100% real data from your Google Sheets.<br>
+              <strong>No mock/skeleton data will be shown.</strong>
+            </p>
+            
+            <div style="text-align: left; margin: 20px auto; max-width: 500px;">
+              <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                <strong>� Status:</strong> All ${FALLBACK_URLS.length} proxy methods tried<br>
+                <strong>📋 Target:</strong> Google Apps Script API<br>
+                <strong>🎯 Sport:</strong> ${sport.toUpperCase()}
+              </div>
+            </div>
+            
+            <div style="margin-top: 25px;">
+              <button onclick="location.reload()" style="
+                background: #007bff; 
+                color: white; 
+                border: none; 
+                padding: 12px 24px; 
+                border-radius: 8px; 
+                cursor: pointer;
+                font-size: 14px;
+                margin: 5px;
+              ">🔄 Try Again</button>
+              <button onclick="retryWithExtendedTimeout('${sport}')" style="
+                background: #28a745; 
+                color: white; 
+                border: none; 
+                padding: 12px 24px; 
+                border-radius: 8px; 
+                cursor: pointer;
+                font-size: 14px;
+                margin: 5px;
+              ">⏱️ Retry with Longer Timeout</button>
+            </div>
+            
+            <div style="margin-top: 20px; padding: 15px; background: rgba(0,123,255,0.1); border-radius: 8px; border-left: 4px solid #007bff;">
+              <strong>💡 Working on it:</strong><br>
+              The app is configured to show ONLY real data from your Google Sheets.<br>
+              No dummy/mock data will be displayed.
+            </div>
+            
+            <div style="margin-top: 15px; font-size: 12px; color: #666;">
+              Last Error: ${lastError?.message || 'Unknown error'}<br>
+              Proxy attempts: ${FALLBACK_URLS.length} different methods tested
+            </div>
           </div>
         `);
+        currentLoadingState = LoadingState.ERROR;
         return;
       }
       
@@ -3536,10 +4197,27 @@
           // Analisis struktur field dalam match
           const sampleMatch = ligaMap[firstLeague][0];
           console.log('🔍 Match fields available:', Object.keys(sampleMatch));
-          console.log('🔍 Date field value:', sampleMatch.tanggal);
-          console.log('🔍 Time field value:', sampleMatch.jam);
-          console.log('🔍 Home team field:', sampleMatch.home || sampleMatch.timhome);
-          console.log('🔍 Away team field:', sampleMatch.away || sampleMatch.timaway);
+          
+          // Check for different field variations
+          const dateField = sampleMatch.tanggal || sampleMatch.date || sampleMatch.tgl;
+          const timeField = sampleMatch.jam || sampleMatch.time || sampleMatch.waktu;
+          const homeField = sampleMatch.home || sampleMatch.tima || sampleMatch.timhome || sampleMatch.team1;
+          const awayField = sampleMatch.away || sampleMatch.timb || sampleMatch.timaway || sampleMatch.team2;
+          
+          console.log('🔍 Date field value:', dateField);
+          console.log('🔍 Time field value:', timeField);
+          console.log('🔍 Home team field:', homeField);
+          console.log('🔍 Away team field:', awayField);
+          
+          // Validate that essential fields exist
+          if (!dateField || !timeField || !homeField || !awayField) {
+            console.warn('⚠️ Missing essential fields in sample match:', {
+              hasDate: !!dateField,
+              hasTime: !!timeField,
+              hasHome: !!homeField,
+              hasAway: !!awayField
+            });
+          }
         }
         
         // Hitung total matches
@@ -3596,24 +4274,34 @@
         // Store data in cache untuk sport ini
         allMatchesData[sport] = ligaMap;
         
-        // Setup filter and search after data is loaded
-        setTimeout(() => {
-          console.log('🎯 Setting up filters and search after data load');
-          setupFilterAndSearch();
-          
-          // Jika ada tanggal aktif, filter ke tanggal tersebut
-          if (currentActiveDate) {
-            filterBySpecificDateWithFallback(currentActiveDate);
-          } else {
-            applyFiltersWithFallback();
-          }
-          
-          // Auto-show relevant data berdasarkan parameter atau waktu saat ini
-          autoDisplayRelevantData(ligaMap);
-        }, 200);
+        // 💾 Save to localStorage for persistent cache
+        saveCachedData();
         
-        // Show success notification
-        showTemporaryNotification('✅ Data berhasil dimuat!', 'success');
+        // Setup filter and search immediately for faster UI response
+        console.log('🎯 Setting up filters and search immediately');
+        setupFilterAndSearch();
+        
+        // Jika ada tanggal aktif, filter ke tanggal tersebut
+        if (currentActiveDate) {
+          filterBySpecificDate(currentActiveDate);
+        } else {
+          applyFilters();
+        }
+        
+        // Auto-show relevant data tanpa delay
+        autoDisplayRelevantData(ligaMap);
+        
+        // Show enhanced success notification dengan info metode koneksi
+        const successMethod = window.lastSuccessfulMethod || 'Google Apps Script';
+        const attemptInfo = window.lastSuccessfulAttempt ? ` (Attempt ${window.lastSuccessfulAttempt})` : '';
+        const loadTime = Date.now() - loadingStartTime;
+        showTemporaryNotification(`🚀 DATA DIMUAT! Berhasil dalam ${loadTime}ms via ${successMethod}${attemptInfo}!`, 'success');
+        currentLoadingState = LoadingState.CACHED;
+        
+        // 🚀 TRIGGER PRELOADING - Load other sports in background for instant switching
+        setTimeout(() => {
+          preloadAllSportsData();
+        }, 1000); // Start preloading after 1 second
         
       } catch (error) {
         console.error('❌ Error processing data:', error);
@@ -3625,9 +4313,6 @@
             </button>
           </div>
         `);
-      } finally {
-        // Always clear loading flag
-        isDataLoading = false;
       }
     }
     
@@ -3642,7 +4327,8 @@
       let todayMatches = 0;
       Object.values(ligaMap).forEach(matches => {
         matches.forEach(match => {
-          if (match.tanggal === today) {
+          const matchDate = match.tanggal || match.date || match.tgl || '';
+          if (matchDate === today) {
             todayMatches++;
           }
         });
@@ -3650,18 +4336,16 @@
       
       console.log(`📅 Pertandingan hari ini: ${todayMatches}`);
       
-      // Jika ada pertandingan hari ini, tampilkan hari ini
+      // Tampilkan notifikasi informatif saja, tidak auto-filter
       if (todayMatches > 0) {
-        setTimeout(() => {
-          filterBySpecificDateWithFallback(today);
-          showTemporaryNotification(`📅 Menampilkan ${todayMatches} pertandingan hari ini`, 'info');
-        }, 500);
+        showTemporaryNotification(`📅 Ada ${todayMatches} pertandingan hari ini. Gunakan filter "Hari Ini" untuk melihatnya.`, 'info');
       } else {
-        // Jika tidak ada hari ini, cek besok
+        // Cek besok
         let tomorrowMatches = 0;
         Object.values(ligaMap).forEach(matches => {
           matches.forEach(match => {
-            if (match.tanggal === tomorrow) {
+            const matchDate = match.tanggal || match.date || match.tgl || '';
+            if (matchDate === tomorrow) {
               tomorrowMatches++;
             }
           });
@@ -3670,13 +4354,9 @@
         console.log(`📅 Pertandingan besok: ${tomorrowMatches}`);
         
         if (tomorrowMatches > 0) {
-          setTimeout(() => {
-            filterBySpecificDateWithFallback(tomorrow);
-            showTemporaryNotification(`📅 Menampilkan ${tomorrowMatches} pertandingan besok`, 'info');
-          }, 500);
+          showTemporaryNotification(`📅 Ada ${tomorrowMatches} pertandingan besok. Gunakan filter "Besok" untuk melihatnya.`, 'info');
         } else {
-          // Tampilkan semua data jika tidak ada hari ini atau besok
-          showTemporaryNotification('📅 Menampilkan semua pertandingan', 'info');
+          showTemporaryNotification('📅 Menampilkan semua pertandingan yang tersedia', 'info');
         }
       }
     }
@@ -3794,99 +4474,16 @@
         searchInput.addEventListener('input', function() {
           searchQuery = this.value.toLowerCase();
           clearBtn.classList.toggle('show', searchQuery.length > 0);
-          applyFiltersWithFallback();
+          applyFilters();
         });
       }
       
       if (dateSelect) {
-        // Enhanced date selector with smart button management
         dateSelect.addEventListener('change', function() {
-          const newSelectedDate = this.value;
-          console.log('📅 Date dropdown changed to:', newSelectedDate);
-          
-          // Update button state based on selection
-          updateApplyButtonState(newSelectedDate);
-          
-          // If "Semua Tanggal" is selected, auto-apply and disable button
-          if (newSelectedDate === 'all') {
-            selectedDate = newSelectedDate;
-            console.log('📋 Auto-applying "Semua Tanggal" - showing all matches');
-            
-            // Clear any active filter state
-            currentFilter = null;
-            document.querySelectorAll('.quick-filter-btn').forEach(btn => btn.classList.remove('active'));
-            
-            // Show all matches immediately
-            if (currentSportData && Object.keys(currentSportData).length > 0) {
-              renderLeagues(currentSportData, window.currentSport);
-              setTimeout(() => applyFiltersWithFallback(), 100);
-            } else if (window.currentSport) {
-              fetchAndRenderLeagues(window.currentSport);
-            }
-          } else {
-            // For specific dates, just update the selection but don't apply yet
-            selectedDate = newSelectedDate;
-          }
+          selectedDate = this.value;
+          // Jangan re-render, hanya apply filter untuk menyembunyikan/menampilkan
+          applyFilters();
         });
-      }
-      
-      // Helper function to manage Apply button state
-      function updateApplyButtonState(dateValue) {
-        const applyDateBtn = document.getElementById('apply-date-btn');
-        if (!applyDateBtn) return;
-        
-        const isAllDates = dateValue === 'all';
-        const isSameAsLastApplied = dateValue === window.lastAppliedDate;
-        
-        if (isAllDates || isSameAsLastApplied) {
-          // Disable button for "all dates" or already applied dates
-          applyDateBtn.disabled = true;
-          applyDateBtn.classList.add('disabled');
-          applyDateBtn.textContent = isAllDates ? 'Semua Ditampilkan' : 'Sudah Diterapkan';
-        } else {
-          // Enable button for new specific dates
-          applyDateBtn.disabled = false;
-          applyDateBtn.classList.remove('disabled');
-          applyDateBtn.textContent = 'Lihat Jadwal';
-        }
-      }
-      
-      // Enhanced "Lihat Jadwal" button functionality
-      const applyDateBtn = document.getElementById('apply-date-btn');
-      if (applyDateBtn) {
-        // Initialize button as disabled on startup
-        updateApplyButtonState(selectedDate);
-        
-        applyDateBtn.addEventListener('click', function() {
-          // Prevent action if button is disabled
-          if (this.disabled) {
-            console.log('🚫 Button is disabled, no action taken');
-            return;
-          }
-          
-          console.log('🎯 Applying date filter:', selectedDate);
-          
-          // Store the applied date to prevent duplicate applications
-          window.lastAppliedDate = selectedDate;
-          
-          // Clear any active filter state when switching dates
-          currentFilter = null;
-          document.querySelectorAll('.quick-filter-btn').forEach(btn => btn.classList.remove('active'));
-          
-          // Apply the selected date filter
-          if (selectedDate && selectedDate !== 'all') {
-            console.log('🎯 Filtering by specific date:', selectedDate);
-            filterBySpecificDateWithFallback(selectedDate);
-            
-            // Update button to show it's been applied
-            this.disabled = true;
-            this.classList.add('disabled');
-            this.textContent = 'Sudah Diterapkan';
-          }
-        });
-        
-        // Initialize the button state based on current selectedDate
-        setTimeout(() => updateApplyButtonState(selectedDate), 100);
       }
       
       if (clearBtn) {
@@ -3894,7 +4491,7 @@
           searchInput.value = '';
           searchQuery = '';
           clearBtn.classList.remove('show');
-          applyFiltersWithFallback();
+          applyFilters();
         });
       }
       
@@ -3918,47 +4515,53 @@
           this.classList.add('active');
           
           // Apply filter dengan format tanggal yang KONSISTEN DD/MM/YYYY
-          if (filterType === 'today') {
+          if (filterType === 'live') {
+            console.log("🔴 FILTERING LIVE MATCHES");
+            filterLiveMatches();
+          } else if (filterType === 'today') {
             const hariIniFormatted = getTodayFormatted();
             console.log("🎯 FILTERING HARI INI:", hariIniFormatted);
-            filterBySpecificDateWithFallback(hariIniFormatted);
+            filterBySpecificDate(hariIniFormatted);
           } else if (filterType === 'tomorrow') {
             const besokFormatted = getTomorrowFormatted();
             console.log("🎯 FILTERING BESOK:", besokFormatted);
-            filterBySpecificDateWithFallback(besokFormatted);
+            filterBySpecificDate(besokFormatted);
           } else if (filterType === 'week') {
-            // Enhanced "Minggu Ini" (This Week) functionality
-            console.log("🎯 FILTERING MINGGU INI - Processing week filter");
-            currentFilter = 'week';
-            selectedDate = 'all'; // Reset date selector to show all dates, but filter by week
+            // Filter minggu ini dengan fungsi khusus
+            filterWeeklyMatches();
+          } else if (filterType === 'all') {
+            // Reset filter dan tampilkan semua
+            console.log("🎯 RESETTING TO SHOW ALL DATA");
+            selectedDate = 'all';
+            currentActiveDate = null;
+            currentFilter = 'all';
             
-            // Update date dropdown to show "all" since we're filtering by week range
+            // Update date select dropdown
             const dateSelect = document.getElementById('date-select');
             if (dateSelect) {
               dateSelect.value = 'all';
             }
             
-            // Update apply button state for "all" dates
-            updateApplyButtonState('all');
+            // Reset date navigator
+            const currentDateDisplay = document.getElementById('currentDateDisplay');
+            if (currentDateDisplay) {
+              currentDateDisplay.classList.remove('active');
+            }
             
-            // Calculate current week range for debugging
-            const weekRange = getCurrentWeekRange();
-            console.log("📅 Current week range:", weekRange.startFormatted, "to", weekRange.endFormatted);
-            console.log("📅 Today is:", formatDateToDDMMYYYY(new Date()));
+            // Clear quick date button states
+            document.querySelectorAll('.quick-date-btn').forEach(btn => {
+              btn.classList.remove('active');
+            });
             
-            // Apply the week filter immediately
-            applyFiltersWithFallback();
-            
-            // Also log some sample dates for verification
-            setTimeout(() => {
-              const sampleDates = Array.from(document.querySelectorAll('.match-time div:first-child'))
-                .map(el => el.textContent.trim())
-                .filter(date => date && date.includes('/'))
-                .slice(0, 5);
-              console.log("📋 Sample match dates in DOM:", sampleDates);
-            }, 100);
+            // Re-render all data
+            if (currentSportData) {
+              renderLeagues(currentSportData, window.currentSport);
+              showTemporaryNotification('📋 Menampilkan semua pertandingan', 'info');
+            } else {
+              applyFilters();
+            }
           } else {
-            applyFiltersWithFallback();
+            applyFilters();
           }
         });
         
@@ -3969,6 +4572,96 @@
       
       // Setup Flashscore-style Date Navigator
       setupDateNavigator();
+    }
+    
+    // Filter by specific date (like Flashscore) dengan data filtering yang tepat
+    function filterBySpecificDate(targetDate) {
+      console.log('🎯 FILTERING BY SPECIFIC DATE:', targetDate);
+      
+      // Set current active date
+      currentActiveDate = targetDate;
+      
+      // Update date select dropdown to match
+      const dateSelect = document.getElementById('date-select');
+      if (dateSelect) {
+        dateSelect.value = targetDate;
+        selectedDate = targetDate;
+      }
+      
+      // Jika tidak ada data sport saat ini, return
+      if (!currentSportData) {
+        console.log('❌ No current sport data available');
+        showNoMatchesMessage(targetDate);
+        return;
+      }
+      
+      // Filter data berdasarkan tanggal dengan string comparison
+      const filteredData = {};
+      let totalMatches = 0;
+      let debugCount = 0;
+      
+      Object.entries(currentSportData).forEach(([league, matches]) => {
+        const filteredMatches = matches.filter(match => {
+          // Support multiple date field formats
+          const rowTanggal = match.tanggal || match.date || match.tgl || '';
+          const isMatch = rowTanggal === targetDate; // Perbandingan string langsung
+          
+          // Debug logging untuk verifikasi perbandingan
+          if (debugCount < 3) {
+            console.log(`🔍 Date comparison: "${rowTanggal}" === "${targetDate}" = ${isMatch}`);
+            debugCount++;
+          }
+          
+          return isMatch;
+        });
+        
+        if (filteredMatches.length > 0) {
+          filteredData[league] = filteredMatches;
+          totalMatches += filteredMatches.length;
+        }
+      });
+      
+      console.log(`📊 Found ${totalMatches} matches for ${targetDate}`);
+      
+      // Render filtered data atau tampilkan pesan tidak ada data
+      if (totalMatches > 0) {
+        renderFilteredLeagues(filteredData, window.currentSport);
+        showTemporaryNotification(`📅 Menampilkan ${totalMatches} pertandingan tanggal ${targetDate}`, 'success');
+      } else {
+        showNoMatchesMessage(targetDate);
+        showTemporaryNotification(`📅 Tidak ada pertandingan di tanggal ${targetDate}`, 'warning');
+      }
+    }
+    
+    // Reset Date Navigator ke hari ini ketika pindah sport
+    function resetDateNavigatorToToday() {
+      console.log('🔄 Resetting date navigator to today...');
+      
+      // Reset global variables
+      currentActiveDate = null;
+      selectedDate = 'all';
+      
+      // Reset date select dropdown
+      const dateSelect = document.getElementById('date-select');
+      if (dateSelect) {
+        dateSelect.value = 'all';
+      }
+      
+      // Reset date navigator display ke hari ini
+      const currentDateDisplay = document.getElementById('currentDateDisplay');
+      if (currentDateDisplay) {
+        const today = new Date();
+        const todayFormatted = formatDateToDDMMYYYY(today);
+        currentDateDisplay.textContent = todayFormatted;
+        currentDateDisplay.classList.remove('active');
+      }
+      
+      // Reset quick date buttons
+      document.querySelectorAll('.quick-date-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      
+      console.log('✅ Date navigator reset to today');
     }
     
     // Setup Date Navigator functionality
@@ -4026,8 +4719,18 @@
         }
         
         console.log("🎯 Date Navigator Filter:", formatted);
+        
+        // Update current filter state
+        currentFilter = 'date-navigator';
+        selectedDate = formatted;
+        
+        // Update quick filter button states
+        document.querySelectorAll('.quick-filter-btn').forEach(btn => {
+          btn.classList.remove('active');
+        });
+        
         // Apply filter for this specific date
-        filterBySpecificDateWithFallback(formatted);
+        filterBySpecificDate(formatted);
       }
       
       // Previous date
@@ -4081,12 +4784,578 @@
       activateCenterNavigation();
     }
     
+    // Filter untuk menampilkan hanya pertandingan LIVE (untuk semua olahraga)
+    function filterLiveMatches() {
+      console.log('🔴 FILTERING LIVE MATCHES FOR ALL SPORTS');
+      
+      // Set current filter state
+      currentFilter = 'live';
+      selectedDate = 'all'; // Reset date filter
+      currentActiveDate = null;
+      
+      // Update date select dropdown
+      const dateSelect = document.getElementById('date-select');
+      if (dateSelect) {
+        dateSelect.value = 'all';
+      }
+      
+      // Reset date navigator
+      const currentDateDisplay = document.getElementById('currentDateDisplay');
+      if (currentDateDisplay) {
+        currentDateDisplay.classList.remove('active');
+      }
+      
+      // Clear quick date button states
+      document.querySelectorAll('.quick-date-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      
+      // Jika tidak ada data sport saat ini, return
+      if (!currentSportData) {
+        console.log('❌ No current sport data available');
+        showNoLiveMatchesMessage();
+        return;
+      }
+      
+      // Filter data berdasarkan status LIVE dengan SEMUA kriteria olahraga
+      const liveMatches = {};
+      let totalLiveMatches = 0;
+      
+      Object.entries(currentSportData).forEach(([league, matches]) => {
+        const liveMatchesInLeague = matches.filter(match => {
+          // Support multiple field formats untuk berbagai olahraga
+          const matchTime = match.jam || match.time || match.waktu || '';
+          const matchDate = match.tanggal || match.date || match.tgl || '';
+          
+          // Skip jika data tidak lengkap
+          if (!matchTime || !matchDate) {
+            return false;
+          }
+          
+          // Gunakan fungsi getMatchStatus yang sudah ada untuk deteksi LIVE
+          const matchStatus = getMatchStatus(matchTime, { tanggal: matchDate, ...match });
+          
+          // Debug logging untuk verifikasi
+          if (matchStatus.isLive) {
+            console.log(`🔴 LIVE MATCH FOUND: ${match.home || match.tima || match.team1} vs ${match.away || match.timb || match.team2} at ${matchTime} on ${matchDate}`);
+          }
+          
+          return matchStatus.isLive;
+        });
+        
+        if (liveMatchesInLeague.length > 0) {
+          liveMatches[league] = liveMatchesInLeague;
+          totalLiveMatches += liveMatchesInLeague.length;
+        }
+      });
+      
+      console.log(`🔴 Found ${totalLiveMatches} LIVE matches across all leagues`);
+      
+      // Render LIVE matches atau tampilkan pesan tidak ada pertandingan LIVE
+      if (totalLiveMatches > 0) {
+        renderLiveMatches(liveMatches, window.currentSport);
+        showTemporaryNotification(`🔴 Menampilkan ${totalLiveMatches} pertandingan LIVE`, 'success');
+      } else {
+        showNoLiveMatchesMessage();
+        showTemporaryNotification('🔴 Tidak ada pertandingan LIVE saat ini', 'warning');
+      }
+    }
+    
+    // Render LIVE matches dengan styling khusus
+    function renderLiveMatches(liveMatches, sportKey) {
+      const main = document.getElementById('main-content');
+      if (!main) return;
+      
+      main.innerHTML = '';
+      
+      // Tambahkan header khusus untuk LIVE matches
+      const liveHeader = document.createElement('div');
+      liveHeader.className = 'live-section-header';
+      liveHeader.innerHTML = `
+        <span style="font-size: 16px;">🔴 PERTANDINGAN LIVE</span>
+        <div style="font-size: 12px; margin-top: 5px; opacity: 0.9;">
+          ${Object.values(liveMatches).reduce((total, matches) => total + matches.length, 0)} pertandingan sedang berlangsung
+        </div>
+      `;
+      main.appendChild(liveHeader);
+      
+      Object.entries(liveMatches).forEach(([league, matches], idx) => {
+        // Accordion dengan styling khusus untuk LIVE
+        const accordion = document.createElement('div');
+        accordion.className = 'accordion expanded'; // Expand all LIVE matches by default
+
+        // Header dengan indikator LIVE
+        const header = document.createElement('div');
+        header.className = 'accordion-header';
+        header.style.borderLeft = '4px solid #ff0000';
+        header.style.background = 'linear-gradient(90deg, rgba(255, 0, 0, 0.05), transparent)';
+        header.innerHTML = `
+          <span class="accordion-title">
+            <span class="league-icon">${getLigaIcon(league)}</span>
+            ${escapeHTML(league)}
+            <span class="live-badge" style="margin-left: 10px;">🔴 LIVE</span>
+          </span>
+          <span class="accordion-arrow">▼</span>
+        `;
+        
+        header.onclick = () => {
+          const wasExpanded = accordion.classList.contains('expanded');
+          
+          // Toggle current accordion
+          if (wasExpanded) {
+            accordion.classList.remove('expanded');
+            header.querySelector('.accordion-arrow').textContent = '▶';
+          } else {
+            accordion.classList.add('expanded');
+            header.querySelector('.accordion-arrow').textContent = '▼';
+          }
+        };
+
+        // Content
+        const content = document.createElement('div');
+        content.className = 'accordion-content';
+
+        // Create LIVE match rows dengan styling khusus
+        matches.forEach(match => {
+          const matchRow = document.createElement('div');
+          matchRow.className = 'match-row live-match'; // Tambahkan class live-match
+          
+          // Mapping field yang konsisten untuk berbagai format data dan olahraga
+          const homeTeam = match.home || match.tima || match.timhome || match.team1 || match.player1 || '';
+          const awayTeam = match.away || match.timb || match.timaway || match.team2 || match.player2 || '';
+          const matchTime = match.jam || match.time || match.waktu || '';
+          const matchDate = match.tanggal || match.date || match.tgl || '';
+          const homeScore = match.scorea || match.score1 || match.homescore || '-';
+          const awayScore = match.scoreb || match.score2 || match.awayscore || '-';
+          const betLink = match.linkbet || match.link || match.bet || '#';
+          
+          // Validate data - skip if essential fields are missing
+          if (!homeTeam || !awayTeam || !matchTime || !matchDate) {
+            console.warn('⚠️ Skipping LIVE match with missing data:', match);
+            return;
+          }
+          
+          // Determine appropriate labels based on sport type
+          let homeLabel = 'HOME';
+          let awayLabel = 'AWAY';
+          
+          if (sportKey === 'tennis' || sportKey === 'badminton') {
+            homeLabel = 'PLAYER 1';
+            awayLabel = 'PLAYER 2';
+          } else if (sportKey === 'esport') {
+            homeLabel = 'TEAM 1';
+            awayLabel = 'TEAM 2';
+          } else if (sportKey === 'basket') {
+            homeLabel = 'HOME';
+            awayLabel = 'AWAY';
+          } else if (sportKey === 'voli') {
+            homeLabel = 'HOME';
+            awayLabel = 'AWAY';
+          } else if (sportKey === 'baseball') {
+            homeLabel = 'HOME';
+            awayLabel = 'AWAY';
+          }
+          
+          // Generate LIVE match status dengan durasi elapsed
+          const matchStatus = getMatchStatus(matchTime, { tanggal: matchDate, ...match });
+          
+          // Disable bet button for finished matches (safety check)
+          const betButtonClass = matchStatus.statusClass === 'finished' ? 'bet-link disabled' : 'bet-link';
+          const betButtonHref = matchStatus.statusClass === 'finished' ? '#' : escapeHTML(betLink);
+          const betButtonOnClick = matchStatus.statusClass === 'finished' ? 'onclick="return false;"' : '';
+          
+          matchRow.innerHTML = `
+            <div class="match-time">
+              <div style="font-weight: bold; color: #ff0000;">${escapeHTML(matchDate)}</div>
+              <div style="font-weight: bold; position: relative;">
+                ${escapeHTML(matchTime)} WIB
+                <div class="live-indicator"></div>
+              </div>
+              <div class="match-status live">🔴 LIVE</div>
+              ${matchStatus.countdown ? `<div class="match-countdown">${matchStatus.countdown}</div>` : ''}
+            </div>
+            <div class="match-teams">
+              <div class="team-row">
+                <span class="team-label">${homeLabel}</span>
+                <span class="team-name" style="font-weight: bold;">${escapeHTML(homeTeam)}</span>
+                <span class="team-score live-score" style="color: #ff0000; font-weight: bold;">${escapeHTML(homeScore)}</span>
+              </div>
+              <div class="team-row">
+                <span class="team-label">${awayLabel}</span>
+                <span class="team-name" style="font-weight: bold;">${escapeHTML(awayTeam)}</span>
+                <span class="team-score live-score" style="color: #ff0000; font-weight: bold;">${escapeHTML(awayScore)}</span>
+              </div>
+            </div>
+            <div class="match-bet">
+              <a href="${betButtonHref}" target="_blank" class="${betButtonClass}" ${betButtonOnClick}>
+                ${matchStatus.statusClass === 'finished' ? '🏁 FINISHED' : '🎯 BET'}
+              </a>
+            </div>
+          `;
+          
+          content.appendChild(matchRow);
+        });
+
+        accordion.appendChild(header);
+        accordion.appendChild(content);
+        main.appendChild(accordion);
+      });
+    }
+    
+    // Show message when no LIVE matches found
+    function showNoLiveMatchesMessage() {
+      const main = document.getElementById('main-content');
+      if (main) {
+        // Cek waktu saat ini untuk memberikan saran yang relevan
+        const now = new Date();
+        const currentHour = now.getHours();
+        
+        let suggestion = '';
+        if (currentHour >= 0 && currentHour < 6) {
+          suggestion = 'Biasanya pertandingan dimulai pada siang atau malam hari.';
+        } else if (currentHour >= 6 && currentHour < 12) {
+          suggestion = 'Coba cek lagi pada sore atau malam hari untuk pertandingan Eropa dan Amerika.';
+        } else if (currentHour >= 12 && currentHour < 18) {
+          suggestion = 'Pertandingan Eropa biasanya dimulai sore-malam waktu Indonesia.';
+        } else {
+          suggestion = 'Ini adalah waktu prime time untuk pertandingan Eropa!';
+        }
+        
+        main.innerHTML = `
+          <div class="live-section-header">
+            <span style="font-size: 16px;">🔴 PERTANDINGAN LIVE</span>
+          </div>
+          <div class="error-container" style="
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            background: rgba(255, 0, 0, 0.05);
+            text-align: center;
+            padding: 30px 20px;
+            margin: 20px 0;
+            border-radius: 12px;
+          ">
+            <div style="font-size: 48px; margin-bottom: 15px;">⏰</div>
+            <div style="font-size: 18px; font-weight: bold; margin-bottom: 10px; color: #ff0000;">
+              Tidak Ada Pertandingan LIVE Saat Ini
+            </div>
+            <div style="color: #666; margin-bottom: 15px;">
+              ${suggestion}
+            </div>
+            <div style="font-size: 12px; color: #999; margin-bottom: 20px;">
+              Waktu saat ini: ${now.toLocaleString('id-ID')} WIB
+            </div>
+            <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+              <button onclick="applyFilters(); currentFilter='today'; document.querySelector('[data-filter=today]').click();" 
+                style="padding: 8px 16px; background: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px;">
+                📅 Lihat Hari Ini
+              </button>
+              <button onclick="applyFilters(); currentFilter='tomorrow'; document.querySelector('[data-filter=tomorrow]').click();" 
+                style="padding: 8px 16px; background: #28a745; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px;">
+                🌅 Lihat Besok
+              </button>
+              <button onclick="resetAllFilters()" 
+                style="padding: 8px 16px; background: #6c757d; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px;">
+                📋 Lihat Semua
+              </button>
+            </div>
+            <div style="margin-top: 20px; padding: 15px; background: rgba(0,0,0,0.05); border-radius: 8px; border-left: 4px solid #007bff;">
+              <div style="font-weight: bold; margin-bottom: 5px;">💡 Tips:</div>
+              <div style="font-size: 13px; color: #666;">
+                • Pertandingan akan otomatis muncul di filter LIVE ketika sudah dimulai<br>
+                • Status LIVE dihitung berdasarkan waktu real-time Indonesia (WIB)<br>
+                • Filter akan diperbarui otomatis setiap 30 detik
+              </div>
+            </div>
+          </div>
+        `;
+      }
+    }
+    
+    // Filter untuk menampilkan pertandingan minggu ini
+    function filterWeeklyMatches() {
+      console.log('📅 FILTERING WEEKLY MATCHES');
+      
+      // Set current filter state
+      currentFilter = 'week';
+      selectedDate = 'all'; // Reset date filter
+      currentActiveDate = null;
+      
+      // Update date select dropdown
+      const dateSelect = document.getElementById('date-select');
+      if (dateSelect) {
+        dateSelect.value = 'all';
+      }
+      
+      // Reset date navigator
+      const currentDateDisplay = document.getElementById('currentDateDisplay');
+      if (currentDateDisplay) {
+        currentDateDisplay.classList.remove('active');
+      }
+      
+      // Clear quick date button states
+      document.querySelectorAll('.quick-date-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      
+      // Jika tidak ada data sport saat ini, return
+      if (!currentSportData) {
+        console.log('❌ No current sport data available');
+        showNoMatchesMessage('Data tidak tersedia untuk minggu ini');
+        return;
+      }
+      
+      // Calculate this week range (Sunday to Saturday)
+      const today = new Date();
+      const weekStart = new Date(today);
+      weekStart.setDate(today.getDate() - today.getDay()); // Start of week (Sunday)
+      const weekEnd = new Date(weekStart);
+      weekEnd.setDate(weekStart.getDate() + 6); // End of week (Saturday)
+      
+      console.log('📅 Week range:', {
+        start: formatDateToDDMMYYYY(weekStart),
+        end: formatDateToDDMMYYYY(weekEnd)
+      });
+      
+      // Filter data berdasarkan range minggu ini
+      const weeklyMatches = {};
+      let totalWeeklyMatches = 0;
+      
+      Object.entries(currentSportData).forEach(([league, matches]) => {
+        const weeklyMatchesInLeague = matches.filter(match => {
+          // Support multiple field formats
+          const matchDate = match.tanggal || match.date || match.tgl || '';
+          
+          // Skip jika data tidak lengkap
+          if (!matchDate) {
+            return false;
+          }
+          
+          try {
+            // Parse DD/MM/YYYY format
+            const dateParts = matchDate.split('/');
+            if (dateParts.length !== 3) return false;
+            
+            const matchDay = parseInt(dateParts[0]);
+            const matchMonth = parseInt(dateParts[1]) - 1; // Month is 0-indexed
+            const matchYear = parseInt(dateParts[2]);
+            
+            const matchDateObj = new Date(matchYear, matchMonth, matchDay);
+            
+            // Check if match date is within this week
+            const isInWeek = matchDateObj >= weekStart && matchDateObj <= weekEnd;
+            
+            return isInWeek;
+          } catch (error) {
+            console.warn('Error parsing date:', matchDate, error);
+            return false;
+          }
+        });
+        
+        if (weeklyMatchesInLeague.length > 0) {
+          weeklyMatches[league] = weeklyMatchesInLeague;
+          totalWeeklyMatches += weeklyMatchesInLeague.length;
+        }
+      });
+      
+      console.log(`📅 Found ${totalWeeklyMatches} matches for this week`);
+      
+      // Render weekly matches atau tampilkan pesan tidak ada pertandingan
+      if (totalWeeklyMatches > 0) {
+        renderWeeklyMatches(weeklyMatches, window.currentSport);
+        showTemporaryNotification(`📅 Menampilkan ${totalWeeklyMatches} pertandingan minggu ini`, 'success');
+      } else {
+        showNoWeeklyMatchesMessage();
+        showTemporaryNotification('📅 Tidak ada pertandingan minggu ini', 'warning');
+      }
+    }
+    
+    // Render weekly matches dengan styling khusus
+    function renderWeeklyMatches(weeklyMatches, sportKey) {
+      const main = document.getElementById('main-content');
+      if (!main) return;
+      
+      main.innerHTML = '';
+      
+      // Tambahkan header khusus untuk weekly matches
+      const weeklyHeader = document.createElement('div');
+      weeklyHeader.className = 'weekly-section-header';
+      weeklyHeader.innerHTML = `
+        <span style="font-size: 16px;">📅 PERTANDINGAN MINGGU INI</span>
+        <div style="font-size: 12px; margin-top: 5px; opacity: 0.9;">
+          ${Object.values(weeklyMatches).reduce((total, matches) => total + matches.length, 0)} pertandingan dalam 7 hari ini
+        </div>
+      `;
+      main.appendChild(weeklyHeader);
+      
+      Object.entries(weeklyMatches).forEach(([league, matches], idx) => {
+        // Accordion dengan styling khusus untuk weekly
+        const accordion = document.createElement('div');
+        accordion.className = 'accordion expanded'; // Expand all weekly matches by default
+
+        // Header dengan indikator weekly
+        const header = document.createElement('div');
+        header.className = 'accordion-header';
+        header.style.borderLeft = '4px solid #007bff';
+        header.style.background = 'linear-gradient(90deg, rgba(0, 123, 255, 0.05), transparent)';
+        header.innerHTML = `
+          <span class="accordion-title">
+            <span class="league-icon">${getLigaIcon(league)}</span>
+            ${escapeHTML(league)}
+            <span class="weekly-badge" style="margin-left: 10px;">📅 MINGGU INI</span>
+          </span>
+          <span class="accordion-arrow">▼</span>
+        `;
+        
+        header.onclick = () => {
+          const wasExpanded = accordion.classList.contains('expanded');
+          
+          // Toggle current accordion
+          if (wasExpanded) {
+            accordion.classList.remove('expanded');
+            header.querySelector('.accordion-arrow').textContent = '▶';
+          } else {
+            accordion.classList.add('expanded');
+            header.querySelector('.accordion-arrow').textContent = '▼';
+          }
+        };
+
+        // Content
+        const content = document.createElement('div');
+        content.className = 'accordion-content';
+
+        // Create weekly match rows dengan styling khusus
+        matches.forEach(match => {
+          const matchRow = document.createElement('div');
+          matchRow.className = 'match-row weekly-match'; // Tambahkan class weekly-match
+          
+          // Mapping field yang konsisten untuk berbagai format data dan olahraga
+          const homeTeam = match.home || match.tima || match.timhome || match.team1 || match.player1 || '';
+          const awayTeam = match.away || match.timb || match.timaway || match.team2 || match.player2 || '';
+          const matchTime = match.jam || match.time || match.waktu || '';
+          const matchDate = match.tanggal || match.date || match.tgl || '';
+          const homeScore = match.scorea || match.score1 || match.homescore || '-';
+          const awayScore = match.scoreb || match.score2 || match.awayscore || '-';
+          const betLink = match.linkbet || match.link || match.bet || '#';
+          
+          // Validate data - skip if essential fields are missing
+          if (!homeTeam || !awayTeam || !matchTime || !matchDate) {
+            return;
+          }
+          
+          // Determine appropriate labels based on sport type
+          let homeLabel = 'HOME';
+          let awayLabel = 'AWAY';
+          
+          if (sportKey === 'tennis' || sportKey === 'badminton') {
+            homeLabel = 'PLAYER 1';
+            awayLabel = 'PLAYER 2';
+          } else if (sportKey === 'esport') {
+            homeLabel = 'TEAM 1';
+            awayLabel = 'TEAM 2';
+          }
+          
+          // Generate match status
+          const matchStatus = getMatchStatus(matchTime, { tanggal: matchDate, ...match });
+          
+          // Disable bet button for finished matches
+          const betButtonClass = matchStatus.statusClass === 'finished' ? 'bet-link disabled' : 'bet-link';
+          const betButtonHref = matchStatus.statusClass === 'finished' ? '#' : escapeHTML(betLink);
+          const betButtonOnClick = matchStatus.statusClass === 'finished' ? 'onclick="return false;"' : '';
+          
+          matchRow.innerHTML = `
+            <div class="match-time">
+              <div style="font-size: 11px; color: #666; margin-bottom: 3px;">${escapeHTML(matchDate)}</div>
+              <div style="font-weight: bold; color: #333;">
+                ${escapeHTML(matchTime)} WIB
+                ${matchStatus.isLive ? '<div class="live-indicator"></div>' : ''}
+              </div>
+              <div class="match-status ${matchStatus.statusClass}">${matchStatus.statusText}</div>
+            </div>
+            <div class="match-teams">
+              <div class="team-row">
+                <span class="team-label">${homeLabel}</span>
+                <span class="team-name">${escapeHTML(homeTeam)}${matchStatus.isLive ? createLiveBadge() : ''}</span>
+                <span class="team-score">${escapeHTML(homeScore)}</span>
+              </div>
+              <div class="team-row">
+                <span class="team-label">${awayLabel}</span>
+                <span class="team-name">${escapeHTML(awayTeam)}</span>
+                <span class="team-score">${escapeHTML(awayScore)}</span>
+              </div>
+            </div>
+            <div class="match-bet">
+              <a href="${betButtonHref}" target="_blank" class="${betButtonClass}" ${betButtonOnClick}>
+                ${matchStatus.statusClass === 'finished' ? '🏁 FINISHED' : '💰 BET'}
+              </a>
+            </div>
+          `;
+          
+          content.appendChild(matchRow);
+        });
+
+        accordion.appendChild(header);
+        accordion.appendChild(content);
+        main.appendChild(accordion);
+      });
+    }
+    
+    // Show message when no weekly matches found
+    function showNoWeeklyMatchesMessage() {
+      const main = document.getElementById('main-content');
+      if (main) {
+        main.innerHTML = `
+          <div class="weekly-section-header">
+            <span style="font-size: 16px;">📅 PERTANDINGAN MINGGU INI</span>
+          </div>
+          <div class="error-container" style="
+            border: 1px solid rgba(0, 123, 255, 0.3);
+            background: rgba(0, 123, 255, 0.05);
+            text-align: center;
+            padding: 30px 20px;
+            margin: 20px 0;
+            border-radius: 12px;
+          ">
+            <div style="font-size: 48px; margin-bottom: 15px;">📅</div>
+            <div style="font-size: 18px; font-weight: bold; margin-bottom: 10px; color: #007bff;">
+              Tidak Ada Pertandingan Minggu Ini
+            </div>
+            <div style="color: #666; margin-bottom: 15px;">
+              Belum ada jadwal pertandingan untuk 7 hari ke depan dari hari ini.
+            </div>
+            <div style="font-size: 12px; color: #999; margin-bottom: 20px;">
+              Coba cek lagi nanti atau pilih filter lain untuk melihat pertandingan di tanggal yang berbeda.
+            </div>
+            <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+              <button onclick="document.querySelector('[data-filter=\\"all\\"]').click()" style="padding: 8px 16px; background: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer;">
+                📋 Lihat Semua
+              </button>
+              <button onclick="document.querySelector('[data-filter=\\"today\\"]').click()" style="padding: 8px 16px; background: #28a745; color: white; border: none; border-radius: 6px; cursor: pointer;">
+                📅 Hari Ini
+              </button>
+              <button onclick="document.querySelector('[data-filter=\\"tomorrow\\"]').click()" style="padding: 8px 16px; background: #ffc107; color: black; border: none; border-radius: 6px; cursor: pointer;">
+                📅 Besok
+              </button>
+            </div>
+            <div style="margin-top: 20px; padding: 15px; background: rgba(0,0,0,0.05); border-radius: 8px; border-left: 4px solid #007bff;">
+              💡 <strong>Tips:</strong> Jadwal pertandingan biasanya dirilis 1-2 hari sebelumnya. Coba cek kembali besok untuk jadwal terbaru!
+            </div>
+          </div>
+        `;
+      }
+    }
+    
     // Filter by specific date (like Flashscore) dengan data filtering yang tepat
     function filterBySpecificDate(targetDate) {
       console.log('🎯 FILTERING BY SPECIFIC DATE:', targetDate);
       
       // Set current active date
       currentActiveDate = targetDate;
+      
+      // Update date select dropdown to match
+      const dateSelect = document.getElementById('date-select');
+      if (dateSelect) {
+        dateSelect.value = targetDate;
+        selectedDate = targetDate;
+      }
       
       // Jika tidak ada data sport saat ini, return
       if (!currentSportData) {
@@ -4102,20 +5371,15 @@
       
       Object.entries(currentSportData).forEach(([league, matches]) => {
         const filteredMatches = matches.filter(match => {
-          const rowTanggal = match.tanggal; // Data dari spreadsheet (DD/MM/YYYY)
-          
-          // ✅ GUNAKAN NORMALIZED COMPARISON untuk konsistensi
-          const normalizedTarget = normalizeDate(targetDate);
-          const normalizedRow = normalizeDate(rowTanggal);
-          const isMatch = normalizedTarget === normalizedRow;
+          // Support multiple date field formats
+          const rowTanggal = match.tanggal || match.date || match.tgl || '';
+          const isMatch = rowTanggal === targetDate; // Perbandingan string langsung
           
           // Debug logging untuk verifikasi perbandingan
-          if (debugCount < 5) {
-            console.log("📊 NORMALIZED FILTER COMPARISON:");
-            console.log("  Target Date (original):", targetDate);
-            console.log("  Target Date (normalized):", normalizedTarget);
-            console.log("  Row Tanggal (original):", rowTanggal);
-            console.log("  Row Tanggal (normalized):", normalizedRow);
+          if (debugCount < 3) {
+            console.log("📊 FILTER COMPARISON:");
+            console.log("  Target Date:", targetDate);
+            console.log("  Row Tanggal:", rowTanggal);
             console.log("  Match Result:", isMatch);
             debugCount++;
           }
@@ -4131,11 +5395,13 @@
       
       console.log(`📊 Found ${totalMatches} matches for ${targetDate}`);
       
-      // Render filtered data
+      // Render filtered data atau tampilkan pesan tidak ada data
       if (totalMatches > 0) {
         renderFilteredLeagues(filteredData, window.currentSport);
+        showTemporaryNotification(`📅 Menampilkan ${totalMatches} pertandingan tanggal ${targetDate}`, 'success');
       } else {
         showNoMatchesMessage(targetDate);
+        showTemporaryNotification(`📅 Tidak ada pertandingan di tanggal ${targetDate}`, 'warning');
       }
     }
     
@@ -4219,6 +5485,11 @@
           // Create LIVE badge untuk home team jika pertandingan sedang live
           const liveBadge = isLive ? createLiveBadge() : '';
           
+          // Disable bet button for finished matches
+          const betButtonClass = matchStatus.statusClass === 'finished' ? 'bet-btn disabled' : 'bet-btn';
+          const betButtonHref = matchStatus.statusClass === 'finished' ? '#' : (match.linkbet || '#');
+          const betButtonOnClick = matchStatus.statusClass === 'finished' ? 'onclick="return false;"' : '';
+          
           matchRow.innerHTML = `
             <div class="match-time">
               <div>${escapeHTML(matchDate)}</div>
@@ -4239,7 +5510,7 @@
               </div>
             </div>
             <div class="match-bet">
-              ${generateBetButton(match, matchStatus)}
+              <a class="${betButtonClass}" href="${betButtonHref}" target="_blank" rel="noopener" ${betButtonOnClick}>${matchStatus.statusClass === 'finished' ? 'FINISHED' : 'BET'}</a>
             </div>
           `;
           
@@ -4253,13 +5524,72 @@
     }
     
     // Show message when no matches found
-    function showNoMatchesMessage(targetDate) {
+    function showNoMatchesMessage(message = 'Tidak ada pertandingan ditemukan') {
       const main = document.getElementById('main-content');
       if (main) {
+        // Get available dates for suggestion
+        const availableDates = new Set();
+        if (currentSportData) {
+          Object.values(currentSportData).forEach(matches => {
+            matches.forEach(match => {
+              const matchDate = match.tanggal || match.date || match.tgl;
+              if (matchDate) availableDates.add(matchDate);
+            });
+          });
+        }
+        
+        const sortedDates = Array.from(availableDates).sort((a, b) => {
+          let dateA = a.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1');
+          let dateB = b.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1');
+          return new Date(dateA) - new Date(dateB);
+        });
+        
+        let suggestionText = '';
+        if (sortedDates.length > 0) {
+          const recentDates = sortedDates.slice(0, 5).join(', ');
+          suggestionText = `<div style="margin-top: 15px; font-size: 12px; color: #666;">
+            Tanggal tersedia: ${recentDates}${sortedDates.length > 5 ? ` dan ${sortedDates.length - 5} lainnya` : ''}
+          </div>`;
+        }
+        
         main.innerHTML = `
-          <div class="error-msg">
-            <h3>📅 Tidak ada pertandingan di tanggal ${targetDate}</h3>
-            <p>Silakan pilih tanggal lain atau coba kategori olahraga yang berbeda.</p>
+          <div class="error-msg" style="
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border: 2px dashed #dee2e6;
+            border-radius: 12px;
+            padding: 40px 20px;
+            text-align: center;
+            margin: 20px;
+            color: #495057;
+          ">
+            <div style="font-size: 48px; margin-bottom: 20px;">📅</div>
+            <h3 style="margin: 0 0 15px 0; color: #343a40;">${message}</h3>
+            <p style="margin: 0 0 20px 0; line-height: 1.5;">
+              Silakan pilih tanggal lain atau coba kategori olahraga yang berbeda.
+            </p>
+            ${suggestionText}
+            <div style="margin-top: 20px;">
+              <button onclick="location.reload()" style="
+                background: #007bff;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 6px;
+                cursor: pointer;
+                font-weight: 500;
+                margin: 0 5px;
+              ">🔄 Refresh</button>
+              <button onclick="resetAllFilters()" style="
+                background: #28a745;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 6px;
+                cursor: pointer;
+                font-weight: 500;
+                margin: 0 5px;
+              ">📋 Tampilkan Semua</button>
+            </div>
           </div>
         `;
       }
@@ -4267,9 +5597,16 @@
 
     // Apply filters dengan string comparison yang tepat
     function applyFilters() {
+      console.log('🎯 APPLY FILTERS START');
+      console.log('🎯 Current filter:', currentFilter);
+      console.log('🎯 Selected date:', selectedDate);
+      console.log('🎯 Search query:', searchQuery);
+      
       const matchRows = document.querySelectorAll('.match-row');
       
       if (!matchRows.length) {
+        console.log('❌ No match rows found');
+        showNoMatchesMessage('Data tidak tersedia');
         return;
       }
 
@@ -4279,7 +5616,6 @@
       
       console.log('📅 Today (DD/MM/YYYY):', todayFormatted);
       console.log('📅 Tomorrow (DD/MM/YYYY):', tomorrowFormatted);
-      console.log('🎯 Current filter:', currentFilter);
 
       let visibleCount = 0;
 
@@ -4301,94 +5637,66 @@
             if (dateDiv) {
               const dateText = dateDiv.textContent.trim();
               
-              console.log(`🔍 Row ${index}: Date="${dateText}", Filter="${currentFilter}"`);
-              
-              // Filter berdasarkan dropdown date selector - GUNAKAN NORMALIZED COMPARISON
+              // Filter berdasarkan dropdown date selector
               if (selectedDate && selectedDate !== 'all') {
-                const normalizedSelected = normalizeDate(selectedDate);
-                const normalizedRow = normalizeDate(dateText);
-                shouldShow = normalizedSelected === normalizedRow;
-                
-                if (!shouldShow && index < 3) {
-                  console.warn("Dropdown filter mismatch:", normalizedSelected, "vs", normalizedRow);
+                shouldShow = dateText === selectedDate;
+                if (index < 3) {
+                  console.log(`🔍 Dropdown filter: "${selectedDate}" vs "${dateText}" = ${shouldShow}`);
                 }
               }
               
               // Filter berdasarkan tombol quick filter dengan PERBANDINGAN STRING
               if (shouldShow && currentFilter && currentFilter !== 'all') {
-                if (currentFilter === 'today') {
-                  console.log("📊 TODAY FILTER COMPARISON:");
-                  console.log("  Target (Hari Ini):", todayFormatted);
-                  console.log("  Row Tanggal:", dateText);
-                  console.log("  Match:", dateText === todayFormatted);
+                if (currentFilter === 'live') {
+                  // Filter untuk LIVE matches
+                  const timeDiv = matchTimeDiv.querySelector('div:nth-child(2)');
+                  if (timeDiv) {
+                    const timeText = timeDiv.textContent.replace(/WIB|wib/g, '').trim();
+                    // Gunakan fungsi getMatchStatus yang sudah ada
+                    const matchStatus = getMatchStatus(timeText, { tanggal: dateText });
+                    shouldShow = matchStatus.isLive;
+                    
+                    if (index < 3) {
+                      console.log(`🔴 LIVE filter: "${dateText} ${timeText}" is LIVE = ${shouldShow}`);
+                    }
+                  } else {
+                    shouldShow = false;
+                  }
+                }
+                else if (currentFilter === 'today') {
                   shouldShow = dateText === todayFormatted;
-                  if (!shouldShow && index < 3) {
-                    console.warn("❌ Today filter mismatch:", todayFormatted, "vs", dateText);
+                  if (index < 3) {
+                    console.log(`🔍 Today filter: "${todayFormatted}" vs "${dateText}" = ${shouldShow}`);
                   }
                 } 
                 else if (currentFilter === 'tomorrow') {
-                  console.log("📊 TOMORROW FILTER COMPARISON:");
-                  console.log("  Target (Besok):", tomorrowFormatted);
-                  console.log("  Row Tanggal:", dateText);
-                  console.log("  Match:", dateText === tomorrowFormatted);
                   shouldShow = dateText === tomorrowFormatted;
-                  if (!shouldShow && index < 3) {
-                    console.warn("❌ Tomorrow filter mismatch:", tomorrowFormatted, "vs", dateText);
+                  if (index < 3) {
+                    console.log(`🔍 Tomorrow filter: "${tomorrowFormatted}" vs "${dateText}" = ${shouldShow}`);
                   }
                 } 
                 else if (currentFilter === 'week') {
-                  // Enhanced this week filtering with better date parsing
+                  // Check for this week (current week from today) - GUNAKAN DATE PARSING YANG BENAR
                   shouldShow = false;
-                  
                   try {
-                    const weekRange = getCurrentWeekRange();
+                    const today = new Date();
+                    const weekStart = new Date(today);
+                    weekStart.setDate(today.getDate() - today.getDay()); // Start of week (Sunday)
+                    const weekEnd = new Date(weekStart);
+                    weekEnd.setDate(weekStart.getDate() + 6); // End of week (Saturday)
                     
-                    // Parse the match date from DD/MM/YYYY format with comprehensive validation
-                    if (dateText && dateText.includes('/')) {
-                      const dateParts = dateText.split('/');
-                      if (dateParts.length === 3) {
-                        const day = parseInt(dateParts[0].trim(), 10);
-                        const month = parseInt(dateParts[1].trim(), 10);
-                        const year = parseInt(dateParts[2].trim(), 10);
-                        
-                        // Enhanced validation
-                        if (!isNaN(day) && !isNaN(month) && !isNaN(year) && 
-                            day >= 1 && day <= 31 && month >= 1 && month <= 12 && year >= 2024) {
-                          
-                          const matchDate = new Date(year, month - 1, day);
-                          matchDate.setHours(12, 0, 0, 0); // Set to noon to avoid timezone issues
-                          
-                          // More robust date comparison
-                          const isInRange = matchDate >= weekRange.start && matchDate <= weekRange.end;
-                          shouldShow = isInRange;
-                          
-                          // Enhanced debugging for first few matches
-                          if (index < 3) {
-                            console.log(`📊 WEEK FILTER MATCH ${index}:`);
-                            console.log(`  Date Text: "${dateText}"`);
-                            console.log(`  Parsed: ${day}/${month}/${year}`);
-                            console.log(`  Match Date: ${matchDate.toLocaleDateString()}`);
-                            console.log(`  Week Start: ${weekRange.start.toLocaleDateString()}`);
-                            console.log(`  Week End: ${weekRange.end.toLocaleDateString()}`);
-                            console.log(`  In Range: ${isInRange}`);
-                          }
-                        } else {
-                          if (index < 3) {
-                            console.warn(`❌ Invalid date parts: ${day}/${month}/${year} from "${dateText}"`);
-                          }
-                        }
-                      } else {
-                        if (index < 3) {
-                          console.warn(`❌ Invalid date format: "${dateText}" (${dateParts.length} parts)`);
-                        }
-                      }
-                    } else {
-                      if (index < 3) {
-                        console.warn(`❌ No valid date found: "${dateText}"`);
-                      }
+                    // Parse the match date dari format DD/MM/YYYY
+                    const [day, month, year] = dateText.split('/').map(Number);
+                    if (!isNaN(day) && !isNaN(month) && !isNaN(year)) {
+                      const matchDate = new Date(year, month - 1, day);
+                      shouldShow = matchDate >= weekStart && matchDate <= weekEnd;
+                    }
+                    
+                    if (index < 3) {
+                      console.log(`🔍 Week filter: "${dateText}" in range = ${shouldShow}`);
                     }
                   } catch (error) {
-                    console.warn('❌ Error in week filter:', error);
+                    console.warn('Week filter error:', error);
                     shouldShow = false;
                   }
                 }
@@ -4397,7 +5705,7 @@
           }
         }
 
-        // Show/hide the row - GUNAKAN DISPLAY BLOCK BUKAN FLEX
+        // Show/hide the row
         if (shouldShow) {
           row.style.display = '';
           visibleCount++;
@@ -4418,17 +5726,32 @@
       
       console.log(`🎉 Filter applied! Showing ${visibleCount} out of ${matchRows.length} matches`);
       
-      // Show message if no matches visible for debugging
-      if (visibleCount === 0 && currentFilter !== 'all') {
-        console.log(`⚠️ No matches found for filter "${currentFilter}".`);
-        console.log(`📅 Available dates in DOM:`, 
-          Array.from(document.querySelectorAll('.match-time div:first-child')).map(el => el.textContent.trim()).slice(0, 10));
+      // Show message if no matches visible
+      if (visibleCount === 0) {
+        const filterInfo = currentFilter === 'all' ? 'semua filter' : `filter "${currentFilter}"`;
+        console.log(`⚠️ No matches found for ${filterInfo}.`);
+        
+        // Show appropriate message
+        let message = 'Tidak ada pertandingan ditemukan';
+        if (currentFilter === 'today') {
+          message = `Tidak ada pertandingan hari ini (${todayFormatted})`;
+        } else if (currentFilter === 'tomorrow') {
+          message = `Tidak ada pertandingan besok (${tomorrowFormatted})`;
+        } else if (currentFilter === 'week') {
+          message = 'Tidak ada pertandingan minggu ini';
+        } else if (selectedDate && selectedDate !== 'all') {
+          message = `Tidak ada pertandingan di tanggal ${selectedDate}`;
+        } else if (searchQuery) {
+          message = `Tidak ada pertandingan ditemukan untuk pencarian "${searchQuery}"`;
+        }
+        
+        showNoMatchesMessage(message);
       }
     }
 
-    // Update LIVE status secara berkala
+    // Update LIVE status secara berkala untuk SEMUA jenis olahraga
     function updateLiveMatches() {
-      console.log('🔄 Updating LIVE match status...');
+      console.log('🔄 Updating LIVE match status for all sports...');
       
       const matchRows = document.querySelectorAll('.match-row');
       let liveCount = 0;
@@ -4436,35 +5759,112 @@
       matchRows.forEach(row => {
         const timeDiv = row.querySelector('.match-time div:nth-child(2)');
         const dateDiv = row.querySelector('.match-time div:first-child');
-        const homeTeamNameSpan = row.querySelector('.team-row .team-name');
         
-        if (timeDiv && dateDiv && homeTeamNameSpan) {
-          const matchTime = timeDiv.textContent.trim();
-          const matchDate = dateDiv.textContent.trim();
-          const isLive = checkIfMatchIsLive(matchTime, matchDate);
+        if (timeDiv && dateDiv) {
+          const timeText = timeDiv.textContent.replace(/WIB|wib/g, '').trim();
+          const dateText = dateDiv.textContent.trim();
           
-          // Remove existing LIVE badge
-          const existingBadge = homeTeamNameSpan.querySelector('.live-badge');
-          if (existingBadge) {
-            existingBadge.remove();
+          // Skip jika waktu tidak valid
+          if (!timeText.includes(':')) return;
+          
+          // Gunakan getMatchStatus yang sudah ada
+          const matchStatus = getMatchStatus(timeText, { tanggal: dateText });
+          
+          // Update status element
+          let statusElement = row.querySelector('.match-status');
+          if (statusElement) {
+            statusElement.className = `match-status ${matchStatus.statusClass}`;
+            statusElement.textContent = matchStatus.statusText;
           }
           
-          // Remove existing live-match class
-          row.classList.remove('live-match');
+          // Update live indicator
+          let liveIndicator = row.querySelector('.live-indicator');
+          if (matchStatus.isLive && !liveIndicator) {
+            liveIndicator = document.createElement('div');
+            liveIndicator.className = 'live-indicator';
+            timeDiv.style.position = 'relative';
+            timeDiv.appendChild(liveIndicator);
+          } else if (!matchStatus.isLive && liveIndicator) {
+            liveIndicator.remove();
+          }
           
-          if (isLive) {
-            // Add LIVE badge
-            homeTeamNameSpan.innerHTML += createLiveBadge();
-            
-            // Add live-match class
+          // Update countdown
+          let countdownElement = row.querySelector('.match-countdown');
+          if (matchStatus.countdown) {
+            if (!countdownElement) {
+              countdownElement = document.createElement('div');
+              countdownElement.className = 'match-countdown';
+              const statusParent = statusElement?.parentNode || timeDiv;
+              statusParent.appendChild(countdownElement);
+            }
+            countdownElement.textContent = matchStatus.countdown;
+          } else if (countdownElement) {
+            countdownElement.remove();
+          }
+          
+          // Update row styling untuk LIVE matches
+          if (matchStatus.isLive) {
             row.classList.add('live-match');
-            
             liveCount++;
+          } else {
+            row.classList.remove('live-match');
           }
+          
+          // Update score styling untuk LIVE matches
+          const scoreElements = row.querySelectorAll('.team-score');
+          scoreElements.forEach(scoreEl => {
+            if (matchStatus.isLive) {
+              scoreEl.classList.add('live-score');
+              scoreEl.style.color = '#ff0000';
+              scoreEl.style.fontWeight = 'bold';
+            } else {
+              scoreEl.classList.remove('live-score');
+              scoreEl.style.color = '';
+              scoreEl.style.fontWeight = '';
+            }
+          });
         }
       });
       
-      console.log(`🔴 Found ${liveCount} LIVE matches`);
+      console.log(`🔴 Found ${liveCount} LIVE matches after update`);
+      
+      // Update LIVE filter button badge
+      const liveBtn = document.querySelector('[data-filter="live"]');
+      if (liveBtn) {
+        // Remove existing count badge
+        const existingBadge = liveBtn.querySelector('.live-count-badge');
+        if (existingBadge) {
+          existingBadge.remove();
+        }
+        
+        // Add new count badge if there are live matches
+        if (liveCount > 0) {
+          const countBadge = document.createElement('span');
+          countBadge.className = 'live-count-badge';
+          countBadge.textContent = liveCount;
+          countBadge.style.cssText = `
+            background: white;
+            color: #ff0000;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 10px;
+            font-weight: bold;
+            margin-left: 5px;
+            min-width: 16px;
+            text-align: center;
+          `;
+          liveBtn.appendChild(countBadge);
+        }
+      }
+      
+      // Jika user sedang melihat filter LIVE, refresh tampilan
+      if (currentFilter === 'live') {
+        console.log('🔄 Refreshing LIVE filter view...');
+        // Delay sedikit untuk memastikan DOM sudah terupdate
+        setTimeout(() => {
+          filterLiveMatches();
+        }, 500);
+      }
     }
 
     // Dark mode toggle
@@ -4478,17 +5878,17 @@
       }
     }
 
-    // Initialize app dengan Enhanced Features - Mobile Optimized
+    // Initialize app dengan Enhanced Features + LIVE Features
     function initializeApp() {
-      console.log('🎯 Initializing app with enhanced features...');
-      
-      // Prevent duplicate initialization
-      if (isInitialized) {
-        console.log('🚫 App already initialized, skipping');
-        return;
-      }
+      console.log('🎯 Initializing app with fast loading system...');
       
       try {
+        // 💾 LOAD CACHED DATA FIRST untuk instant loading
+        const cacheInfo = loadCachedData();
+        if (cacheInfo.hasCache) {
+          console.log(`⚡ Found cached data - enabling super fast loading! (${cacheInfo.dataCount} sports, ${cacheInfo.age}min old, ${cacheInfo.isFresh ? 'FRESH' : 'VALID'})`);
+        }
+        
         // Test format tanggal terlebih dahulu
         testDateFormatting();
         
@@ -4497,58 +5897,63 @@
         console.log('📋 URL Parameters detected:', urlParams);
         
         // Set current sport berdasarkan URL parameter atau default
-        if (SPORTS && SPORTS.length > 0) {
-          window.currentSport = urlParams.sport || SPORTS[0].key;
-        } else {
-          window.currentSport = 'bola'; // fallback
-        }
-        console.log('Current sport:', window.currentSport);
+        window.currentSport = urlParams.sport || SPORTS[0].key;
+        console.log('✅ Current sport set to:', window.currentSport);
         
         // Start real-time clock
         updateRealTimeClock();
         
         // Render sports tabs
         renderSportsTabs(window.currentSport);
-      
-      // Setup filter and search IMMEDIATELY
-      setupFilterAndSearch();
-      
-      // Setup date navigator
-      setupDateNavigator();
-      
-      // Enhanced fetch dengan parameter URL
-      if (urlParams.date || urlParams.category) {
-        console.log('🎯 Loading specific data based on URL parameters...');
-        fetchSpecificData(window.currentSport, urlParams.date, urlParams.category);
-      } else {
-        // Fetch and render leagues dengan auto-display logic
-        fetchAndRenderLeagues(window.currentSport);
-      }
-      
-      // Setup dark mode
-      setupDarkMode();
-      
-      // Start timer updates
-      updateMatchTimers();
-      
-      // Setup notifications
-      setupNotifications();
-      
-      // Setup LIVE match detection - update setiap 30 detik
-      setInterval(() => {
-        updateLiveMatches();
-      }, 30000);
-      
-      // Show initialization success message
-      setTimeout(() => {
-        showTemporaryNotification('🚀 Aplikasi berhasil dimuat!', 'success');
-      }, 1000);
-      
-      console.log('✅ App initialized successfully with enhanced features');
-      
+        
+        // Setup filter and search IMMEDIATELY
+        setupFilterAndSearch();
+        
+        // Setup date navigator
+        setupDateNavigator();
+        
+        console.log('🚀 Starting data fetch...');
+        
+        // Enhanced fetch dengan parameter URL
+        if (urlParams.date || urlParams.category) {
+          console.log('🎯 Loading specific data based on URL parameters...');
+          fetchSpecificData(window.currentSport, urlParams.date, urlParams.category);
+        } else {
+          // Fetch and render leagues dengan auto-display logic
+          fetchAndRenderLeagues(window.currentSport);
+        }
+        
+        // Setup dark mode
+        setupDarkMode();
+        
+        // Start timer updates
+        updateMatchTimers();
+        
+        // Setup notifications
+        setupNotifications();
+        
+        // Setup LIVE match detection - update setiap 30 detik untuk SEMUA olahraga
+        console.log('🔴 Setting up LIVE match detection...');
+        setInterval(() => {
+          updateLiveMatches();
+        }, 30000);
+        
+        // Initial LIVE check setelah 5 detik
+        setTimeout(() => {
+          updateLiveMatches();
+          console.log('🔴 Initial LIVE status check completed');
+        }, 5000);
+        
+        // Show initialization success message
+        setTimeout(() => {
+          showTemporaryNotification('🚀 Data siap dimuat! Sistem optimasi aktif.', 'success');
+        }, 1000);
+        
+        console.log('✅ App initialized successfully with fast loading system');
+        
       } catch (error) {
         console.error('❌ Error during app initialization:', error);
-        showTemporaryNotification('⚠️ Error saat inisialisasi aplikasi', 'error');
+        showTemporaryNotification('❌ Error saat inisialisasi: ' + error.message, 'error');
       }
     }
     
@@ -4590,7 +5995,7 @@
           setTimeout(() => {
             setupFilterAndSearch();
             if (date && date !== 'all') {
-              filterBySpecificDateWithFallback(date);
+              filterBySpecificDate(date);
               showTemporaryNotification(`📅 Data untuk tanggal ${date} berhasil dimuat!`, 'info');
             } else {
               showTemporaryNotification('📅 Data berhasil dimuat!', 'success');
@@ -4648,7 +6053,7 @@
     
     function showMatchNotification(team1, team2, timeLeft) {
       if ('Notification' in window && Notification.permission === 'granted') {
-        const notification = new Notification(`⚽ Match Starting Soon!`, {
+        const notification = new Notification(`⚽ SPORT SLOTGOKIL - Match Starting Soon!`, {
           body: `${team1} vs ${team2} starts in ${timeLeft}`,
           icon: 'https://i.ibb.co/ksD92H7L/sg-logo-200x90-20211713191713-2.png',
           badge: 'https://i.ibb.co/ksD92H7L/sg-logo-200x90-20211713191713-2.png'
@@ -4679,778 +6084,79 @@
       setInterval(updateClock, 1000);
     }
 
-    // Welcome screen handler
+    // Welcome screen handler dengan enhanced error handling
     document.addEventListener('DOMContentLoaded', function() {
-      console.log('DOM loaded, setting up welcome button...');
+      console.log('🚀 DOM loaded, setting up welcome screen...');
       
-      const welcomeBtn = document.getElementById('welcome-btn');
-      const welcomeScreen = document.getElementById('welcome-screen');
-      const container = document.querySelector('.container');
-      
-      if (!welcomeBtn || !welcomeScreen || !container) {
-        console.error('Essential elements not found!');
-        return;
-      }
-      
-      welcomeBtn.addEventListener('click', function() {
-        console.log('Welcome button clicked!');
+      try {
+        const welcomeBtn = document.getElementById('welcome-btn');
+        const welcomeScreen = document.getElementById('welcome-screen');
+        const container = document.querySelector('.container');
         
-        try {
-          // Hide welcome screen and show container
-          welcomeScreen.style.opacity = '0';
+        if (!welcomeBtn || !welcomeScreen || !container) {
+          console.error('❌ Essential elements not found!', {
+            welcomeBtn: !!welcomeBtn,
+            welcomeScreen: !!welcomeScreen,
+            container: !!container
+          });
+          // Fallback: try to initialize anyway
           setTimeout(() => {
-            welcomeScreen.style.display = 'none';
-            container.style.display = 'block';
-            
-            // Initialize the app with protection against multiple inits
-            if (!isInitialized) {
+            try {
               initializeApp();
-              isInitialized = true;
-            } else {
-              console.log('🚫 App already initialized, skipping duplicate init');
+            } catch (fallbackError) {
+              console.error('❌ Fallback initialization failed:', fallbackError);
             }
-          }, 300);
-          
-        } catch (error) {
-          console.error('Error in welcome button:', error);
-          alert('Error: ' + error.message);
+          }, 1000);
+          return;
         }
-      });
-      
-      console.log('Welcome button setup complete');
+        
+        welcomeBtn.addEventListener('click', function() {
+          console.log('✅ Welcome button clicked!');
+          
+          try {
+            // Hide welcome screen and show container with smooth transition
+            welcomeScreen.style.transition = 'opacity 0.5s ease-out';
+            welcomeScreen.style.opacity = '0';
+            
+            setTimeout(() => {
+              welcomeScreen.style.display = 'none';
+              container.style.display = 'block';
+              container.style.opacity = '0';
+              container.style.transition = 'opacity 0.5s ease-in';
+              
+              setTimeout(() => {
+                container.style.opacity = '1';
+                
+                // Initialize the app with enhanced error handling
+                initializeApp();
+              }, 10);
+              
+            }, 10);
+            
+          } catch (error) {
+            console.error('❌ Error in welcome button handler:', error);
+            showTemporaryNotification('❌ Error: ' + error.message, 'error');
+            
+            // Fallback: direct initialization
+            try {
+              initializeApp();
+            } catch (fallbackError) {
+              console.error('❌ Fallback failed:', fallbackError);
+              alert('Critical Error: ' + fallbackError.message + '\n\nPage will reload.');
+              location.reload();
+            }
+          }
+        });
+        
+        console.log('✅ Welcome screen setup complete');
+        
+      } catch (error) {
+        console.error('❌ Critical error in DOMContentLoaded:', error);
+      }
     });
 
     // Touch support for accordion (optional, for mobile)
     document.addEventListener('touchstart', function(){}, {passive:true});
-    
-    // 🚀 ENHANCED MOBILE FEATURES & RESPONSIVENESS
-    
-    // Swipe gestures untuk navigasi tanggal
-    function setupSwipeGestures() {
-      let startX = 0;
-      let startY = 0;
-      let currentX = 0;
-      let currentY = 0;
-      let isSwipeStarted = false;
-      
-      const dateNavigator = document.querySelector('.date-navigator');
-      if (!dateNavigator) return;
-      
-      dateNavigator.addEventListener('touchstart', function(e) {
-        startX = e.touches[0].clientX;
-        startY = e.touches[0].clientY;
-        isSwipeStarted = true;
-      }, { passive: true });
-      
-      dateNavigator.addEventListener('touchmove', function(e) {
-        if (!isSwipeStarted) return;
-        
-        currentX = e.touches[0].clientX;
-        currentY = e.touches[0].clientY;
-        
-        // Prevent scrolling if horizontal swipe
-        const deltaX = Math.abs(currentX - startX);
-        const deltaY = Math.abs(currentY - startY);
-        
-        if (deltaX > deltaY && deltaX > 30) {
-          e.preventDefault();
-        }
-      }, { passive: false });
-      
-      dateNavigator.addEventListener('touchend', function(e) {
-        if (!isSwipeStarted) return;
-        
-        const deltaX = currentX - startX;
-        const deltaY = currentY - startY;
-        
-        // Minimum swipe distance (50px)
-        if (Math.abs(deltaX) > 50 && Math.abs(deltaX) > Math.abs(deltaY)) {
-          if (deltaX > 0) {
-            // Swipe right - previous date
-            document.getElementById('prevDateNav')?.click();
-            showTemporaryNotification('📅 Hari sebelumnya', 'info');
-            hapticFeedback('light');
-          } else {
-            // Swipe left - next date
-            document.getElementById('nextDateNav')?.click();
-            showTemporaryNotification('📅 Hari berikutnya', 'info');
-            hapticFeedback('light');
-          }
-        }
-        
-        isSwipeStarted = false;
-      }, { passive: true });
-    }
-    
-    // Pull-to-refresh functionality
-    function setupPullToRefresh() {
-      let startY = 0;
-      let currentY = 0;
-      let isPulling = false;
-      let refreshThreshold = 80;
-      
-      const container = document.querySelector('.container');
-      if (!container) return;
-      
-      // Create refresh indicator
-      const refreshIndicator = document.createElement('div');
-      refreshIndicator.className = 'refresh-indicator';
-      refreshIndicator.innerHTML = '↓ Pull to refresh';
-      refreshIndicator.style.cssText = `
-        position: fixed;
-        top: -60px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: var(--accent);
-        color: white;
-        padding: 10px 20px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: 600;
-        z-index: 1000;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      `;
-      document.body.appendChild(refreshIndicator);
-      
-      container.addEventListener('touchstart', function(e) {
-        if (window.scrollY === 0) {
-          startY = e.touches[0].clientY;
-          isPulling = true;
-        }
-      }, { passive: true });
-      
-      container.addEventListener('touchmove', function(e) {
-        if (!isPulling || window.scrollY > 0) return;
-        
-        currentY = e.touches[0].clientY;
-        const pullDistance = currentY - startY;
-        
-        if (pullDistance > 0 && pullDistance < 150) {
-          const progress = Math.min(pullDistance / refreshThreshold, 1);
-          refreshIndicator.style.top = `${-60 + (pullDistance * 0.5)}px`;
-          refreshIndicator.style.opacity = progress;
-          
-          if (pullDistance > refreshThreshold) {
-            refreshIndicator.innerHTML = '🔄 Release to refresh';
-            refreshIndicator.style.backgroundColor = 'var(--accent-dark)';
-          } else {
-            refreshIndicator.innerHTML = '↓ Pull to refresh';
-            refreshIndicator.style.backgroundColor = 'var(--accent)';
-          }
-        }
-      }, { passive: true });
-      
-      container.addEventListener('touchend', function(e) {
-        if (!isPulling) return;
-        
-        const pullDistance = currentY - startY;
-        
-        if (pullDistance > refreshThreshold) {
-          // Trigger refresh
-          refreshIndicator.innerHTML = '🔄 Refreshing...';
-          refreshIndicator.style.top = '20px';
-          hapticFeedback('medium');
-          
-          // Refresh current sport data
-          if (window.currentSport) {
-            // Clear cache untuk refresh
-            delete allMatchesData[window.currentSport];
-            fetchAndRenderLeagues(window.currentSport);
-          }
-          
-          setTimeout(() => {
-            refreshIndicator.style.top = '-60px';
-            refreshIndicator.style.opacity = '0';
-          }, 2000);
-        } else {
-          // Return to original position
-          refreshIndicator.style.top = '-60px';
-          refreshIndicator.style.opacity = '0';
-        }
-        
-        isPulling = false;
-      }, { passive: true });
-    }
-    
-    // Haptic feedback untuk iOS dan Android
-    function hapticFeedback(type = 'light') {
-      if (navigator.vibrate) {
-        // Android vibration
-        const patterns = {
-          light: 50,
-          medium: 100,
-          heavy: 200
-        };
-        navigator.vibrate(patterns[type] || 50);
-      }
-      
-      // iOS haptic feedback
-      try {
-        if (window.DeviceMotionEvent && 'vibrate' in navigator) {
-          navigator.vibrate(type === 'light' ? 25 : type === 'medium' ? 50 : 100);
-        }
-      } catch (e) {
-        // Fallback - silent fail
-      }
-    }
-    
-    // Network status monitoring
-    function setupNetworkMonitoring() {
-      function updateNetworkStatus() {
-        const isOnline = navigator.onLine;
-        const networkIndicator = document.querySelector('.network-status') || createNetworkIndicator();
-        
-        if (isOnline) {
-          networkIndicator.style.display = 'none';
-        } else {
-          networkIndicator.style.display = 'block';
-          networkIndicator.innerHTML = '📵 No internet connection';
-        }
-      }
-      
-      function createNetworkIndicator() {
-        const indicator = document.createElement('div');
-        indicator.className = 'network-status';
-        indicator.style.cssText = `
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          background: #dc3545;
-          color: white;
-          text-align: center;
-          padding: 8px;
-          font-size: 12px;
-          font-weight: 600;
-          z-index: 10001;
-          display: none;
-        `;
-        document.body.appendChild(indicator);
-        return indicator;
-      }
-      
-      window.addEventListener('online', updateNetworkStatus);
-      window.addEventListener('offline', updateNetworkStatus);
-      updateNetworkStatus();
-    }
-    
-    // Enhanced keyboard navigation
-    function setupKeyboardNavigation() {
-      document.addEventListener('keydown', function(e) {
-        if (e.target.tagName === 'INPUT') return;
-        
-        switch(e.key) {
-          case 'ArrowLeft':
-            e.preventDefault();
-            document.getElementById('prevDateNav')?.click();
-            break;
-          case 'ArrowRight':
-            e.preventDefault();
-            document.getElementById('nextDateNav')?.click();
-            break;
-          case 'Escape':
-            e.preventDefault();
-            // Close any open modals or reset search
-            const searchInput = document.getElementById('search-input');
-            if (searchInput && searchInput.value) {
-              searchInput.value = '';
-              searchInput.dispatchEvent(new Event('input'));
-            }
-            break;
-          case '/':
-            e.preventDefault();
-            document.getElementById('search-input')?.focus();
-            break;
-        }
-      });
-    }
-    
-    // Intersection Observer untuk lazy loading dan animations
-    function setupIntersectionObserver() {
-      if ('IntersectionObserver' in window) {
-        const observerOptions = {
-          threshold: 0.1,
-          rootMargin: '50px'
-        };
-        
-        const observer = new IntersectionObserver((entries) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add('animate-in');
-              observer.unobserve(entry.target);
-            }
-          });
-        }, observerOptions);
-        
-        // Observe match rows for animation
-        setTimeout(() => {
-          document.querySelectorAll('.match-row').forEach(row => {
-            observer.observe(row);
-          });
-        }, 1000);
-      }
-    }
-    
-    // Enhanced scroll behavior dengan momentum
-    function setupSmoothScrolling() {
-      // Smooth scroll untuk navigasi internal
-      document.addEventListener('click', function(e) {
-        const link = e.target.closest('a[href^="#"]');
-        if (link) {
-          e.preventDefault();
-          const targetId = link.getAttribute('href');
-          const targetElement = document.querySelector(targetId);
-          
-          if (targetElement) {
-            targetElement.scrollIntoView({
-              behavior: 'smooth',
-              block: 'start'
-            });
-          }
-        }
-      });
-    }
-    
-    // Performance monitoring
-    function setupPerformanceMonitoring() {
-      // Monitor Core Web Vitals
-      if ('PerformanceObserver' in window) {
-        try {
-          const observer = new PerformanceObserver((list) => {
-            list.getEntries().forEach((entry) => {
-              if (entry.entryType === 'largest-contentful-paint') {
-                console.log('LCP:', entry.startTime);
-              }
-              if (entry.entryType === 'first-input') {
-                console.log('FID:', entry.processingStart - entry.startTime);
-              }
-            });
-          });
-          
-          observer.observe({ entryTypes: ['largest-contentful-paint', 'first-input'] });
-        } catch (e) {
-          console.log('Performance monitoring not supported');
-        }
-      }
-    }
-    
-    // Screen orientation handling
-    function setupOrientationHandling() {
-      function handleOrientationChange() {
-        // Delay untuk memastikan layout sudah adjust
-        setTimeout(() => {
-          // Trigger resize untuk memastikan layout responsive
-          window.dispatchEvent(new Event('resize'));
-          
-          // Update date navigator jika diperlukan
-          if (window.currentSport && currentSportData) {
-            // Re-apply current filters
-            applyFiltersWithFallback();
-          }
-        }, 100);
-      }
-      
-      // Listen untuk orientation change
-      window.addEventListener('orientationchange', handleOrientationChange);
-      screen.orientation?.addEventListener?.('change', handleOrientationChange);
-    }
-    
-    // 🔧 MISSING FUNCTIONS - Added to prevent errors
-    
-    // All missing functions with dummy implementations to prevent ReferenceError
-    function setupFavoritesToggle() {
-      console.log('📌 Favorites toggle feature initialized');
-      // TODO: Implement favorites functionality
-    }
-    
-    function setupDataPersistence() {
-      console.log('💾 Data persistence initialized');
-    }
-    
-    function setupTabVisibilityHandling() {
-      console.log('👁️ Tab visibility handling initialized');
-    }
-    
-    function setupCacheManagement() {
-      console.log('📦 Cache management initialized');
-    }
-    
-    // Enhanced applyFilters dengan error handling dan date normalization
-    // Parse match date and time to Date object
-    function parseMatchDateTime(dateString, timeString) {
-      try {
-        if (!dateString || !timeString) return null;
-        
-        // Handle different date formats
-        let normalizedDate;
-        if (dateString.includes('-')) {
-          // Format: YYYY-MM-DD or DD-MM-YYYY
-          const parts = dateString.split('-');
-          if (parts[0].length === 4) {
-            normalizedDate = dateString; // Already YYYY-MM-DD
-          } else {
-            normalizedDate = `${parts[2]}-${parts[1]}-${parts[0]}`; // Convert DD-MM-YYYY to YYYY-MM-DD
-          }
-        } else if (dateString.includes('/')) {
-          // Format: DD/MM/YYYY
-          const parts = dateString.split('/');
-          normalizedDate = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
-        } else {
-          return null;
-        }
-        
-        // Parse time (assuming HH:MM format)
-        const [hours, minutes] = timeString.split(':').map(Number);
-        
-        const matchDate = new Date(normalizedDate);
-        matchDate.setHours(hours || 0, minutes || 0, 0, 0);
-        
-        return matchDate;
-      } catch (error) {
-        console.warn('Error parsing match date/time:', error);
-        return null;
-      }
-    }
-
-    function applyFiltersWithFallback() {
-      try {
-        if (typeof applyFilters === 'function') {
-          applyFilters();
-        } else {
-          console.warn('applyFilters function not found');
-        }
-      } catch (error) {
-        console.error('Error in applyFilters:', error);
-      }
-    }
-    
-    // Enhanced filterBySpecificDate dengan error handling dan date normalization
-    function filterBySpecificDateWithFallback(date) {
-      try {
-        // Normalize date format to DD/MM/YYYY
-        const normalizedDate = normalizeDate(date);
-        if (typeof filterBySpecificDate === 'function') {
-          filterBySpecificDate(normalizedDate);
-        } else {
-          console.warn('filterBySpecificDate function not found');
-        }
-      } catch (error) {
-        console.error('Error in filterBySpecificDate:', error);
-      }
-    }
-    
-    // Date normalization function untuk konsistensi DD/MM/YYYY - ENHANCED VERSION
-    function normalizeDate(dateStr) {
-      if (!dateStr || dateStr === 'all') return dateStr;
-      
-      // Jika sudah dalam format DD/MM/YYYY, return as is
-      if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(dateStr)) {
-        // Ensure proper DD/MM/YYYY format (dengan leading zeros jika perlu)
-        const [day, month, year] = dateStr.split('/');
-        return `${day.padStart(2, '0')}/${month.padStart(2, '0')}/${year}`;
-      }
-      
-      // Jika dalam format lain, convert ke DD/MM/YYYY
-      try {
-        const date = new Date(dateStr);
-        if (!isNaN(date.getTime())) {
-          return formatDateToDDMMYYYY(date);
-        }
-      } catch (error) {
-        console.warn('Could not normalize date:', dateStr);
-      }
-      
-      return dateStr;
-    }
-    
-    // Enhanced date comparison function
-    function compareDates(date1, date2) {
-      const norm1 = normalizeDate(date1);
-      const norm2 = normalizeDate(date2);
-      return norm1 === norm2;
-    }
-    
-    // 💾 DATA PERSISTENCE & CACHE MANAGEMENT
-    
-    // Save data to localStorage dengan compression
-    function saveToCache(key, data) {
-      try {
-        const timestamp = Date.now();
-        const cacheData = {
-          data: data,
-          timestamp: timestamp,
-          version: '1.0'
-        };
-        localStorage.setItem(`sport_cache_${key}`, JSON.stringify(cacheData));
-        console.log(`💾 Data saved to cache: ${key}`);
-      } catch (error) {
-        console.warn('Could not save to cache:', error);
-      }
-    }
-    
-    // Load data from localStorage
-    function loadFromCache(key, maxAge = 30 * 60 * 1000) { // 30 minutes default
-      try {
-        const cached = localStorage.getItem(`sport_cache_${key}`);
-        if (!cached) return null;
-        
-        const cacheData = JSON.parse(cached);
-        const age = Date.now() - cacheData.timestamp;
-        
-        if (age > maxAge) {
-          localStorage.removeItem(`sport_cache_${key}`);
-          console.log(`🗑️ Cache expired for: ${key}`);
-          return null;
-        }
-        
-        console.log(`📦 Data loaded from cache: ${key}`);
-        return cacheData.data;
-      } catch (error) {
-        console.warn('Could not load from cache:', error);
-        return null;
-      }
-    }
-    
-    // Clear old cache entries
-    function clearOldCache() {
-      try {
-        const keys = Object.keys(localStorage);
-        keys.forEach(key => {
-          if (key.startsWith('sport_cache_')) {
-            const cached = localStorage.getItem(key);
-            if (cached) {
-              const cacheData = JSON.parse(cached);
-              const age = Date.now() - cacheData.timestamp;
-              if (age > 24 * 60 * 60 * 1000) { // 24 hours
-                localStorage.removeItem(key);
-                console.log(`🗑️ Removed old cache: ${key}`);
-              }
-            }
-          }
-        });
-      } catch (error) {
-        console.warn('Could not clear old cache:', error);
-      }
-    }
-    
-    // 👁️ TAB VISIBILITY & PAGE LIFECYCLE MANAGEMENT
-    
-    // Handle page visibility changes - Enhanced for mobile stability
-    function handleVisibilityChange() {
-      visibilityChangeCount++;
-      
-      if (document.hidden) {
-        // Page is hidden - save current state
-        console.log('📱 Page hidden - saving state');
-        saveCurrentState();
-      } else {
-        // Page is visible - check if we need to refresh data
-        console.log(`📱 Page visible (${visibilityChangeCount}) - checking state`);
-        
-        // Prevent excessive refreshes on mobile
-        if (visibilityChangeCount <= 2 && isInitialized) {
-          console.log('🚫 Preventing auto-refresh on mobile tab switch');
-          return;
-        }
-        
-        handlePageReturn();
-      }
-    }
-    
-    // Save current application state
-    function saveCurrentState() {
-      try {
-        const state = {
-          currentSport: window.currentSport,
-          selectedDate: selectedDate,
-          searchQuery: searchQuery,
-          currentFilter: currentFilter,
-          currentActiveDate: currentActiveDate,
-          timestamp: Date.now()
-        };
-        localStorage.setItem('sport_app_state', JSON.stringify(state));
-        
-        // Save current data cache
-        if (allMatchesData && Object.keys(allMatchesData).length > 0) {
-          saveToCache('all_matches', allMatchesData);
-        }
-      } catch (error) {
-        console.warn('Could not save state:', error);
-      }
-    }
-    
-    // Restore application state
-    function restoreState() {
-      try {
-        const savedState = localStorage.getItem('sport_app_state');
-        if (!savedState) return false;
-        
-        const state = JSON.parse(savedState);
-        const age = Date.now() - state.timestamp;
-        
-        // Only restore if state is less than 1 hour old
-        if (age > 60 * 60 * 1000) {
-          localStorage.removeItem('sport_app_state');
-          return false;
-        }
-        
-        // Restore state variables
-        window.currentSport = state.currentSport || SPORTS[0]?.key || 'bola';
-        selectedDate = state.selectedDate || 'all';
-        searchQuery = state.searchQuery || '';
-        currentFilter = state.currentFilter || null;
-        currentActiveDate = state.currentActiveDate || null;
-        
-        // Restore cached data
-        const cachedData = loadFromCache('all_matches');
-        if (cachedData) {
-          allMatchesData = cachedData;
-          console.log('📦 Restored data from cache');
-        }
-        
-        console.log('✅ State restored successfully');
-        return true;
-      } catch (error) {
-        console.warn('Could not restore state:', error);
-        return false;
-      }
-    }
-    
-    // Handle page return (from background) - Enhanced for mobile stability
-    function handlePageReturn() {
-      const lastVisit = localStorage.getItem('sport_last_visit');
-      const now = Date.now();
-      
-      // Enhanced logic to prevent excessive refreshes
-      if (lastVisit) {
-        const timeSinceLastVisit = now - parseInt(lastVisit);
-        
-        // Only refresh if more than 15 minutes AND we don't have data
-        if (timeSinceLastVisit > 15 * 60 * 1000) {
-          console.log('📱 Long absence detected (>15min), checking for updates');
-          
-          // Only refresh if we don't have recent data for current sport
-          if (!allMatchesData[window.currentSport] || !hasRenderedOnce) {
-            console.log('📊 No cached data found, fetching fresh data');
-            fetchAndRenderLeagues(window.currentSport);
-          } else {
-            console.log('📦 Using existing cached data');
-          }
-        } else {
-          console.log(`📱 Recent visit detected (${Math.round(timeSinceLastVisit/1000/60)}min ago), using cache`);
-        }
-      } else {
-        // First visit
-        if (!hasRenderedOnce && window.currentSport) {
-          fetchAndRenderLeagues(window.currentSport);
-        }
-      }
-      
-      localStorage.setItem('sport_last_visit', now.toString());
-    }
-    
-    // Enhanced fetchAndRenderLeagues dengan cache integration
-    function fetchAndRenderLeaguesSafe(sport) {
-      try {
-        // Check cache first
-        const cachedData = loadFromCache(`sport_${sport}`, 15 * 60 * 1000); // 15 minutes
-        if (cachedData) {
-          console.log(`📦 Using cached data for ${sport}`);
-          allMatchesData[sport] = cachedData;
-          currentSportData = cachedData;
-          renderLeagues(cachedData, sport);
-          
-          // Setup filters after render
-          setTimeout(() => {
-            setupFilterAndSearch();
-            if (currentActiveDate) {
-              filterBySpecificDateWithFallback(currentActiveDate);
-            } else {
-              applyFiltersWithFallback();
-            }
-          }, 100);
-          
-          return Promise.resolve();
-        }
-        
-        // If no cache, fetch from API
-        const result = fetchAndRenderLeagues(sport);
-        if (result && typeof result.then === 'function') {
-          return result.then(() => {
-            // Save to cache after successful fetch
-            if (allMatchesData[sport]) {
-              saveToCache(`sport_${sport}`, allMatchesData[sport]);
-            }
-          });
-        } else {
-          return Promise.resolve();
-        }
-      } catch (error) {
-        console.error('Error in fetchAndRenderLeaguesSafe:', error);
-        return Promise.reject(error);
-      }
-    }
-    
-    // Error boundary untuk global error handling
-    window.addEventListener('error', function(event) {
-      console.error('Global error caught:', event.error);
-      // Show user-friendly error message
-      const errorMsg = document.createElement('div');
-      errorMsg.style.cssText = `
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        background: #dc3545;
-        color: white;
-        padding: 12px 20px;
-        border-radius: 8px;
-        font-size: 14px;
-        z-index: 10000;
-        max-width: 300px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      `;
-      errorMsg.textContent = '⚠️ Ada error, silakan refresh halaman';
-      document.body.appendChild(errorMsg);
-      
-      // Auto remove after 5 seconds
-      setTimeout(() => {
-        if (errorMsg.parentNode) {
-          errorMsg.remove();
-        }
-      }, 5000);
-    });
-    
-    // Promise rejection handler
-    window.addEventListener('unhandledrejection', function(event) {
-      console.error('Unhandled promise rejection:', event.reason);
-      event.preventDefault();
-    });
-    
-    // Initialize enhanced features
-    document.addEventListener('DOMContentLoaded', function() {
-      console.log('🚀 Initializing enhanced mobile features...');
-      
-      setupSwipeGestures();
-      setupPullToRefresh();
-      setupNetworkMonitoring();
-      setupKeyboardNavigation();
-      setupIntersectionObserver();
-      setupSmoothScrolling();
-      setupPerformanceMonitoring();
-      setupOrientationHandling();
-      setupDataPersistence();
-      
-      // 📱 Setup visibility change listener untuk data persistence
-      document.addEventListener('visibilitychange', handleVisibilityChange);
-      
-      // 💾 Restore previous state jika ada
-      if (document.visibilityState === 'visible') {
-        restoreState();
-      }
-      
-      console.log('✅ Enhanced mobile features initialized with data persistence');
-    });
   </script>
 </body>
 </html>

@@ -1039,6 +1039,28 @@
       left: 100%;
     }
     
+    /* Skeleton loading animation */
+    .match-row:has(.team-name:contains("Loading")),
+    .match-row:has(.team-name:contains("Memuat")) {
+      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+      background-size: 200% 100%;
+      animation: skeleton-loading 2s infinite ease-in-out;
+      opacity: 0.7;
+    }
+    
+    @keyframes skeleton-loading {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+    
+    .skeleton-text {
+      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+      background-size: 200% 100%;
+      animation: skeleton-loading 1.5s infinite ease-in-out;
+      border-radius: 4px;
+      color: transparent !important;
+    }
+    
     .match-row:hover {
       background: var(--bg-hover);
       transform: translateX(2px);
@@ -2065,6 +2087,51 @@
   <script>
     console.log('🚀 Script loading...');
     
+    // Pending filter system - untuk filter yang dipencet saat loading
+    let pendingFilter = null;
+    let pendingFilterDate = null;
+    let isDataLoading = false;
+    
+    // Function to apply pending filter setelah data selesai loading
+    function applyPendingFilter() {
+      if (pendingFilter) {
+        console.log('⚡ Applying pending filter:', pendingFilter, pendingFilterDate);
+        
+        if (pendingFilter === 'date' && pendingFilterDate) {
+          // Apply date filter
+          filterBySpecificDate(pendingFilterDate);
+        } else if (pendingFilter === 'live') {
+          // Apply live filter  
+          filterLiveMatches();
+        } else if (pendingFilter === 'week') {
+          // Apply weekly filter
+          filterWeeklyMatches();
+        }
+        
+        // Clear pending filter
+        pendingFilter = null;
+        pendingFilterDate = null;
+      }
+    }
+    
+    // Helper function to handle score values properly - distinguishes null from 0
+    function getScore(scoreValue) {
+      if (scoreValue === null || scoreValue === undefined || scoreValue === '') {
+        return '-';
+      }
+      return String(scoreValue); // Keep 0 as "0", not "-"
+    }
+    
+    // Helper function to get first non-null/undefined field value (0 is valid!)
+    function getFirstValidField(...fields) {
+      for (let field of fields) {
+        if (field !== null && field !== undefined && field !== '') {
+          return field;
+        }
+      }
+      return null; // Return null if no valid field found
+    }
+    
     // ✅ GOOGLE SHEETS API CONFIGURATION - 100% REAL DATA
     const DIRECT_URL = "https://script.google.com/macros/s/AKfycbzLPPL9DmNg9k0qL5Ne6chJbmURVck7FOjTI1O53zY8xbfGQnYvu2DlJc7KT80u5y-HeQ/exec";
     
@@ -2407,6 +2474,11 @@
           if (window.currentSport !== sport.key) {
             console.log('Switching to sport:', sport.key);
             
+            // IMMEDIATELY show skeleton content to prevent "no data" message
+            const skeletonData = createSkeletonData(sport.key);
+            currentSportData = skeletonData;
+            renderLeagues(skeletonData, sport.key);
+            
             // RESET semua filter dan tanggal ketika pindah sport
             currentFilter = 'all';
             selectedDate = 'all';
@@ -2424,7 +2496,7 @@
             // Reset date navigator ke hari ini
             resetDateNavigatorToToday();
             
-            // Fetch data untuk sport baru
+            // Fetch real data untuk sport baru (in background)
             fetchAndRenderLeagues(sport.key).then(() => {
               // Reset semua filter buttons ke state default
               document.querySelectorAll('.quick-filter-btn').forEach(filterBtn => {
@@ -2833,7 +2905,10 @@
       const filteredLeagues = leagues; // Tampilkan SEMUA data
       
       if (!filteredLeagues || Object.keys(filteredLeagues).length === 0) {
-        main.innerHTML = '<div class="error-msg">Tidak ada jadwal tersedia.</div>';
+        // Don't show error immediately - might still be loading
+        if (currentLoadingState !== LoadingState.LOADING) {
+          main.innerHTML = '<div class="error-msg">Tidak ada jadwal tersedia.</div>';
+        }
         return;
       }
       
@@ -2884,8 +2959,28 @@
           const awayTeam = match.away || match.timb || match.timaway || match.team2 || '';
           const matchTime = match.jam || match.time || match.waktu || '';
           const matchDate = match.tanggal || match.date || match.tgl || '';
-          const homeScore = match.scorea || match.score1 || match.homescore || '-';
-          const awayScore = match.scoreb || match.score2 || match.awayscore || '-';
+          
+          // Enhanced score mapping with more field variations and proper 0 handling
+          const homeScoreRaw = getFirstValidField(match.scorea, match.score1, match.homescore, match.skor_home, match.skor1, match.skorhome, match.home_score, match.scoreHome);
+          const awayScoreRaw = getFirstValidField(match.scoreb, match.score2, match.awayscore, match.skor_away, match.skor2, match.skoraway, match.away_score, match.scoreAway);
+          
+          const homeScore = getScore(homeScoreRaw);
+          const awayScore = getScore(awayScoreRaw);
+          
+          // Debug score mapping for first few matches
+          if (Math.random() < 0.1) { // Log 10% of matches for debugging
+            console.log('🎯 Score mapping debug for match:', {
+              homeTeam,
+              awayTeam,
+              homeScoreRaw,
+              awayScoreRaw,
+              homeScore,
+              awayScore,
+              availableFields: Object.keys(match),
+              scoreFields: Object.keys(match).filter(key => key.toLowerCase().includes('score') || key.toLowerCase().includes('skor'))
+            });
+          }
+          
           const betLink = match.linkbet || match.link || match.bet || '#';
           
           // Validate data - skip if essential fields are missing
@@ -3678,9 +3773,47 @@
     
     // Skeleton/Fallback data untuk loading cepat - DISABLED TO FORCE REAL DATA
     function createSkeletonData(sport) {
-      // Return empty object to force real data loading
-      console.log('⚠️ Skeleton data disabled - forcing real Google Sheets data');
-      return {};
+      // Create immediate skeleton/placeholder content while real data loads
+      console.log('⚡ Creating skeleton content for instant loading:', sport);
+      
+      // Create sport-specific league names
+      const sportLeagues = {
+        'bola': ['Premier League', 'La Liga', 'Serie A', 'Champions League'],
+        'basket': ['NBA', 'EuroLeague', 'Liga Indonesia', 'Asia Cup'],
+        'tennis': ['ATP Tour', 'WTA Tour', 'Grand Slam', 'Masters'],
+        'voli': ['Liga Voli', 'Asian Games', 'SEA Games', 'International'],
+        'badminton': ['BWF Tour', 'All England', 'Indonesia Open', 'Asian Games'],
+        'baseball': ['MLB', 'NPB', 'KBO', 'Liga Baseball'],
+        'esport': ['DOTA 2', 'Mobile Legends', 'CS:GO', 'Valorant']
+      };
+      
+      const leagues = sportLeagues[sport] || ['Loading Liga...'];
+      const skeletonData = {};
+      
+      leagues.forEach(league => {
+        skeletonData[`🔄 ${league}`] = [
+          {
+            home: '● ● ● Loading...',
+            away: '● ● ● Loading...',
+            jam: '--:--',
+            tanggal: getTodayFormatted(),
+            scorea: null,
+            scoreb: null,
+            linkbet: '#'
+          },
+          {
+            home: '⚡ Memuat data...',
+            away: '⚡ Memuat data...',
+            jam: '--:--',
+            tanggal: getTodayFormatted(),
+            scorea: null,
+            scoreb: null,
+            linkbet: '#'
+          }
+        ];
+      });
+      
+      return skeletonData;
     }
     
     // Force loading timeout untuk memastikan UI tetap responsive - EXTENDED FOR REAL DATA
@@ -3869,21 +4002,29 @@
       console.log('🚀 Fast loading initiated for:', sport);
       loadingStartTime = Date.now();
       currentLoadingState = LoadingState.LOADING;
+      isDataLoading = true; // Set loading flag
       
       // Enhanced caching dengan instant loading untuk cached data
       if (allMatchesData[sport]) {
         console.log('⚡ INSTANT LOADING from cache for:', sport);
         currentLoadingState = LoadingState.CACHED;
+        isDataLoading = false; // Data ready
         currentSportData = allMatchesData[sport];
         renderLeagues(allMatchesData[sport], sport);
         
-        // Immediate setup tanpa delay untuk cached data
-        setupFilterAndSearch();
-        // Jika ada tanggal aktif, filter ke tanggal tersebut
-        if (currentActiveDate) {
-          filterBySpecificDate(currentActiveDate);
+        // Apply pending filter if any
+        if (pendingFilter) {
+          console.log('⚡ Applying pending filter from cache loading');
+          applyPendingFilter();
         } else {
-          applyFilters();
+          // Immediate setup tanpa delay untuk cached data
+          setupFilterAndSearch();
+          // Jika ada tanggal aktif, filter ke tanggal tersebut
+          if (currentActiveDate) {
+            filterBySpecificDate(currentActiveDate);
+          } else {
+            applyFilters();
+          }
         }
         
         const loadTime = Date.now() - loadingStartTime;
@@ -3900,8 +4041,17 @@
         return;
       }
       
-      // Start loading animation and timeout protection
-      showLoader();
+      // Check if skeleton data is already displayed - don't show loader
+      const hasSkeletonData = currentSportData && Object.keys(currentSportData).some(league => 
+        league.includes('Loading') || currentSportData[league].some(match => 
+          match.home === 'Loading...' || match.home === 'Memuat data...'
+        )
+      );
+      
+      // Start loading animation and timeout protection (only if no skeleton data)
+      if (!hasSkeletonData) {
+        showLoader();
+      }
       forceLoadingTimeout(sport);
       
       // Map sport key to API endpoint - SESUAI DENGAN GOOGLE APPS SCRIPT
@@ -4209,6 +4359,21 @@
           console.log('🔍 Home team field:', homeField);
           console.log('🔍 Away team field:', awayField);
           
+          // Debug score fields specifically
+          const scoreAField = sampleMatch.scorea || sampleMatch.score1 || sampleMatch.homescore;
+          const scoreBField = sampleMatch.scoreb || sampleMatch.score2 || sampleMatch.awayscore;
+          console.log('🎯 Score A field (home):', scoreAField, '- Available fields:', {
+            scorea: sampleMatch.scorea,
+            score1: sampleMatch.score1,
+            homescore: sampleMatch.homescore
+          });
+          console.log('🎯 Score B field (away):', scoreBField, '- Available fields:', {
+            scoreb: sampleMatch.scoreb,
+            score2: sampleMatch.score2,
+            awayscore: sampleMatch.awayscore
+          });
+          console.log('🎯 All available score-related fields in match:', Object.keys(sampleMatch).filter(key => key.toLowerCase().includes('score')));
+          
           // Validate that essential fields exist
           if (!dateField || !timeField || !homeField || !awayField) {
             console.warn('⚠️ Missing essential fields in sample match:', {
@@ -4273,6 +4438,8 @@
         
         // Store data in cache untuk sport ini
         allMatchesData[sport] = ligaMap;
+        currentSportData = ligaMap; // Update current data
+        isDataLoading = false; // Data selesai loading
         
         // 💾 Save to localStorage for persistent cache
         saveCachedData();
@@ -4281,11 +4448,17 @@
         console.log('🎯 Setting up filters and search immediately');
         setupFilterAndSearch();
         
-        // Jika ada tanggal aktif, filter ke tanggal tersebut
-        if (currentActiveDate) {
-          filterBySpecificDate(currentActiveDate);
+        // Apply pending filter if any
+        if (pendingFilter) {
+          console.log('⚡ Applying pending filter from fresh data loading');
+          applyPendingFilter();
         } else {
-          applyFilters();
+          // Jika ada tanggal aktif, filter ke tanggal tersebut
+          if (currentActiveDate) {
+            filterBySpecificDate(currentActiveDate);
+          } else {
+            applyFilters();
+          }
         }
         
         // Auto-show relevant data tanpa delay
@@ -4925,8 +5098,14 @@
           const awayTeam = match.away || match.timb || match.timaway || match.team2 || match.player2 || '';
           const matchTime = match.jam || match.time || match.waktu || '';
           const matchDate = match.tanggal || match.date || match.tgl || '';
-          const homeScore = match.scorea || match.score1 || match.homescore || '-';
-          const awayScore = match.scoreb || match.score2 || match.awayscore || '-';
+          
+          // Enhanced score mapping with more field variations and proper 0 handling
+          const homeScoreRaw = getFirstValidField(match.scorea, match.score1, match.homescore, match.skor_home, match.skor1, match.skorhome, match.home_score, match.scoreHome);
+          const awayScoreRaw = getFirstValidField(match.scoreb, match.score2, match.awayscore, match.skor_away, match.skor2, match.skoraway, match.away_score, match.scoreAway);
+          
+          const homeScore = getScore(homeScoreRaw);
+          const awayScore = getScore(awayScoreRaw);
+          
           const betLink = match.linkbet || match.link || match.bet || '#';
           
           // Validate data - skip if essential fields are missing
@@ -5232,8 +5411,14 @@
           const awayTeam = match.away || match.timb || match.timaway || match.team2 || match.player2 || '';
           const matchTime = match.jam || match.time || match.waktu || '';
           const matchDate = match.tanggal || match.date || match.tgl || '';
-          const homeScore = match.scorea || match.score1 || match.homescore || '-';
-          const awayScore = match.scoreb || match.score2 || match.awayscore || '-';
+          
+          // Enhanced score mapping with more field variations and proper 0 handling
+          const homeScoreRaw = getFirstValidField(match.scorea, match.score1, match.homescore, match.skor_home, match.skor1, match.skorhome, match.home_score, match.scoreHome);
+          const awayScoreRaw = getFirstValidField(match.scoreb, match.score2, match.awayscore, match.skor_away, match.skor2, match.skoraway, match.away_score, match.scoreAway);
+          
+          const homeScore = getScore(homeScoreRaw);
+          const awayScore = getScore(awayScoreRaw);
+          
           const betLink = match.linkbet || match.link || match.bet || '#';
           
           // Validate data - skip if essential fields are missing
@@ -5485,6 +5670,10 @@
           // Create LIVE badge untuk home team jika pertandingan sedang live
           const liveBadge = isLive ? createLiveBadge() : '';
           
+          // Enhanced score mapping with more field variations
+          const homeScore = getScore(getFirstValidField(match.scorea, match.score1, match.homescore, match.skor_home, match.skor1, match.skorhome, match.home_score, match.scoreHome));
+          const awayScore = getScore(getFirstValidField(match.scoreb, match.score2, match.awayscore, match.skor_away, match.skor2, match.skoraway, match.away_score, match.scoreAway));
+          
           // Disable bet button for finished matches
           const betButtonClass = matchStatus.statusClass === 'finished' ? 'bet-btn disabled' : 'bet-btn';
           const betButtonHref = matchStatus.statusClass === 'finished' ? '#' : (match.linkbet || '#');
@@ -5501,12 +5690,12 @@
               <div class="team-row">
                 <span class="team-label home" data-sport="${sportKey}">${homeLabel}</span>
                 <span class="team-name">${escapeHTML(homeTeam)}${liveBadge}</span>
-                <span class="team-score ${matchStatus.isLive || isLive ? 'live-score' : ''}">${match.scorea || '-'}</span>
+                <span class="team-score ${matchStatus.isLive || isLive ? 'live-score' : ''}">${homeScore}</span>
               </div>
               <div class="team-row">
                 <span class="team-label away" data-sport="${sportKey}">${awayLabel}</span>
                 <span class="team-name">${escapeHTML(awayTeam)}</span>
-                <span class="team-score ${matchStatus.isLive || isLive ? 'live-score' : ''}">${match.scoreb || '-'}</span>
+                <span class="team-score ${matchStatus.isLive || isLive ? 'live-score' : ''}">${awayScore}</span>
               </div>
             </div>
             <div class="match-bet">

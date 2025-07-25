@@ -658,13 +658,22 @@
       white-space: nowrap;
     }
     
-    .apply-date-btn:hover {
+    .apply-date-btn:hover:not(:disabled) {
       background: var(--accent-dark);
       transform: translateY(-1px);
     }
     
-    .apply-date-btn:active {
+    .apply-date-btn:active:not(:disabled) {
       transform: translateY(0);
+    }
+    
+    .apply-date-btn:disabled,
+    .apply-date-btn.disabled {
+      background: #999;
+      color: #ccc;
+      cursor: not-allowed;
+      opacity: 0.6;
+      transform: none;
     }
     
     .date-select:focus {
@@ -1303,30 +1312,48 @@
       color: white;
       border: none;
       border-radius: 6px;
-      padding: 4px 10px;
-      font-size: 9px;
-      font-weight: 800;
+      padding: 4px 8px;
+      font-size: 8px;
+      font-weight: 700;
       cursor: pointer;
       text-decoration: none;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       display: inline-block;
-      line-height: 1.3;
-      letter-spacing: 0.3px;
+      line-height: 1.2;
+      letter-spacing: 0.2px;
       position: relative;
       overflow: hidden;
       text-transform: uppercase;
-      box-shadow: 0 2px 8px rgba(0, 166, 63, 0.2);
+      box-shadow: 0 1px 4px rgba(0, 166, 63, 0.15);
+      min-width: 28px;
+      height: 20px;
+      text-align: center;
     }
     
-    /* BET button disabled state */
+    /* BET button disabled state - Enhanced */
     .bet-btn:disabled,
     .bet-btn.disabled {
-      background: linear-gradient(135deg, #999, #666);
-      color: #ccc;
+      background: linear-gradient(135deg, #d0d0d0, #999);
+      color: #666;
       cursor: not-allowed;
       box-shadow: none;
       pointer-events: none;
-      opacity: 0.6;
+      opacity: 0.5;
+      transform: none;
+    }
+    
+    .bet-btn.finished {
+      background: linear-gradient(135deg, #f44336, #d32f2f);
+      color: white;
+      cursor: not-allowed;
+      pointer-events: none;
+      opacity: 0.7;
+    }
+    
+    .bet-btn.finished::after {
+      content: '✓';
+      font-size: 10px;
+      margin-left: 2px;
     }
     
     .bet-btn::before {
@@ -2168,14 +2195,27 @@
       }
       
       .bet-btn {
-        padding: 3px 6px;
-        font-size: 7px;
-        font-weight: 700;
-        border-radius: 4px;
-        letter-spacing: 0.2px;
-        min-width: 24px;
-        height: 18px;
-        line-height: 1.1;
+        padding: 2px 4px;
+        font-size: 6px;
+        font-weight: 600;
+        border-radius: 3px;
+        letter-spacing: 0.1px;
+        min-width: 20px;
+        height: 16px;
+        line-height: 1;
+        box-shadow: 0 1px 2px rgba(0, 166, 63, 0.1);
+      }
+      
+      .bet-btn:hover {
+        transform: none; /* Disable transform on mobile */
+        box-shadow: 0 1px 3px rgba(0, 166, 63, 0.2);
+      }
+      
+      .bet-btn.disabled,
+      .bet-btn.finished {
+        font-size: 5px;
+        min-width: 18px;
+        height: 14px;
       }
     }
     
@@ -2599,6 +2639,9 @@
     let currentFilter = null; // Set to null to show all by default
     let currentActiveDate = null; // Tanggal yang sedang aktif di navigator
     let hasRenderedOnce = false; // Flag to prevent multiple renders on load
+    let isInitialized = false; // Prevent multiple initializations
+    let isDataLoading = false; // Prevent concurrent data fetching
+    let visibilityChangeCount = 0; // Track page visibility changes
 
     // Kategori olahraga + emoji
     const SPORTS = [
@@ -2947,6 +2990,13 @@
         }
       }
       
+      // Reset apply button state when dates are repopulated
+      setTimeout(() => {
+        if (typeof updateApplyButtonState === 'function') {
+          updateApplyButtonState(selectedDate);
+        }
+      }, 50);
+      
       // JANGAN auto-select tanggal apapun - biarkan user memilih sendiri
       // Atau default ke 'all' untuk menampilkan semua
       if (selectedDate === 'all') {
@@ -3000,12 +3050,24 @@
       const main = document.getElementById('main-content');
       if (!main) return;
       
-      // Prevent multiple renders on initial load
+      // Enhanced render prevention for mobile stability
+      if (isDataLoading) {
+        console.log('🚫 Data is currently loading, skipping render');
+        return;
+      }
+      
       if (hasRenderedOnce && !leagues) {
         console.log('🚫 Preventing duplicate render on load');
         return;
       }
       
+      // Prevent duplicate renders of the same data
+      if (hasRenderedOnce && currentSportData === leagues && main.children.length > 0) {
+        console.log('🚫 Preventing duplicate render of same data');
+        return;
+      }
+      
+      console.log('🎨 Rendering leagues for:', sportKey);
       main.innerHTML = '';
       
       // Store original data
@@ -3270,7 +3332,7 @@
       });
     }
     
-    // Generate BET button based on match status
+    // Generate BET button based on match status - Enhanced for mobile
     function generateBetButton(match, matchStatus) {
       const scoreA = match.scorea || '-';
       const scoreB = match.scoreb || '-';
@@ -3281,6 +3343,8 @@
                         matchStatus.statusText.toLowerCase().includes('ft') ||
                         matchStatus.statusText.toLowerCase().includes('selesai') ||
                         matchStatus.statusText.toLowerCase().includes('final') ||
+                        matchStatus.statusText.toLowerCase().includes('ended') ||
+                        match.status === 'Finished' ||
                         (scoreA !== '-' && scoreB !== '-' && scoreA !== '' && scoreB !== '' && 
                          matchStatus.statusText !== 'vs' && matchStatus.statusText !== 'Akan Datang');
       
@@ -3290,7 +3354,8 @@
       const isVeryOld = matchTime && (now - matchTime) > (3 * 60 * 60 * 1000);
       
       if (isFinished || isVeryOld) {
-        return `<span class="bet-btn disabled" title="Pertandingan sudah selesai atau tidak tersedia">BET</span>`;
+        // Show "SELESAI" instead of BET for finished matches
+        return `<span class="bet-btn finished" title="Pertandingan sudah selesai">SELESAI</span>`;
       } else {
         // Enhanced BET button with better error handling
         const betLink = match.linkbet && match.linkbet !== '#' ? match.linkbet : '#';
@@ -3299,7 +3364,7 @@
         if (isValidLink) {
           return `<a class="bet-btn" href="${betLink}" target="_blank" rel="noopener" title="Place your bet">BET</a>`;
         } else {
-          return `<span class="bet-btn disabled" title="Link betting tidak tersedia">BET</span>`;
+          return `<span class="bet-btn disabled" title="Link betting tidak tersedia">N/A</span>`;
         }
       }
     }
@@ -3307,6 +3372,12 @@
     // Fetch and render leagues dengan caching system dan retry mechanism
     async function fetchAndRenderLeagues(sport) {
       console.log('🚀 Fetching data for sport:', sport);
+      
+      // Prevent concurrent fetching
+      if (isDataLoading) {
+        console.log('🚫 Data is already loading, skipping duplicate request');
+        return;
+      }
       
       // Cek apakah data sudah ada di cache
       if (allMatchesData[sport]) {
@@ -3326,6 +3397,9 @@
         }, 100);
         return;
       }
+      
+      // Set loading flag
+      isDataLoading = true;
       
       // Jika belum ada di cache, fetch dari API dengan retry mechanism
       showLoader();
@@ -3551,6 +3625,9 @@
             </button>
           </div>
         `);
+      } finally {
+        // Always clear loading flag
+        isDataLoading = false;
       }
     }
     
@@ -3722,19 +3799,75 @@
       }
       
       if (dateSelect) {
-        // Remove auto-change behavior on mobile - now only updates selectedDate variable
+        // Enhanced date selector with smart button management
         dateSelect.addEventListener('change', function() {
-          selectedDate = this.value;
-          console.log('📅 Date dropdown changed to (not applied yet):', selectedDate);
-          // Note: No auto-filtering here - user must click "Lihat Jadwal" button
+          const newSelectedDate = this.value;
+          console.log('📅 Date dropdown changed to:', newSelectedDate);
+          
+          // Update button state based on selection
+          updateApplyButtonState(newSelectedDate);
+          
+          // If "Semua Tanggal" is selected, auto-apply and disable button
+          if (newSelectedDate === 'all') {
+            selectedDate = newSelectedDate;
+            console.log('📋 Auto-applying "Semua Tanggal" - showing all matches');
+            
+            // Clear any active filter state
+            currentFilter = null;
+            document.querySelectorAll('.quick-filter-btn').forEach(btn => btn.classList.remove('active'));
+            
+            // Show all matches immediately
+            if (currentSportData && Object.keys(currentSportData).length > 0) {
+              renderLeagues(currentSportData, window.currentSport);
+              setTimeout(() => applyFiltersWithFallback(), 100);
+            } else if (window.currentSport) {
+              fetchAndRenderLeagues(window.currentSport);
+            }
+          } else {
+            // For specific dates, just update the selection but don't apply yet
+            selectedDate = newSelectedDate;
+          }
         });
       }
       
-      // Add "Lihat Jadwal" button functionality
+      // Helper function to manage Apply button state
+      function updateApplyButtonState(dateValue) {
+        const applyDateBtn = document.getElementById('apply-date-btn');
+        if (!applyDateBtn) return;
+        
+        const isAllDates = dateValue === 'all';
+        const isSameAsLastApplied = dateValue === window.lastAppliedDate;
+        
+        if (isAllDates || isSameAsLastApplied) {
+          // Disable button for "all dates" or already applied dates
+          applyDateBtn.disabled = true;
+          applyDateBtn.classList.add('disabled');
+          applyDateBtn.textContent = isAllDates ? 'Semua Ditampilkan' : 'Sudah Diterapkan';
+        } else {
+          // Enable button for new specific dates
+          applyDateBtn.disabled = false;
+          applyDateBtn.classList.remove('disabled');
+          applyDateBtn.textContent = 'Lihat Jadwal';
+        }
+      }
+      
+      // Enhanced "Lihat Jadwal" button functionality
       const applyDateBtn = document.getElementById('apply-date-btn');
       if (applyDateBtn) {
+        // Initialize button as disabled on startup
+        updateApplyButtonState(selectedDate);
+        
         applyDateBtn.addEventListener('click', function() {
+          // Prevent action if button is disabled
+          if (this.disabled) {
+            console.log('🚫 Button is disabled, no action taken');
+            return;
+          }
+          
           console.log('🎯 Applying date filter:', selectedDate);
+          
+          // Store the applied date to prevent duplicate applications
+          window.lastAppliedDate = selectedDate;
           
           // Clear any active filter state when switching dates
           currentFilter = null;
@@ -3744,19 +3877,16 @@
           if (selectedDate && selectedDate !== 'all') {
             console.log('🎯 Filtering by specific date:', selectedDate);
             filterBySpecificDateWithFallback(selectedDate);
-          } else {
-            // If "all" selected, show all matches by re-rendering the current sport data
-            console.log('📋 Showing all dates - re-rendering full data');
-            if (currentSportData && Object.keys(currentSportData).length > 0) {
-              renderLeagues(currentSportData, window.currentSport);
-              // Apply any existing search filter but no date filter
-              setTimeout(() => applyFiltersWithFallback(), 100);
-            } else if (window.currentSport) {
-              // If no current data, fetch fresh data
-              fetchAndRenderLeagues(window.currentSport);
-            }
+            
+            // Update button to show it's been applied
+            this.disabled = true;
+            this.classList.add('disabled');
+            this.textContent = 'Sudah Diterapkan';
           }
         });
+        
+        // Initialize the button state based on current selectedDate
+        setTimeout(() => updateApplyButtonState(selectedDate), 100);
       }
       
       if (clearBtn) {
@@ -3797,8 +3927,8 @@
             console.log("🎯 FILTERING BESOK:", besokFormatted);
             filterBySpecificDateWithFallback(besokFormatted);
           } else if (filterType === 'week') {
-            // Set currentFilter to 'week' and apply week filtering
-            console.log("🎯 FILTERING MINGGU INI - Setting up week filter");
+            // Enhanced "Minggu Ini" (This Week) functionality
+            console.log("🎯 FILTERING MINGGU INI - Processing week filter");
             currentFilter = 'week';
             selectedDate = 'all'; // Reset date selector to show all dates, but filter by week
             
@@ -3808,8 +3938,25 @@
               dateSelect.value = 'all';
             }
             
-            // Apply the week filter
+            // Update apply button state for "all" dates
+            updateApplyButtonState('all');
+            
+            // Calculate current week range for debugging
+            const weekRange = getCurrentWeekRange();
+            console.log("📅 Current week range:", weekRange.startFormatted, "to", weekRange.endFormatted);
+            console.log("📅 Today is:", formatDateToDDMMYYYY(new Date()));
+            
+            // Apply the week filter immediately
             applyFiltersWithFallback();
+            
+            // Also log some sample dates for verification
+            setTimeout(() => {
+              const sampleDates = Array.from(document.querySelectorAll('.match-time div:first-child'))
+                .map(el => el.textContent.trim())
+                .filter(date => date && date.includes('/'))
+                .slice(0, 5);
+              console.log("📋 Sample match dates in DOM:", sampleDates);
+            }, 100);
           } else {
             applyFiltersWithFallback();
           }
@@ -4190,37 +4337,58 @@
                   }
                 } 
                 else if (currentFilter === 'week') {
-                  // Check for this week (Monday to Sunday) - USING HELPER FUNCTION
+                  // Enhanced this week filtering with better date parsing
                   shouldShow = false;
                   
                   try {
                     const weekRange = getCurrentWeekRange();
                     
-                    // Parse the match date from DD/MM/YYYY format with proper validation
+                    // Parse the match date from DD/MM/YYYY format with comprehensive validation
                     if (dateText && dateText.includes('/')) {
                       const dateParts = dateText.split('/');
                       if (dateParts.length === 3) {
-                        const day = parseInt(dateParts[0], 10);
-                        const month = parseInt(dateParts[1], 10);
-                        const year = parseInt(dateParts[2], 10);
+                        const day = parseInt(dateParts[0].trim(), 10);
+                        const month = parseInt(dateParts[1].trim(), 10);
+                        const year = parseInt(dateParts[2].trim(), 10);
                         
-                        if (!isNaN(day) && !isNaN(month) && !isNaN(year)) {
+                        // Enhanced validation
+                        if (!isNaN(day) && !isNaN(month) && !isNaN(year) && 
+                            day >= 1 && day <= 31 && month >= 1 && month <= 12 && year >= 2024) {
+                          
                           const matchDate = new Date(year, month - 1, day);
                           matchDate.setHours(12, 0, 0, 0); // Set to noon to avoid timezone issues
                           
-                          shouldShow = matchDate >= weekRange.start && matchDate <= weekRange.end;
+                          // More robust date comparison
+                          const isInRange = matchDate >= weekRange.start && matchDate <= weekRange.end;
+                          shouldShow = isInRange;
+                          
+                          // Enhanced debugging for first few matches
+                          if (index < 3) {
+                            console.log(`📊 WEEK FILTER MATCH ${index}:`);
+                            console.log(`  Date Text: "${dateText}"`);
+                            console.log(`  Parsed: ${day}/${month}/${year}`);
+                            console.log(`  Match Date: ${matchDate.toLocaleDateString()}`);
+                            console.log(`  Week Start: ${weekRange.start.toLocaleDateString()}`);
+                            console.log(`  Week End: ${weekRange.end.toLocaleDateString()}`);
+                            console.log(`  In Range: ${isInRange}`);
+                          }
+                        } else {
+                          if (index < 3) {
+                            console.warn(`❌ Invalid date parts: ${day}/${month}/${year} from "${dateText}"`);
+                          }
+                        }
+                      } else {
+                        if (index < 3) {
+                          console.warn(`❌ Invalid date format: "${dateText}" (${dateParts.length} parts)`);
                         }
                       }
-                    }
-                    
-                    if (index < 5) {
-                      console.log("📊 WEEK FILTER DEBUG:");
-                      console.log("  Week Range:", weekRange.startFormatted, "to", weekRange.endFormatted);
-                      console.log("  Match Date Text:", dateText);
-                      console.log("  In Range:", shouldShow);
+                    } else {
+                      if (index < 3) {
+                        console.warn(`❌ No valid date found: "${dateText}"`);
+                      }
                     }
                   } catch (error) {
-                    console.warn('Error in week filter:', error);
+                    console.warn('❌ Error in week filter:', error);
                     shouldShow = false;
                   }
                 }
@@ -4310,9 +4478,15 @@
       }
     }
 
-    // Initialize app dengan Enhanced Features
+    // Initialize app dengan Enhanced Features - Mobile Optimized
     function initializeApp() {
       console.log('🎯 Initializing app with enhanced features...');
+      
+      // Prevent duplicate initialization
+      if (isInitialized) {
+        console.log('🚫 App already initialized, skipping');
+        return;
+      }
       
       try {
         // Test format tanggal terlebih dahulu
@@ -4528,8 +4702,13 @@
             welcomeScreen.style.display = 'none';
             container.style.display = 'block';
             
-            // Initialize the app
-            initializeApp();
+            // Initialize the app with protection against multiple inits
+            if (!isInitialized) {
+              initializeApp();
+              isInitialized = true;
+            } else {
+              console.log('🚫 App already initialized, skipping duplicate init');
+            }
           }, 300);
           
         } catch (error) {
@@ -5057,15 +5236,24 @@
     
     // 👁️ TAB VISIBILITY & PAGE LIFECYCLE MANAGEMENT
     
-    // Handle page visibility changes
+    // Handle page visibility changes - Enhanced for mobile stability
     function handleVisibilityChange() {
+      visibilityChangeCount++;
+      
       if (document.hidden) {
         // Page is hidden - save current state
         console.log('📱 Page hidden - saving state');
         saveCurrentState();
       } else {
         // Page is visible - check if we need to refresh data
-        console.log('📱 Page visible - checking state');
+        console.log(`📱 Page visible (${visibilityChangeCount}) - checking state`);
+        
+        // Prevent excessive refreshes on mobile
+        if (visibilityChangeCount <= 2 && isInitialized) {
+          console.log('🚫 Preventing auto-refresh on mobile tab switch');
+          return;
+        }
+        
         handlePageReturn();
       }
     }
@@ -5129,20 +5317,33 @@
       }
     }
     
-    // Handle page return (from background)
+    // Handle page return (from background) - Enhanced for mobile stability
     function handlePageReturn() {
       const lastVisit = localStorage.getItem('sport_last_visit');
       const now = Date.now();
       
+      // Enhanced logic to prevent excessive refreshes
       if (lastVisit) {
         const timeSinceLastVisit = now - parseInt(lastVisit);
-        // If more than 5 minutes, consider refreshing data
-        if (timeSinceLastVisit > 5 * 60 * 1000) {
-          console.log('📱 Long absence detected, checking for updates');
-          // Only refresh if we don't have recent data
-          if (!allMatchesData[window.currentSport]) {
+        
+        // Only refresh if more than 15 minutes AND we don't have data
+        if (timeSinceLastVisit > 15 * 60 * 1000) {
+          console.log('📱 Long absence detected (>15min), checking for updates');
+          
+          // Only refresh if we don't have recent data for current sport
+          if (!allMatchesData[window.currentSport] || !hasRenderedOnce) {
+            console.log('📊 No cached data found, fetching fresh data');
             fetchAndRenderLeagues(window.currentSport);
+          } else {
+            console.log('📦 Using existing cached data');
           }
+        } else {
+          console.log(`📱 Recent visit detected (${Math.round(timeSinceLastVisit/1000/60)}min ago), using cache`);
+        }
+      } else {
+        // First visit
+        if (!hasRenderedOnce && window.currentSport) {
+          fetchAndRenderLeagues(window.currentSport);
         }
       }
       

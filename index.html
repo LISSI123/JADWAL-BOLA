@@ -1111,6 +1111,159 @@
       border-bottom: none;
     }
     
+    /* 🏆 BIG MATCH HIGHLIGHT SYSTEM */
+    .match-row.big-match {
+      border-left: 4px solid #FFD700;
+      background: linear-gradient(135deg, rgba(255,215,0,0.08), rgba(255,215,0,0.02));
+      box-shadow: 0 2px 12px rgba(255,215,0,0.25);
+      position: relative;
+      transform: translateZ(0);
+      animation: bigMatchGlow 3s ease-in-out infinite alternate;
+    }
+    
+    @keyframes bigMatchGlow {
+      0% { box-shadow: 0 2px 12px rgba(255,215,0,0.25); }
+      100% { box-shadow: 0 4px 20px rgba(255,215,0,0.4); }
+    }
+    
+    .match-row.big-match:hover {
+      background: linear-gradient(135deg, rgba(255,215,0,0.12), rgba(255,215,0,0.04));
+      transform: translateX(3px) translateZ(0);
+      box-shadow: 0 6px 25px rgba(255,215,0,0.5);
+    }
+    
+    /* Premium League Matches */
+    .match-row.premium-league {
+      border-left: 4px solid #8B5CF6;
+      background: linear-gradient(135deg, rgba(139,92,246,0.08), rgba(139,92,246,0.02));
+      box-shadow: 0 2px 12px rgba(139,92,246,0.25);
+    }
+    
+    .match-row.premium-league:hover {
+      background: linear-gradient(135deg, rgba(139,92,246,0.12), rgba(139,92,246,0.04));
+      box-shadow: 0 6px 25px rgba(139,92,246,0.4);
+    }
+    
+    /* Derby/Rivalry Matches */
+    .match-row.derby-match {
+      border-left: 4px solid #EF4444;
+      background: linear-gradient(135deg, rgba(239,68,68,0.08), rgba(239,68,68,0.02));
+      box-shadow: 0 2px 12px rgba(239,68,68,0.25);
+      animation: derbyPulse 2s ease-in-out infinite alternate;
+    }
+    
+    @keyframes derbyPulse {
+      0% { border-left-color: #EF4444; }
+      100% { border-left-color: #DC2626; }
+    }
+    
+    /* Final/Semi-Final Matches */
+    .match-row.final-match {
+      border-left: 4px solid #F59E0B;
+      background: linear-gradient(135deg, rgba(245,158,11,0.1), rgba(245,158,11,0.03));
+      box-shadow: 0 2px 15px rgba(245,158,11,0.3);
+      animation: finalShine 4s ease-in-out infinite;
+    }
+    
+    @keyframes finalShine {
+      0%, 100% { box-shadow: 0 2px 15px rgba(245,158,11,0.3); }
+      50% { box-shadow: 0 4px 25px rgba(245,158,11,0.6); }
+    }
+    
+    /* LIVE Big Match */
+    .match-row.big-match.live-match {
+      border-left: 4px solid #FF0000;
+      background: linear-gradient(135deg, rgba(255,0,0,0.1), rgba(255,0,0,0.03));
+      animation: liveBigMatch 1.5s ease-in-out infinite alternate;
+    }
+    
+    /* 🏅 BIG MATCH BADGES */
+    .big-match-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      background: linear-gradient(45deg, #FFD700, #FFA500);
+      color: white;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 7px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      box-shadow: 0 2px 8px rgba(255,215,0,0.4);
+      animation: badgeGlow 2s ease-in-out infinite alternate;
+      margin-left: 4px;
+      white-space: nowrap;
+    }
+    
+    @keyframes badgeGlow {
+      0% { box-shadow: 0 2px 8px rgba(255,215,0,0.4); }
+      100% { box-shadow: 0 4px 12px rgba(255,215,0,0.6); }
+    }
+    
+    .big-match-badge.premium {
+      background: linear-gradient(45deg, #8B5CF6, #7C3AED);
+      box-shadow: 0 2px 8px rgba(139,92,246,0.4);
+    }
+    
+    .big-match-badge.derby {
+      background: linear-gradient(45deg, #EF4444, #DC2626);
+      box-shadow: 0 2px 8px rgba(239,68,68,0.4);
+      animation: derbyBadgePulse 1.5s ease-in-out infinite alternate;
+    }
+    
+    @keyframes derbyBadgePulse {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.05); }
+    }
+    
+    .big-match-badge.final {
+      background: linear-gradient(45deg, #F59E0B, #D97706);
+      box-shadow: 0 2px 8px rgba(245,158,11,0.4);
+      animation: finalBadgeShine 3s ease-in-out infinite;
+    }
+    
+    @keyframes finalBadgeShine {
+      0%, 100% { 
+        background: linear-gradient(45deg, #F59E0B, #D97706);
+        box-shadow: 0 2px 8px rgba(245,158,11,0.4);
+      }
+      50% { 
+        background: linear-gradient(45deg, #FBBF24, #F59E0B);
+        box-shadow: 0 4px 15px rgba(245,158,11,0.7);
+      }
+    }
+    
+    .big-match-badge.live {
+      background: linear-gradient(45deg, #FF0000, #DC2626);
+      box-shadow: 0 2px 8px rgba(255,0,0,0.5);
+      animation: liveBadgePulse 1s ease-in-out infinite alternate;
+    }
+    
+    @keyframes liveBadgePulse {
+      0% { 
+        background: linear-gradient(45deg, #FF0000, #DC2626);
+        transform: scale(1);
+      }
+      100% { 
+        background: linear-gradient(45deg, #FF3333, #EF4444);
+        transform: scale(1.08);
+      }
+    }
+    
+    /* Hot/Trending Badge */
+    .big-match-badge.hot {
+      background: linear-gradient(45deg, #FF6B6B, #FF5252);
+      box-shadow: 0 2px 8px rgba(255,107,107,0.4);
+      animation: hotBadge 2s ease-in-out infinite;
+    }
+    
+    @keyframes hotBadge {
+      0%, 100% { transform: scale(1) rotate(0deg); }
+      25% { transform: scale(1.05) rotate(1deg); }
+      75% { transform: scale(1.05) rotate(-1deg); }
+    }
+    
     .match-time {
       min-width: 42px;
       font-size: 10px;
@@ -1704,6 +1857,43 @@
     .dark-mode #main-content {
       scrollbar-color: rgba(255,255,255,0.2) rgba(255,255,255,0.05);
     }
+    
+    /* 🌙 Dark Mode Big Match Styling */
+    .dark-mode .match-row.big-match {
+      border-left-color: #FBBF24;
+      background: linear-gradient(135deg, rgba(251,191,36,0.15), rgba(251,191,36,0.05));
+      box-shadow: 0 2px 12px rgba(251,191,36,0.3);
+    }
+    
+    .dark-mode .match-row.premium-league {
+      border-left-color: #A78BFA;
+      background: linear-gradient(135deg, rgba(167,139,250,0.15), rgba(167,139,250,0.05));
+      box-shadow: 0 2px 12px rgba(167,139,250,0.3);
+    }
+    
+    .dark-mode .match-row.derby-match {
+      border-left-color: #F87171;
+      background: linear-gradient(135deg, rgba(248,113,113,0.15), rgba(248,113,113,0.05));
+      box-shadow: 0 2px 12px rgba(248,113,113,0.3);
+    }
+    
+    .dark-mode .match-row.final-match {
+      border-left-color: #FBBF24;
+      background: linear-gradient(135deg, rgba(251,191,36,0.18), rgba(251,191,36,0.06));
+      box-shadow: 0 2px 15px rgba(251,191,36,0.4);
+    }
+    
+    .dark-mode .match-row.big-match.live-match {
+      border-left-color: #FF4444;
+      background: linear-gradient(135deg, rgba(255,68,68,0.2), rgba(255,68,68,0.08));
+      box-shadow: 0 2px 15px rgba(255,68,68,0.5);
+    }
+    
+    /* Dark Mode Badges */
+    .dark-mode .big-match-badge {
+      box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
     /* Professional Responsive Design - Fixed Mobile Layout */
     @media (max-width: 768px) {
       .container { 
@@ -1926,6 +2116,34 @@
       
       .bet-btn:hover::after {
         opacity: 1;
+      }
+      
+      /* 🏆 Big Match Mobile Styling */
+      .match-row.big-match {
+        border-left-width: 3px;
+        background: linear-gradient(135deg, rgba(255,215,0,0.12), rgba(255,215,0,0.04));
+        padding: 8px 12px;
+        box-shadow: 0 3px 15px rgba(255,215,0,0.3);
+      }
+      
+      .match-row.premium-league,
+      .match-row.derby-match,
+      .match-row.final-match {
+        border-left-width: 3px;
+        padding: 8px 12px;
+      }
+      
+      .big-match-badge {
+        font-size: 6px;
+        padding: 1px 4px;
+        margin-left: 3px;
+        letter-spacing: 0.2px;
+      }
+      
+      /* Enhanced touch interactions for big matches */
+      .match-row.big-match:hover {
+        transform: translateX(2px);
+        background: linear-gradient(135deg, rgba(255,215,0,0.15), rgba(255,215,0,0.06));
       }
       
       .welcome-card { 
@@ -4019,6 +4237,226 @@
       });
     }
 
+    // 🏆 BIG MATCH DETECTION SYSTEM
+    function detectBigMatch(homeTeam, awayTeam, league, matchData = {}) {
+      console.log('🔍 Detecting big match:', { homeTeam, awayTeam, league });
+      
+      // Clean team names for comparison
+      const home = (homeTeam || '').toLowerCase().trim();
+      const away = (awayTeam || '').toLowerCase().trim();
+      const leagueName = (league || '').toLowerCase().trim();
+      
+      // 🏆 PREMIUM LEAGUES
+      const premiumLeagues = [
+        'champions league', 'uefa champions league', 'ucl',
+        'premier league', 'epl', 'english premier league',
+        'la liga', 'spanish la liga', 'primera division',
+        'serie a', 'italian serie a',
+        'bundesliga', 'german bundesliga',
+        'ligue 1', 'french ligue 1',
+        'world cup', 'fifa world cup', 'piala dunia',
+        'euros', 'european championship', 'euro',
+        'nba', 'national basketball association',
+        'nba finals', 'nba playoffs',
+        'euroleague basketball',
+        'wimbledon', 'us open', 'french open', 'australian open',
+        'atp masters', 'wta premier',
+        'dota 2 international', 'csgo major', 'lol worlds'
+      ];
+      
+      // 🌟 BIG TEAMS
+      const bigTeams = [
+        // Football
+        'real madrid', 'barcelona', 'manchester united', 'manchester city',
+        'liverpool', 'chelsea', 'arsenal', 'tottenham',
+        'bayern munich', 'borussia dortmund',
+        'juventus', 'ac milan', 'inter milan',
+        'psg', 'paris saint germain',
+        'ajax', 'porto', 'benfica',
+        'atletico madrid', 'valencia', 'sevilla',
+        'napoli', 'roma', 'lazio', 'atalanta',
+        'brazil', 'argentina', 'france', 'spain', 'germany', 'italy', 'england',
+        
+        // Basketball
+        'los angeles lakers', 'lakers', 'golden state warriors', 'warriors',
+        'boston celtics', 'celtics', 'miami heat', 'heat',
+        'chicago bulls', 'bulls', 'san antonio spurs', 'spurs',
+        
+        // Tennis (Top players)
+        'novak djokovic', 'rafael nadal', 'roger federer',
+        'serena williams', 'naomi osaka',
+        
+        // Esports
+        'team liquid', 'fnatic', 'g2 esports', 'cloud9',
+        'sk telecom t1', 'skt', 't1'
+      ];
+      
+      // 🔥 DERBY/RIVALRY KEYWORDS
+      const derbyKeywords = [
+        'el clasico', 'classico', 'clasico',
+        'derby', 'derbi', 'manchester derby', 'merseyside derby',
+        'north london derby', 'milan derby', 'rome derby',
+        'superclasico', 'old firm', 'red devils'
+      ];
+      
+      // 🏅 FINAL/IMPORTANT MATCH KEYWORDS
+      const finalKeywords = [
+        'final', 'finals', 'finale', 'championship',
+        'semi final', 'semifinal', 'semi-final',
+        'quarter final', 'quarterfinal', 'quarter-final',
+        'cup final', 'title', 'decider',
+        'playoff', 'play-off', 'elimination'
+      ];
+      
+      // 🔥 HOT MATCH INDICATORS
+      const hotKeywords = [
+        'top 4', 'top four', 'relegation', 'promotion',
+        'title race', 'championship race', 'must win',
+        'crucial', 'decisive', 'do or die'
+      ];
+      
+      let matchType = null;
+      let badges = [];
+      let priority = 0;
+      
+      // Check for LIVE status first
+      const isLive = checkIfMatchIsLiveAdvanced(matchData.jam || matchData.time || '', matchData.tanggal || matchData.date || '');
+      
+      // 1. Check for Finals/Important matches
+      if (finalKeywords.some(keyword => 
+        leagueName.includes(keyword) || 
+        home.includes(keyword) || 
+        away.includes(keyword)
+      )) {
+        matchType = 'final-match';
+        if (leagueName.includes('final') || leagueName.includes('championship')) {
+          badges.push({ text: '🏆 FINAL', class: 'final' });
+        } else if (leagueName.includes('semi')) {
+          badges.push({ text: '🥉 SEMI', class: 'final' });
+        } else {
+          badges.push({ text: '🏅 PLAYOFF', class: 'final' });
+        }
+        priority = 5;
+      }
+      
+      // 2. Check for Derby/Rivalry matches
+      else if (derbyKeywords.some(keyword => 
+        leagueName.includes(keyword) || 
+        home.includes(keyword) || 
+        away.includes(keyword) ||
+        (home.includes('manchester') && away.includes('manchester')) ||
+        (home.includes('milan') && away.includes('milan')) ||
+        (home.includes('real madrid') && away.includes('barcelona')) ||
+        (home.includes('barcelona') && away.includes('real madrid'))
+      )) {
+        matchType = 'derby-match';
+        if (home.includes('real madrid') && away.includes('barcelona') || 
+            home.includes('barcelona') && away.includes('real madrid')) {
+          badges.push({ text: '⚔️ EL CLASICO', class: 'derby' });
+        } else {
+          badges.push({ text: '🔥 DERBY', class: 'derby' });
+        }
+        priority = 4;
+      }
+      
+      // 3. Check for Premium League matches
+      else if (premiumLeagues.some(league => leagueName.includes(league))) {
+        matchType = 'premium-league';
+        if (leagueName.includes('champions league') || leagueName.includes('ucl')) {
+          badges.push({ text: '👑 UCL', class: 'premium' });
+        } else if (leagueName.includes('premier league') || leagueName.includes('epl')) {
+          badges.push({ text: '💎 EPL', class: 'premium' });
+        } else if (leagueName.includes('la liga')) {
+          badges.push({ text: '⭐ LA LIGA', class: 'premium' });
+        } else if (leagueName.includes('nba')) {
+          badges.push({ text: '🏀 NBA', class: 'premium' });
+        } else {
+          badges.push({ text: '👑 PREMIUM', class: 'premium' });
+        }
+        priority = 3;
+      }
+      
+      // 4. Check for Big Team matches
+      else if (bigTeams.some(team => home.includes(team) || away.includes(team))) {
+        matchType = 'big-match';
+        badges.push({ text: '⭐ BIG MATCH', class: 'big' });
+        priority = 2;
+      }
+      
+      // 5. Check for Hot matches
+      else if (hotKeywords.some(keyword => 
+        leagueName.includes(keyword) || 
+        home.includes(keyword) || 
+        away.includes(keyword)
+      )) {
+        matchType = 'big-match';
+        badges.push({ text: '🔥 HOT', class: 'hot' });
+        priority = 1;
+      }
+      
+      // Add LIVE badge if match is live
+      if (isLive && matchType) {
+        badges.unshift({ text: '🔴 LIVE', class: 'live' });
+        priority += 2; // Boost priority for live matches
+      }
+      
+      const result = {
+        isBig: !!matchType,
+        type: matchType,
+        badges: badges,
+        priority: priority,
+        isLive: isLive
+      };
+      
+      if (result.isBig) {
+        console.log('🎯 BIG MATCH DETECTED:', result);
+      }
+      
+      return result;
+    }
+    
+    // Function to create badge HTML
+    function createBadgeHTML(badges) {
+      if (!badges || badges.length === 0) return '';
+      
+      return badges.map(badge => 
+        `<span class="big-match-badge ${badge.class}">${badge.text}</span>`
+      ).join('');
+    }
+    
+    // Enhanced function to check if match is live
+    function checkIfMatchIsLiveAdvanced(timeStr, dateStr) {
+      try {
+        if (!timeStr || !dateStr) return false;
+        
+        // Parse time and date
+        const cleanTime = timeStr.replace(/[^0-9:]/g, '').trim();
+        if (!cleanTime.includes(':')) return false;
+        
+        const [hours, minutes] = cleanTime.split(':').map(Number);
+        if (isNaN(hours) || isNaN(minutes)) return false;
+        
+        // Parse date (DD/MM/YYYY format)
+        const dateParts = dateStr.split('/');
+        if (dateParts.length !== 3) return false;
+        
+        const [day, month, year] = dateParts.map(Number);
+        if (isNaN(day) || isNaN(month) || isNaN(year)) return false;
+        
+        // Create match datetime
+        const matchDate = new Date(year, month - 1, day, hours, minutes);
+        const now = new Date();
+        
+        // Check if match is currently happening (within 2 hours window)
+        const diffMs = now - matchDate;
+        const diffHours = diffMs / (1000 * 60 * 60);
+        
+        return diffHours >= 0 && diffHours <= 2;
+      } catch (error) {
+        return false;
+      }
+    }
+
     // ✅ FAST LOADING SYSTEM - Target loading cepat
     let isPreloading = false;
     let loadingStartTime = 0;
@@ -5897,7 +6335,7 @@
         const content = document.createElement('div');
         content.className = 'accordion-content';
 
-        // Create match rows dengan LIVE detection
+        // Create match rows dengan LIVE detection dan Big Match Detection
         matches.forEach(match => {
           const matchRow = document.createElement('div');
           matchRow.className = 'match-row';
@@ -5906,6 +6344,14 @@
           const awayTeam = match.away || match.timb || '';
           const matchTime = match.jam || '';
           const matchDate = match.tanggal || '';
+          
+          // 🏆 BIG MATCH DETECTION
+          const bigMatchInfo = detectBigMatch(homeTeam, awayTeam, league, match);
+          
+          // Add big match classes
+          if (bigMatchInfo.isBig) {
+            matchRow.classList.add(bigMatchInfo.type);
+          }
           
           // Check if match is LIVE berdasarkan waktu WIB
           const isLive = checkIfMatchIsLive(matchTime, matchDate);
@@ -5930,6 +6376,9 @@
           // Generate match status
           const matchStatus = getMatchStatus(matchTime, { tanggal: matchDate, ...match });
           
+          // Create badges HTML
+          const badgesHTML = createBadgeHTML(bigMatchInfo.badges);
+          
           // Create LIVE badge untuk home team jika pertandingan sedang live
           const liveBadge = isLive ? createLiveBadge() : '';
           
@@ -5952,7 +6401,7 @@
             <div class="match-teams">
               <div class="team-row">
                 <span class="team-label home" data-sport="${sportKey}">${homeLabel}</span>
-                <span class="team-name">${escapeHTML(homeTeam)}${liveBadge}</span>
+                <span class="team-name">${escapeHTML(homeTeam)}${badgesHTML}${liveBadge}</span>
                 <span class="team-score ${matchStatus.isLive || isLive ? 'live-score' : ''}">${homeScore}</span>
               </div>
               <div class="team-row">

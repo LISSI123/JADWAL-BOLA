@@ -451,6 +451,47 @@
       margin: 0 auto;
       padding: 8px;
       background: var(--bg-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    /* Main Content with Scrollable Area */
+    #main-content {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      max-height: calc(100vh - 200px);
+      padding-right: 4px;
+      margin-right: -4px;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Custom Scrollbar for Main Content */
+    #main-content::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    #main-content::-webkit-scrollbar-track {
+      background: rgba(0,0,0,0.05);
+      border-radius: 3px;
+    }
+    
+    #main-content::-webkit-scrollbar-thumb {
+      background: rgba(0,0,0,0.2);
+      border-radius: 3px;
+      transition: background 0.3s ease;
+    }
+    
+    #main-content::-webkit-scrollbar-thumb:hover {
+      background: rgba(0,0,0,0.4);
+    }
+    
+    /* Firefox Scrollbar */
+    #main-content {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(0,0,0,0.2) rgba(0,0,0,0.05);
     }
     
     .header-bar {
@@ -1006,7 +1047,7 @@
     }
     
     .accordion.expanded .accordion-content {
-      max-height: 2000px;
+      max-height: none;
       overflow: visible;
       opacity: 1;
       transform: translateY(0);
@@ -1555,10 +1596,47 @@
       font-weight: 800;
       text-shadow: 0 1px 2px rgba(0,0,0,0.2);
     }
+    
+    /* Dark Mode Scrollbar Styling */
+    .dark-mode #main-content::-webkit-scrollbar-track {
+      background: rgba(255,255,255,0.05);
+    }
+    
+    .dark-mode #main-content::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.2);
+    }
+    
+    .dark-mode #main-content::-webkit-scrollbar-thumb:hover {
+      background: rgba(255,255,255,0.4);
+    }
+    
+    .dark-mode #main-content {
+      scrollbar-color: rgba(255,255,255,0.2) rgba(255,255,255,0.05);
+    }
     /* Professional Responsive Design - Fixed Mobile Layout */
     @media (max-width: 768px) {
       .container { 
-        padding: 6px; 
+        padding: 6px;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+      
+      #main-content {
+        max-height: calc(100vh - 180px);
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+      }
+      
+      /* Improve touch scrolling on mobile */
+      #main-content::-webkit-scrollbar {
+        width: 3px;
+      }
+      
+      #main-content::-webkit-scrollbar-thumb {
+        background: rgba(0,0,0,0.3);
+        border-radius: 2px;
       }
       
       .header-bar { 
@@ -1751,6 +1829,16 @@
     @media (max-width: 480px) {
       .container {
         padding: 4px;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+      
+      #main-content {
+        max-height: calc(100vh - 160px);
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
       }
       
       .header-bar {
